@@ -27,7 +27,7 @@ namespace displayConfiguration
 
   //Public methods
   void initialConfigurationOfDisplay(void);
-  void scrennBackLightStatus(bool stateOfLight);
+  void screenBackLightStatus(bool stateOfLight);
   void writeInScreen(int cursorCoordinateX, int cursorCoordinateY, const char* textToPrint);
   void clearScreen(bool clearOrNot);
 
