@@ -42,7 +42,7 @@ void Ar_DisplayConfigurationClass::initialConfigurationOfDisplay(void)
   }
 }
 
-void Ar_DisplayConfigurationClass::scrennBackLightStatus(bool stateOfLight)
+void Ar_DisplayConfigurationClass::screenBackLightStatus(bool stateOfLight)
 {
   if (FINISHED == stateOfProcees)
   {
