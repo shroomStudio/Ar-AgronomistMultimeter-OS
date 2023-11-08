@@ -12,7 +12,7 @@
 // Class instances
 //energyManagementClass energy;
 sensingClass sensing;
-//signalConditioningClass conditioningSignals;
+signalConditioningClass conditioningSignals;
 
 //Namespaces 
 using namespace std;
