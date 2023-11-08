@@ -10,7 +10,7 @@
 #include <sub_SignalConditioning/signalConditioningClass.h>
 
 // Class instances
-//energyManagementClass energy;
+energyManagementClass energy;
 sensingClass sensing;
 signalConditioningClass conditioningSignals;
 
