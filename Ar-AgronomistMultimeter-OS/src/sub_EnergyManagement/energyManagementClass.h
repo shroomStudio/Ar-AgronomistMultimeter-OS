@@ -13,17 +13,20 @@ class energyManagementClass{
     int batteryChargePercentage;
 
     //Public Methods
-    void turnOffDevice(bool trueFalse);
+    void initialSetUpEnergyManagament(void);
+    void voltageBatteryMonitor(void);
+    void turnOffDevice(void);
+    void resetDevice(void);
 
     private:
     //Private attributes
-    int activationPinRelayOff;
-    int activationPinRelayBatteryCharge;
-    int voltageMeasuredBattery;
-    double voltageMeasured;
+    int activationPinRelayOff = 13;
+    int activationPinRelayBatteryCharge = 12;
+    int resetDevicePin = 11;
+    double voltageMeasuredBattery = 10;
+    
 
     // Private Methods
-    void voltageBatteryMonitor(void);
     void chargeBattery(void);
 };
 
