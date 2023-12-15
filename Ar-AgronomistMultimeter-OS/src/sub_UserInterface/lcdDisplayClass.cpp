@@ -10,7 +10,7 @@ int resetLcdPin = 9;
 int lightLcdPin = 9;
 
 //LCD Nokia instance declare inside this file to avoid any unauthorizated access
- Nokia_LCD display(clockLcdPin/* CLK */, dinLcdPin /* DIN */, dcLcdPin /* DC */, ceLcdPin /* CE */, resetLcdPin /* RST */,lightLcdPin/* BL */);
+ Nokia_LCD nokia5110(clockLcdPin/* CLK */, dinLcdPin /* DIN */, dcLcdPin /* DC */, ceLcdPin /* CE */, resetLcdPin /* RST */,lightLcdPin/* BL */);
 
 //LCD class
 lcdDisplayClass::lcdDisplayClass(){
@@ -23,13 +23,13 @@ lcdDisplayClass::~lcdDisplayClass(){
 //Private methods
 void lcdDisplayClass::initialDisplaySetup(void)
 {
-    display.begin();
+    nokia5110.begin();
     // Turn on the backlight
-    display.setBacklight(true);
+    nokia5110.setBacklight(true);
     // Set the contrast
-    display.setContrast(60);  // Good values are usualy between 40 and 60
+    nokia5110.setContrast(60);  // Good values are usualy between 40 and 60
     // Clear the screen by filling it with black pixels
-    display.clear();
+    nokia5110.clear();
 }
 
 //Public methods
