@@ -14,12 +14,6 @@ class lcdDisplayClass{
 
     private:
     //Private attributes
-    int resetLcdPin;
-    int ceLcdPin;
-    int dcLcdPin;
-    int clockLcdPin;
-    int lightLcdPin;
-
     //Private methods
     void initialDisplaySetup(void);
 };
