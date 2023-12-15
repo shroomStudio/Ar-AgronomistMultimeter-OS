@@ -19,6 +19,7 @@ Pin5    Back Push Button    Pull-Up Resistor
 
 //Headers 
 #include <Arduino.h>
+#include <string.h>
 #include <sub_EnergyManagement/energyManagementClass.h>
 #include "lcdDisplayClass.h"
 #include "buttonsClass.h"

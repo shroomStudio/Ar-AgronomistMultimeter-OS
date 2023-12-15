@@ -30,13 +30,18 @@ void lcdDisplayClass::initialDisplaySetup(void)
     nokia5110.setContrast(60);  // Good values are usualy between 40 and 60
     // Clear the screen by filling it with black pixels
     nokia5110.clear();
+    delay(2000);
+    metadataTodisplayInLCD("ShroomCorp",CENTERED_X,MIDDLE_Y);
 }
 
 //Public methods
-void lcdDisplayClass::metadataTodisplayInLCD(String)
+void lcdDisplayClass::metadataTodisplayInLCD(String text, COORDINATES_X_DISCPLAY_ENUM xCoordinate, COORDINATES_Y_DISCPLAY_ENUM yCoordinate)
 {
-
+    const char* textInChar = text.c_str();
+    nokia5110.setCursor(xCoordinate,yCoordinate);
+    nokia5110.println(*textInChar);
 }
+
 void lcdDisplayClass::navigationLCD(int changeForEnumInButtons)
 {
 
