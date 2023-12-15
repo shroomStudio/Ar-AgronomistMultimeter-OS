@@ -7,10 +7,11 @@ using namespace std;
 
 enum BUTTON_PRESSED
 {
-    UP_BUTTON,
+    UP_BUTTON = 0,
     DOWN_BUTTON,
     BACK_BUTTON,
-    OK_BUTTON
+    OK_BUTTON,
+    NO_BUTTON = 15,
 };
 
 class buttonsClass{
@@ -18,18 +19,15 @@ class buttonsClass{
     buttonsClass();
     ~buttonsClass();    
     //Public Attributtes
-    BUTTON_PRESSED buttonPressed;
     //Public Methods
-    BUTTON_PRESSED navigationButtons(void);
+    BUTTON_PRESSED buttonPressed(void);
+    
 
     private:
     //Private Attributes
-    int pinUpButton;
-    int pinDownButton;
-    int pinBackButton;
-    int pinOkButton;
     //Private Methods
     void initialButtonsSetup(void);
+    static void navigationButtons(void);
 };
 
 
