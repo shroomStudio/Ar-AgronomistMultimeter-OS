@@ -3,13 +3,16 @@
 // Description
 // Copyright*
 // System PinOut
-/*
-pin to turn off device    13
-pin to start chargin the battery 12
-Pin to reset the device 11
-pin to read voltage in battery 12
 
+/*
+Pin13  clockLcdPin = 13;
+Pin12  dinLcdPin   = 12;
+Pin11  dcLcdPin    = 11;
+Pin10  LcdPin      = 10;
+Pin9   resetLcdPin = 9;
+Pin9   lightLcdPin = 9;
 */
+
 //Headers 
 #include <Arduino.h>
 #include <sub_EnergyManagement/energyManagementClass.h>
