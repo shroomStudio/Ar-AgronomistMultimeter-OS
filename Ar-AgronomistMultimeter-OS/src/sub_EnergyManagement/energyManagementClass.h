@@ -13,7 +13,6 @@ class energyManagementClass{
     int batteryChargePercentage;
 
     //Public Methods
-    void initialSetUpEnergyManagament(void);
     void voltageBatteryMonitor(void);
     void turnOffDevice(void);
     void resetDevice(void);
@@ -27,6 +26,7 @@ class energyManagementClass{
     
 
     // Private Methods
+    void initialSetUpEnergyManagament(void);
     void chargeBattery(void);
 };
 

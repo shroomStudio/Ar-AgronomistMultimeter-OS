@@ -43,8 +43,9 @@ using namespace std;
 void setup() 
 {
     //Verifying state of battery first start 
-    //or Hardreboot
-    energy.initialSetUpEnergyManagament();
+
+    //Initialization of all classes. 
+    
     
 }
 

@@ -15,6 +15,7 @@ int lightLcdPin = 9;
 //LCD class
 lcdDisplayClass::lcdDisplayClass(){
     //Constructor lcdDisplayClass
+    initialDisplaySetup();
 }
 lcdDisplayClass::~lcdDisplayClass(){
     //destructor lcdDisplayClass
