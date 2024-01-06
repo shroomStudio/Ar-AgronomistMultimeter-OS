@@ -2,14 +2,7 @@
 #define USBCONECTTIONCLASS_H
 
 #include <Arduino.h>
-
-enum TYPE_USB
-{
-    ONLY_CHARGER,
-    SHARE_FILES,
-    SHARE_FILES_CHARGER
-};
-
+#include "commonDataTypes.h"
 class usbConecttionClass{
     public:
     usbConecttionClass();
