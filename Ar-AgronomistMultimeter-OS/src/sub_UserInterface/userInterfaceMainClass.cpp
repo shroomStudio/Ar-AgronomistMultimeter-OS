@@ -81,7 +81,7 @@ void userInitialConfiguration(void)
 {
      if (energy.batteryChargePercentage < MINIMUM_BATTERY_PERCENTAGE)
     {
-        lcd.metadataTodisplayInLCD("System discharged please, plug in to source power", LEFT_ALIGNED_X, MIDDLE_Y);
+        lcd.metadataTodisplayInLCD("System discharged please plug in to source power", LEFT_ALIGNED_X, MIDDLE_Y);
         delay(2000);
         energy.turnOffDevice();
     }

@@ -36,12 +36,22 @@ void lcdDisplayClass::initialDisplaySetup(void)
 }
 
 //Public methods
-void metadataTodisplayInLCD(String text, COORDINATES_X_DISCPLAY_ENUM xCoordinate, COORDINATES_Y_DISCPLAY_ENUM yCoordinate)
+void lcdDisplayClass::metadataTodisplayInLCD(String text, COORDINATES_X_DISCPLAY_ENUM xCoordinate, COORDINATES_Y_DISCPLAY_ENUM yCoordinate)
 {
-    //int customCoordinates = (int)yCoordinate + increaseOrReduceRow;
-
     const char* textInChar = text.c_str();
     nokia5110.setCursor(xCoordinate,yCoordinate);
+    nokia5110.println(*textInChar);
+}
+
+
+void lcdDisplayClass::metadataTodisplayInLCDAdvanceCursor(String text, COORDINATES_X_DISCPLAY_ENUM xCoordinate, 
+                                            COORDINATES_Y_DISCPLAY_ENUM yCoordinate, uint8_t advanceXcoordinate, uint8_t advanceYCoordinate)
+{
+    uint8_t customXCoordinates = (uint8_t)xCoordinate + advanceXcoordinate;
+    uint8_t customYCoordinates = (uint8_t)yCoordinate + advanceYCoordinate;
+
+    const char* textInChar = text.c_str();
+    nokia5110.setCursor(customXCoordinates,customYCoordinates);
     nokia5110.println(*textInChar);
 }
 
