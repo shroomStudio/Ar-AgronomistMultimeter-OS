@@ -15,6 +15,9 @@ Pin8    OK Push Button      Pull-Up Resistor
 Pin7    Up Push Button      Pull-Up Resistor
 Pin6    Down Push Button    Pull-Up Resistor
 Pin5    Back Push Button    Pull-Up Resistor
+Pin4    Reset Device Pin
+Pin3    Activation Pin Relay Battery Charge
+Pin2    Activation Pin Relay Off
 */
 
 //Headers 
@@ -27,6 +30,13 @@ Pin5    Back Push Button    Pull-Up Resistor
 #include <sub_SensingManagement/sensingClass.h>
 #include <sub_SignalConditioning/signalConditioningClass.h>
 
+//Defines
+#define MINIMUM_BATTERY_PERCENTAGE 2
+#define ZERO 0
+#define INDEX_PLUS_ONE 1
+#define INDEX_LESS_ONE -1
+
+
 // Class instances
 energyManagementClass energy;
 lcdDisplayClass lcd;
@@ -38,14 +48,20 @@ signalConditioningClass conditioningSignals;
 //Namespaces 
 using namespace std;
 
+//Local Function Prototypes
+void userInitialConfiguration(void);
+
+//Global Variables 
+bool initialConfigurationDone = false;
 
 
 void setup() 
 {
-    //Verifying state of battery first start 
-
-    //Initialization of all classes. 
-    
+    while (false == initialConfigurationDone)
+    {
+        /* User Initial Confiuration */
+         userInitialConfiguration();
+    }
     
 }
 
@@ -58,3 +74,30 @@ void loop()
 }
 
 
+
+
+//Local Functions 
+void userInitialConfiguration(void)
+{
+     if (energy.batteryChargePercentage < MINIMUM_BATTERY_PERCENTAGE)
+    {
+        lcd.metadataTodisplayInLCD("System discharged please, plug in to source power", LEFT_ALIGNED_X, MIDDLE_Y);
+        delay(2000);
+        energy.turnOffDevice();
+    }
+    else
+    {
+        lcd.metadataTodisplayInLCD("Initial Setup",CENTERED_X,TOP_Y);
+        lcd.metadataTodisplayInLCD("Time & Zone",LEFT_ALIGNED_X,MIDDLE_Y);
+        delay(1000);
+        if (buttons.buttonPressed() == OK_BUTTON )
+        {
+             lcd.metadataTodisplayInLCD("Time & Zone - Menu",CENTERED_X,TOP_Y);
+             lcd.metadataTodisplayInLCD("",LEFT_ALIGNED_X,TOP_Y);
+
+
+        }
+    }
+
+
+}

@@ -19,10 +19,10 @@ class energyManagementClass{
 
     private:
     //Private attributes
-    int activationPinRelayOff = 13;
-    int activationPinRelayBatteryCharge = 12;
-    int resetDevicePin = 11;
-    double voltageMeasuredBattery = 10;
+    int activationPinRelayOff = 2;
+    int activationPinRelayBatteryCharge = 3;
+    int resetDevicePin = 4;
+    double voltageMeasuredBattery;
     
 
     // Private Methods

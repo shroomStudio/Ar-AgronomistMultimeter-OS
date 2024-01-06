@@ -32,12 +32,14 @@ void lcdDisplayClass::initialDisplaySetup(void)
     // Clear the screen by filling it with black pixels
     nokia5110.clear();
     delay(2000);
-    metadataTodisplayInLCD("ShroomCorp",CENTERED_X,MIDDLE_Y);
+   metadataTodisplayInLCD("ShroomCorp",CENTERED_X,MIDDLE_Y);
 }
 
 //Public methods
-void lcdDisplayClass::metadataTodisplayInLCD(String text, COORDINATES_X_DISCPLAY_ENUM xCoordinate, COORDINATES_Y_DISCPLAY_ENUM yCoordinate)
+void metadataTodisplayInLCD(String text, COORDINATES_X_DISCPLAY_ENUM xCoordinate, COORDINATES_Y_DISCPLAY_ENUM yCoordinate)
 {
+    //int customCoordinates = (int)yCoordinate + increaseOrReduceRow;
+
     const char* textInChar = text.c_str();
     nokia5110.setCursor(xCoordinate,yCoordinate);
     nokia5110.println(*textInChar);
