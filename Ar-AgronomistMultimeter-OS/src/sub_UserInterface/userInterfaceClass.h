@@ -2,7 +2,7 @@
 #define USERINTERFACECLASS_H
 
 #include <Arduino.h>
-#include "commonDataTypes.h"
+#include <EEPROM.h>
 
 class userInterfaceClass{
 
@@ -16,7 +16,11 @@ class userInterfaceClass{
     
     private:
     //Private Attributes
+    bool initialConfigurationDone = false;
     //Private Methods
+    uint8_t VariableFromEEPROM_Get(uint8_t address);
+    void VariableToEEPROM_Set(uint8_t address, uint8_t variable);
+    void resetEEPROM(void); 
 };
 
 #endif

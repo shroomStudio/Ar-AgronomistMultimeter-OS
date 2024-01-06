@@ -1,9 +1,10 @@
 #include "userInterfaceClass.h"
-#include <sub_EnergyManagement/energyManagementClass.h>
+#include "commonDataTypes.h"
 #include "lcdDisplayClass.h"
 #include "buttonsClass.h"
 #include "usbConecttionClass.h"
 #include <sub_SensingManagement/sensingClass.h>
+#include <sub_EnergyManagement/energyManagementClass.h>
 #include <sub_SignalConditioning/signalConditioningClass.h>
 
 // Class instances.
@@ -14,11 +15,10 @@ usbConecttionClass usb;
 sensingClass sensing;
 signalConditioningClass conditioningSignals;
 
-//Global Variables 
-bool initialConfigurationDone = false;
-
 userInterfaceClass::userInterfaceClass(){
+
     // Constructor class usbConecttionClass
+    VariableToEEPROM_Set(0, initialConfigurationDone);
 
     energy.voltageBatteryMonitor();
 }
@@ -27,6 +27,35 @@ userInterfaceClass::~userInterfaceClass(){
     //Destructor class usbConecttionClass
 }
 
+uint8_t userInterfaceClass::VariableFromEEPROM_Get(uint8_t address) 
+{
+  uint8_t readValue = 0;
+
+  EEPROM.get(address, readValue);
+
+  return readValue;
+}
+
+void userInterfaceClass::VariableToEEPROM_Set(uint8_t address, uint8_t variable) 
+{
+  // Save the variable to EEPROM
+  EEPROM.put(address, variable);
+}
+
+
+
+void userInterfaceClass::resetEEPROM(void)
+{
+    uint8_t memoryLength = static_cast<uint8_t>(EEPROM.length());
+
+    // Reset the EEPROM (for testing purposes)
+    for (int i = 0; i < memoryLength; i++) 
+    {
+        EEPROM.write(i, 255);  // Write 255 to each EEPROM address
+    }
+    
+    Serial.println("EEPROM Reset");
+}
 
 //Local Functions 
 void userInterfaceClass::userInitialConfiguration(void)
@@ -59,5 +88,6 @@ void userInterfaceClass::userInitialConfiguration(void)
                 lcd.metadataTodisplayInLCDAdvanceCursor("Save and continue",LEFT_ALIGNED_X,TOP_Y,0,6);
             }
         }
+        initialConfigurationDone = true;
     }  
 }
