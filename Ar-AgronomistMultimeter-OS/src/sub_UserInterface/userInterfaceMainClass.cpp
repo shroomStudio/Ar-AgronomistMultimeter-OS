@@ -57,7 +57,7 @@ bool initialConfigurationDone = false;
 
 void setup() 
 {
-    while (false == initialConfigurationDone)
+    if (false == initialConfigurationDone)
     {
         /* User Initial Confiuration */
          userInitialConfiguration();
@@ -93,9 +93,8 @@ void userInitialConfiguration(void)
         if (buttons.buttonPressed() == OK_BUTTON )
         {
              lcd.metadataTodisplayInLCD("Time & Zone - Menu",CENTERED_X,TOP_Y);
-             lcd.metadataTodisplayInLCD("",LEFT_ALIGNED_X,TOP_Y);
-
-
+             lcd.metadataTodisplayInLCDAdvanceCursor("Date",LEFT_ALIGNED_X,TOP_Y,0,3);
+             lcd.metadataTodisplayInLCDAdvanceCursor("Date",LEFT_ALIGNED_X,TOP_Y,0,3);
         }
     }
 
