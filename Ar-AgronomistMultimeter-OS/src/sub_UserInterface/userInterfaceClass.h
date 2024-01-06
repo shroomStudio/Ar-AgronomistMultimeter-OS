@@ -5,13 +5,14 @@
 #include "commonDataTypes.h"
 
 class userInterfaceClass{
-    
+
     public:
     userInterfaceClass();
     ~userInterfaceClass();
 
     //Public Attributtes 
     //Public Attributes
+    void userInitialConfiguration(void);
     
     private:
     //Private Attributes
