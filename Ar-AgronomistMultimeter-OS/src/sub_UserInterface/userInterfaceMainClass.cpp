@@ -12,26 +12,16 @@
 #include "commonDataTypes.h"
 #include "userInterfaceClass.h"
 
+//Namespaces 
+using namespace std;
 
 // Class instances
 userInterfaceClass userInterface;
 
-
-//Namespaces 
-using namespace std;
-
-//Global Variables 
-bool initialConfigurationDone = false;
-
-
 void setup() 
 {
-    if (false == initialConfigurationDone)
-    {
-        /* User Initial Confiuration */
-         userInterface.userInitialConfiguration();
-    }
-    
+    /* User Initial Confiuration */
+    userInterface.userInitialConfiguration();
 }
 
 void loop()
