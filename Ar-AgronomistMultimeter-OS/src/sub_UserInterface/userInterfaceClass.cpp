@@ -1,11 +1,12 @@
+#include <EEPROM.h>
+#include <sub_SensingManagement/sensingClass.h>
+#include <sub_EnergyManagement/energyManagementClass.h>
+#include <sub_SignalConditioning/signalConditioningClass.h>
 #include "userInterfaceClass.h"
 #include "commonDataTypes.h"
 #include "lcdDisplayClass.h"
 #include "buttonsClass.h"
 #include "usbConecttionClass.h"
-#include <sub_SensingManagement/sensingClass.h>
-#include <sub_EnergyManagement/energyManagementClass.h>
-#include <sub_SignalConditioning/signalConditioningClass.h>
 
 // Class instances.
 energyManagementClass energy;
@@ -18,7 +19,7 @@ signalConditioningClass conditioningSignals;
 userInterfaceClass::userInterfaceClass(){
 
     // Constructor class usbConecttionClass
-    VariableToEEPROM_Set(0, initialConfigurationDone);
+    initialConfigurationDone = VariableFromEEPROM_Get(0);
 
     energy.voltageBatteryMonitor();
 }
@@ -89,5 +90,6 @@ void userInterfaceClass::userInitialConfiguration(void)
             }
         }
         initialConfigurationDone = true;
+        VariableToEEPROM_Set(0,initialConfigurationDone);
     }  
 }
