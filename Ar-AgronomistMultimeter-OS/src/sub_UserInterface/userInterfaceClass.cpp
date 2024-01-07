@@ -7,6 +7,7 @@
 #include "lcdDisplayClass.h"
 #include "buttonsClass.h"
 #include "usbConecttionClass.h"
+#include "ExternalLibraries/LcdMenu.h"
 
 // Class instances.
 energyManagementClass energy;
@@ -87,9 +88,43 @@ void userInterfaceClass::userInitialConfiguration(void)
                 lcd.metadataTodisplayInLCDAdvanceCursor("TIME ZONE",LEFT_ALIGNED_X,TOP_Y,0,5);
                 lcd.metadataTodisplayInLCDAdvanceCursor("AMERICAS",LEFT_ALIGNED_X,TOP_Y,3,5);
                 lcd.metadataTodisplayInLCDAdvanceCursor("Save and continue",LEFT_ALIGNED_X,TOP_Y,0,6);
+                initialConfigurationMenuNavigation();
             }
         }
         initialConfigurationDone = true;
         VariableToEEPROM_Set(0,initialConfigurationDone);
     }  
+}
+
+void userInterfaceClass::initialConfigurationMenuNavigation(void)
+{
+    uint8_t indexXcursor = 0;
+    uint8_t indexYcursor = 3;
+    /* Coordinates in the enum for consulting purposes 
+    //Coordinates on the x-axis, can be between 0 and 83
+    LEFT_ALIGNED_X = 0, 
+    CENTERED_X = 20, 
+    RIGHT_ALIGNED_X = 60
+    TOP_Y = 0, 
+    MIDDLE_Y = 3, 
+    BOTTOM_Y = 5
+    */
+    lcd.moveCursor(indexXcursor,indexYcursor);
+    switch (buttons.buttonPressed())
+    {
+    case UP_BUTTON:
+        /* code */
+        break;
+    case DOWN_BUTTON:
+        /* code */
+        break;
+    case BACK_BUTTON:
+        /* code */
+        break;
+    case OK_BUTTON:
+        /* code */
+        break;
+    default:
+        break;
+    }
 }
