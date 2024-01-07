@@ -8,6 +8,7 @@
 #include "buttonsClass.h"
 #include "usbConecttionClass.h"
 #include "ExternalLibraries/LcdMenu.h"
+#include "ExternalLibraries/utils/commandProccesors.h"
 
 // Class instances.
 energyManagementClass energy;
