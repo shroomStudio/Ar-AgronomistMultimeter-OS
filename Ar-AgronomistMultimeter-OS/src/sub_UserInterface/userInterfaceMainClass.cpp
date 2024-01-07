@@ -20,6 +20,7 @@ userInterfaceClass userInterface;
 
 void setup() 
 {
+    Serial.begin(9600);
     /* User Initial Confiuration */
     userInterface.userInitialConfiguration();
 }
