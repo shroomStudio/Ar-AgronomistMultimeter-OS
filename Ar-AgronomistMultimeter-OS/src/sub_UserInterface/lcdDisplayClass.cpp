@@ -15,6 +15,7 @@ int lightLcdPin = 9;
 //LCD class
 lcdDisplayClass::lcdDisplayClass(){
     //Constructor lcdDisplayClass
+    initialDisplaySetup();
 }
 lcdDisplayClass::~lcdDisplayClass(){
     //destructor lcdDisplayClass
@@ -30,14 +31,31 @@ void lcdDisplayClass::initialDisplaySetup(void)
     nokia5110.setContrast(60);  // Good values are usualy between 40 and 60
     // Clear the screen by filling it with black pixels
     nokia5110.clear();
+    delay(2000);
+   metadataTodisplayInLCD("ShroomCorp",CENTERED_X,MIDDLE_Y);
 }
 
 //Public methods
-void lcdDisplayClass::metadataTodisplayInLCD(String)
+void lcdDisplayClass::metadataTodisplayInLCD(String text, COORDINATES_X_DISCPLAY_ENUM xCoordinate, COORDINATES_Y_DISCPLAY_ENUM yCoordinate)
 {
-
+    const char* textInChar = text.c_str();
+    nokia5110.setCursor(xCoordinate,yCoordinate);
+    nokia5110.println(*textInChar);
 }
-void lcdDisplayClass::navigationLCD(int changeForEnumInButtons)
-{
 
+
+void lcdDisplayClass::metadataTodisplayInLCDAdvanceCursor(String text, COORDINATES_X_DISCPLAY_ENUM xCoordinate, 
+                                            COORDINATES_Y_DISCPLAY_ENUM yCoordinate, uint8_t advanceXcoordinate, uint8_t advanceYCoordinate)
+{
+    uint8_t customXCoordinates = (uint8_t)xCoordinate + advanceXcoordinate;
+    uint8_t customYCoordinates = (uint8_t)yCoordinate + advanceYCoordinate;
+
+    const char* textInChar = text.c_str();
+    nokia5110.setCursor(customXCoordinates,customYCoordinates);
+    nokia5110.println(*textInChar);
+}
+
+void lcdDisplayClass::moveCursor(uint8_t xCoordinates, uint8_t yCoordinates)
+{
+    nokia5110.setCursor(xCoordinates,yCoordinates);
 }

@@ -18,6 +18,8 @@ energyManagementClass::energyManagementClass(){
     pinMode(resetDevicePin, OUTPUT);
     //Pin to read the voltage in the battery
     pinMode(voltageMeasuredBattery, INPUT);
+
+    initialSetUpEnergyManagament();
 }
 
 energyManagementClass::~energyManagementClass(){
@@ -43,7 +45,7 @@ void energyManagementClass::initialSetUpEnergyManagament(void)
    if(batteryChargePercentage <= MINIMUM_BATTERY_PERCENTAJE)
    {
     // Inform te user the system will be shut down
-    lcdEnergy.metadataTodisplayInLCD("System Discharged, please connect device to power source");
+    //lcdEnergy.metadataTodisplayInLCD("System Discharged, please connect device to power source");
     //Wait 2 seconds before to shut down the device
     delay(2000);  
     //shutdown device
@@ -54,7 +56,7 @@ void energyManagementClass::initialSetUpEnergyManagament(void)
 //Public Methods
 void energyManagementClass::turnOffDevice(void)
 {
-    lcdEnergy.metadataTodisplayInLCD("Shutting down device - See you");
+   // lcdEnergy.metadataTodisplayInLCD("Shutting down device - See you");
     //Wait 2 seconds before to shut down the device
     delay(2000);  
     //shutdown device
@@ -63,7 +65,7 @@ void energyManagementClass::turnOffDevice(void)
 }
 void energyManagementClass::resetDevice(void)
 {
-    lcdEnergy.metadataTodisplayInLCD("Restarting device - Please wait");
+    //lcdEnergy.metadataTodisplayInLCD("Restarting device - Please wait");
     delay(2000);  
     //restartng device
     digitalWrite(activationPinRelayOff, HIGH);

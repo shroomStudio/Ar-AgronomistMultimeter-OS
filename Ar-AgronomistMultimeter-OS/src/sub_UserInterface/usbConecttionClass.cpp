@@ -3,6 +3,7 @@
 
 usbConecttionClass::usbConecttionClass(){
     // Constructor class usbConecttionClass
+    initialUsbConfiguration();
 }
 
 usbConecttionClass::~usbConecttionClass(){
