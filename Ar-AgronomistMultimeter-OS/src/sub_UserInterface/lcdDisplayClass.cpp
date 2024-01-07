@@ -55,3 +55,7 @@ void lcdDisplayClass::metadataTodisplayInLCDAdvanceCursor(String text, COORDINAT
     nokia5110.println(*textInChar);
 }
 
+void lcdDisplayClass::moveCursor(uint8_t xCoordinates, uint8_t yCoordinates)
+{
+    nokia5110.setCursor(xCoordinates,yCoordinates);
+}
