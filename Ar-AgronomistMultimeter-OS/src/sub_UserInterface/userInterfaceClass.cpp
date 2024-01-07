@@ -8,21 +8,35 @@
 #include "buttonsClass.h"
 #include "usbConecttionClass.h"
 #include "ExternalLibraries/LcdMenu.h"
+#include "ExternalLibraries/ItemSubMenu.h"
 #include "ExternalLibraries/utils/commandProccesors.h"
 
 // Class instances.
 energyManagementClass energy;
+LcdMenu menu(LCD_ROWS, LCD_COLS);
 lcdDisplayClass lcd;
 buttonsClass buttons;
 usbConecttionClass usb;
 sensingClass sensing;
 signalConditioningClass conditioningSignals;
 
+// Constructionc of main menu and submenus when is the first time the 
+extern MenuItem* timeZoneMenu[];
+
+MAIN_MENU(
+    ITEM_BASIC("Initial Setup"),
+    ITEM_SUBMENU("Time & Zone", timeZoneMenu)   
+);
+
+SUB_MENU(timeZoneMenu, mainMenu,
+    ITEM_BASIC("Date"),
+    ITEM_BASIC("TIME"),
+    ITEM_BASIC("TIME ZONE"),
+    ITEM_BASIC("Save and continue")
+);   
+
 userInterfaceClass::userInterfaceClass(){
-
-    // Constructor class usbConecttionClass
     initialConfigurationDone = VariableFromEEPROM_Get(0);
-
     energy.voltageBatteryMonitor();
 }
 
@@ -44,8 +58,6 @@ void userInterfaceClass::VariableToEEPROM_Set(uint8_t address, uint8_t variable)
   // Save the variable to EEPROM
   EEPROM.put(address, variable);
 }
-
-
 
 void userInterfaceClass::resetEEPROM(void)
 {
@@ -73,59 +85,12 @@ void userInterfaceClass::userInitialConfiguration(void)
         }
         else
         {
-            lcd.metadataTodisplayInLCD("Initial Setup",CENTERED_X,TOP_Y);
-            lcd.metadataTodisplayInLCD("Time & Zone",LEFT_ALIGNED_X,MIDDLE_Y);
-            delay(1000);
             if (buttons.buttonPressed() == OK_BUTTON )
             {
-            // time and Zone Main Menu
-                lcd.metadataTodisplayInLCD("Time & Zone - Menu",CENTERED_X,TOP_Y);
-                lcd.metadataTodisplayInLCDAdvanceCursor("Date",LEFT_ALIGNED_X,TOP_Y,0,3);
-                lcd.metadataTodisplayInLCDAdvanceCursor("MM/DD/YYYY",LEFT_ALIGNED_X,TOP_Y,3,3);
-                lcd.metadataTodisplayInLCDAdvanceCursor("TIME",LEFT_ALIGNED_X,TOP_Y,0,4);
-                lcd.metadataTodisplayInLCDAdvanceCursor("00:00",LEFT_ALIGNED_X,TOP_Y,3,4);
-                lcd.metadataTodisplayInLCDAdvanceCursor("TIME ZONE",LEFT_ALIGNED_X,TOP_Y,0,5);
-                lcd.metadataTodisplayInLCDAdvanceCursor("AMERICAS",LEFT_ALIGNED_X,TOP_Y,3,5);
-                lcd.metadataTodisplayInLCDAdvanceCursor("TIME ZONE",LEFT_ALIGNED_X,TOP_Y,0,5);
-                lcd.metadataTodisplayInLCDAdvanceCursor("AMERICAS",LEFT_ALIGNED_X,TOP_Y,3,5);
-                lcd.metadataTodisplayInLCDAdvanceCursor("Save and continue",LEFT_ALIGNED_X,TOP_Y,0,6);
-                initialConfigurationMenuNavigation();
+            //TODO: time and Zone Main Menu to be done
             }
+            initialConfigurationDone = true;
+            VariableToEEPROM_Set(0,initialConfigurationDone);
         }
-        initialConfigurationDone = true;
-        VariableToEEPROM_Set(0,initialConfigurationDone);
     }  
-}
-
-void userInterfaceClass::initialConfigurationMenuNavigation(void)
-{
-    uint8_t indexXcursor = 0;
-    uint8_t indexYcursor = 3;
-    /* Coordinates in the enum for consulting purposes 
-    //Coordinates on the x-axis, can be between 0 and 83
-    LEFT_ALIGNED_X = 0, 
-    CENTERED_X = 20, 
-    RIGHT_ALIGNED_X = 60
-    TOP_Y = 0, 
-    MIDDLE_Y = 3, 
-    BOTTOM_Y = 5
-    */
-    lcd.moveCursor(indexXcursor,indexYcursor);
-    switch (buttons.buttonPressed())
-    {
-    case UP_BUTTON:
-        /* code */
-        break;
-    case DOWN_BUTTON:
-        /* code */
-        break;
-    case BACK_BUTTON:
-        /* code */
-        break;
-    case OK_BUTTON:
-        /* code */
-        break;
-    default:
-        break;
-    }
 }

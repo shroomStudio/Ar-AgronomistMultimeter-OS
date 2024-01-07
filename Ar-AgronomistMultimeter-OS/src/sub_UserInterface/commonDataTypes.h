@@ -28,6 +28,8 @@ Pin2    Activation Pin Relay Off
 #define ZERO 0
 #define INDEX_PLUS_ONE 1
 #define INDEX_LESS_ONE -1
+#define LCD_ROWS 60
+#define LCD_COLS 5
 
 //Enumerations 
 typedef enum 
