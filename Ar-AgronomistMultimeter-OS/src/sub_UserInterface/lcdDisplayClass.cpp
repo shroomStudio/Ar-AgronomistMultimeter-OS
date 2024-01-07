@@ -55,7 +55,3 @@ void lcdDisplayClass::metadataTodisplayInLCDAdvanceCursor(String text, COORDINAT
     nokia5110.println(*textInChar);
 }
 
-void lcdDisplayClass::navigationLCD(int changeForEnumInButtons)
-{
-
-}

@@ -15,7 +15,6 @@ class lcdDisplayClass{
     void metadataTodisplayInLCD(String text, COORDINATES_X_DISCPLAY_ENUM xCoordinate, COORDINATES_Y_DISCPLAY_ENUM yCoordinate);
     void metadataTodisplayInLCDAdvanceCursor(String text, COORDINATES_X_DISCPLAY_ENUM xCoordinate, 
                                             COORDINATES_Y_DISCPLAY_ENUM yCoordinate, uint8_t advanceXcoordinate, uint8_t advanceYCoordinate);
-    void navigationLCD(int changeForEnumInButtons);
 
     private:
     //Private attributes

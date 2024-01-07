@@ -13,6 +13,7 @@ volatile uint8_t previousButtonstates[4] = {LOW,LOW,LOW,LOW};
 buttonsClass::buttonsClass(){
     //Constructor class buttonsClass
    initialButtonsSetup();
+   navigationButtons();
 }
 
 buttonsClass:: ~buttonsClass(){
