@@ -27,7 +27,8 @@ extern MenuItem* temperatureSensing[];
 extern MenuItem* atmosphericSensing[];
 extern MenuItem* files[];
 extern MenuItem* configurations[];
-
+// Local Methods Prototypes
+void displaySensingInstruction(char* input);
 
 MAIN_MENU
 (
@@ -39,7 +40,7 @@ MAIN_MENU
 );
 
 SUB_MENU(macronutrientsSensing, mainMenu,
-    ITEM_BASIC("Date"),
+    ITEM_INPUT("Sensing instrucctions", displaySensingInstruction),
     ITEM_BASIC("Save and continue")
 );   
 SUB_MENU(temperatureSensing, mainMenu,
@@ -130,4 +131,13 @@ void userInterfaceClass::userMainMenu(void)
 
     //Method to interact whit the user 
     processMenuCommand(menu, command, UP_BUTTON, DOWN_BUTTON, OK_BUTTON, BACK_BUTTON);
+}
+
+
+void displaySensingInstruction(char* input)
+{
+    //Input not neccesary at this point operation done to avoid warning
+    input = "0"; 
+
+
 }
