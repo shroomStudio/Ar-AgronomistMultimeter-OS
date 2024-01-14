@@ -95,7 +95,7 @@ void userInterfaceClass::resetEEPROM(void)
     Serial.println("EEPROM Reset");
 }
 
-//Local Functions 
+//Local Methods
 void userInterfaceClass::userInitialConfiguration(void)
 {
     if(false == initialConfigurationDone)
@@ -116,4 +116,10 @@ void userInterfaceClass::userInitialConfiguration(void)
             VariableToEEPROM_Set(0,initialConfigurationDone);
         }
     }  
+}
+
+//Local Methods
+void userInterfaceClass::userMainMenu(void)
+{
+   
 }

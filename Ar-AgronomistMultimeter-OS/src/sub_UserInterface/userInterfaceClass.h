@@ -13,6 +13,7 @@ class userInterfaceClass{
     //Public Attributtes 
     //Public Attributes
     void userInitialConfiguration(void);
+    void userMainMenu(void);
     
     private:
     //Private Attributes
