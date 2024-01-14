@@ -121,7 +121,12 @@ void userInterfaceClass::userInitialConfiguration(void)
 //Local Methods
 void userInterfaceClass::userMainMenu(void)
 {
+    // Variable to Read the user Input
     char command = static_cast<char>(buttons.buttonPressed());
     
+    //Setting up the main menu in the LCD
+    menu.setupLcdWithMenu(0x27, mainMenu);
+
+    //Method to interact whit the user 
     processMenuCommand(menu, command, UP_BUTTON, DOWN_BUTTON, OK_BUTTON, BACK_BUTTON);
 }
