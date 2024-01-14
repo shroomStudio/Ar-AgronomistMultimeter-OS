@@ -21,17 +21,40 @@ sensingClass sensing;
 signalConditioningClass conditioningSignals;
 
 // Constructionc of main menu and submenus when is the first time the 
-extern MenuItem* timeZoneMenu[];
+extern MenuItem* macronutrientsSensing[];
+extern MenuItem* temperatureSensing[];
+extern MenuItem* atmosphericSensing[];
+extern MenuItem* files[];
+extern MenuItem* configurations[];
 
-MAIN_MENU(
-    ITEM_BASIC("Initial Setup"),
-    ITEM_SUBMENU("Time & Zone", timeZoneMenu)   
+
+MAIN_MENU
+(
+    ITEM_SUBMENU("Macronutrients Sensing",macronutrientsSensing),
+    ITEM_SUBMENU("Temperature Sensing"   ,temperatureSensing),
+    ITEM_SUBMENU("Atmospheric Sensing"   ,atmosphericSensing),
+    ITEM_SUBMENU("sensing records"       ,files),
+    ITEM_SUBMENU("Configurations"        ,configurations)
 );
 
-SUB_MENU(timeZoneMenu, mainMenu,
+SUB_MENU(macronutrientsSensing, mainMenu,
     ITEM_BASIC("Date"),
-    ITEM_BASIC("TIME"),
-    ITEM_BASIC("TIME ZONE"),
+    ITEM_BASIC("Save and continue")
+);   
+SUB_MENU(temperatureSensing, mainMenu,
+    ITEM_BASIC("Date"),
+    ITEM_BASIC("Save and continue")
+);   
+SUB_MENU(atmosphericSensing, mainMenu,
+    ITEM_BASIC("Date"),
+    ITEM_BASIC("Save and continue")
+);   
+SUB_MENU(files, mainMenu,
+    ITEM_BASIC("Date"),
+    ITEM_BASIC("Save and continue")
+);   
+SUB_MENU(configurations, mainMenu,
+    ITEM_BASIC("Date"),
     ITEM_BASIC("Save and continue")
 );   
 
