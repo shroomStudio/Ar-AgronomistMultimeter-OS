@@ -10,6 +10,7 @@
 #include "ExternalLibraries/LcdMenu.h"
 #include "ExternalLibraries/ItemSubMenu.h"
 #include "ExternalLibraries/utils/commandProccesors.h"
+#include "ExternalLibraries/ItemInput.h"
 
 // Class instances.
 energyManagementClass energy;
