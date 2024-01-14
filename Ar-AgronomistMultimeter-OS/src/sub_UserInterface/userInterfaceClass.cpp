@@ -121,5 +121,7 @@ void userInterfaceClass::userInitialConfiguration(void)
 //Local Methods
 void userInterfaceClass::userMainMenu(void)
 {
-   
+    char command = static_cast<char>(buttons.buttonPressed());
+    
+    processMenuCommand(menu, command, UP_BUTTON, DOWN_BUTTON, OK_BUTTON, BACK_BUTTON);
 }
