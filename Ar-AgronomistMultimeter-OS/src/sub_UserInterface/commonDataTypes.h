@@ -34,11 +34,11 @@ Pin2    Activation Pin Relay Off
 //Enumerations 
 typedef enum 
 {
-    UP_BUTTON = 0,
-    DOWN_BUTTON,
-    BACK_BUTTON,
-    OK_BUTTON,
-    NO_BUTTON = 15,
+    UP_BUTTON = 56,
+    DOWN_BUTTON = 50,
+    BACK_BUTTON = 55,
+    OK_BUTTON = 53,
+    NO_BUTTON = 255,
 }BUTTON_PRESSED;
 typedef enum 
 {
