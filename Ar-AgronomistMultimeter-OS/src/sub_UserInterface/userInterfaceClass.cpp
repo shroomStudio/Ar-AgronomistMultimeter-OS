@@ -136,8 +136,30 @@ void userInterfaceClass::userMainMenu(void)
 
 void displaySensingInstruction(char* input)
 {
-    //Input not neccesary at this point operation done to avoid warning
-    input = "0"; 
+    int lineNumber = 0;
+    int lastLIne = 0;
+    char addressOfInstructtions[] = "Hello, Arduino!\nThis is a text file content.";
+    char* fileContentCopy = strdup(addressOfInstructtions);
+    const char* token = strtok(fileContentCopy, "\n");
 
+    while (token != NULL) 
+    {
+        lcd.metadataTodisplayInLCDAdvanceCursor(token,LEFT_ALIGNED_X,TOP_Y,0,(lineNumber + 1));
+        delay(1000);  // Adjust delay based on your preferences
+        lineNumber++;
+        token = strtok(NULL, "\n");
+    }
+   
+    if (lastLIne ==lineNumber)
+    {
 
+        
+    }
+    else 
+    {
+
+        lastLIne++;
+    }
+
+  free(fileContentCopy);
 }
