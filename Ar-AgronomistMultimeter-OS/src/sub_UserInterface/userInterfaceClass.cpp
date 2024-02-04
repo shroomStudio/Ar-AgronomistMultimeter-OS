@@ -136,6 +136,7 @@ void userInterfaceClass::userMainMenu(void)
 
 void displaySensingInstruction(char* input)
 {
+    /* TODO: To be implemented in User interface creation
     int lineNumber = 0;
     int lastLIne = 0;
     char addressOfInstructtions[] = "Hello, Arduino!\nThis is a text file content.";
@@ -162,4 +163,6 @@ void displaySensingInstruction(char* input)
     }
 
   free(fileContentCopy);
+  */
 }
+
