@@ -176,7 +176,6 @@ void startSensingProcess(char* input)
     else 
     {
         lcd.metadataTodisplayInLCD("the battery must has at least 10 percent of charge", LEFT_ALIGNED_X, MIDDLE_Y);
-
     }
 }
 
