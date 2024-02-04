@@ -7,10 +7,6 @@ sensingClass::~sensingClass(){
     //destructor sensing class
 }
 
-void sensingProcessSelected(SENSING_PROCESS process)
-{
-
-}
 void sensingClass::macronutrientSensingProcess()
 {
 

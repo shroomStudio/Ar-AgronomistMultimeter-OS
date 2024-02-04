@@ -29,6 +29,7 @@ extern MenuItem* files[];
 extern MenuItem* configurations[];
 // Local Methods Prototypes
 void displaySensingInstruction(char* input);
+void startSensingProcess(char* input);
 
 MAIN_MENU
 (
@@ -41,7 +42,7 @@ MAIN_MENU
 
 SUB_MENU(macronutrientsSensing, mainMenu,
     ITEM_INPUT("Sensing instrucctions", displaySensingInstruction),
-    ITEM_BASIC("Save and continue")
+    ITEM_INPUT("Sensing Process", startSensingProcess)
 );   
 SUB_MENU(temperatureSensing, mainMenu,
     ITEM_BASIC("Date"),
@@ -164,5 +165,18 @@ void displaySensingInstruction(char* input)
 
   free(fileContentCopy);
   */
+}
+
+void startSensingProcess(char* input)
+{
+    if ( energy.batteryChargePercentage >= MINIMUM_TO_SENSING)
+    {
+        sensing.macronutrientSensingProcess();
+    }
+    else 
+    {
+        lcd.metadataTodisplayInLCD("the battery must has at least 10 percent of charge", LEFT_ALIGNED_X, MIDDLE_Y);
+
+    }
 }
 
