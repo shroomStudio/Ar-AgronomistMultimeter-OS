@@ -42,12 +42,12 @@ void sensingClass::macronutrientSensingProcess()
         lcdSensing.metadataTodisplayInLCDAdvanceCursor
         ("...",LEFT_ALIGNED_X,TOP_Y,0,1);
         delay(2000);
+        nitrogenSensingProcess();
+        phosphorusSensingProcess();
+        potassiumSensingProcess();
 
+        sensingProcessFinished = true;
     }
-
-    
-
-
 }
 void sensingClass::temperatureSensingProcess()
 {
@@ -75,5 +75,5 @@ void phosphorusSensingProcess(void)
 }
 void potassiumSensingProcess(void)
 {
-    
+
 }
