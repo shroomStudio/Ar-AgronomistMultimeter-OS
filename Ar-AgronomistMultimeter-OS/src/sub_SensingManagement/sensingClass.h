@@ -3,6 +3,15 @@
 
 #include <Arduino.h>
 
+//Definitions
+const int photodiodeInput  = A0; 
+const int photodiodeOutput = A1; 
+const int redLedPin        = A2;
+const int yellowLedPin     = A3;
+const int blueLedPin       = A4;
+const int infraredLedPin   = A5;
+
+
 typedef enum 
 {
     MACRONUTRIENT,
@@ -34,12 +43,6 @@ class sensingClass{
 
     private:
     //Private attributes
-    int redLedPin;
-    int yellowLedPin;
-    int blueLedPin;
-    int infraredLedPin;
-    int photodiodePinOut;
-    int photodiodePinIn;
     int serialTx;
     int serialRx;
     double serialSelector;
