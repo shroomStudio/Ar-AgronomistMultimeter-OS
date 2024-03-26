@@ -10,6 +10,7 @@
 #include "ExternalLibraries/LcdMenu.h"
 #include "ExternalLibraries/ItemSubMenu.h"
 #include "ExternalLibraries/utils/commandProccesors.h"
+#include "ExternalLibraries/ItemInput.h"
 
 // Class instances.
 energyManagementClass energy;
@@ -26,7 +27,9 @@ extern MenuItem* temperatureSensing[];
 extern MenuItem* atmosphericSensing[];
 extern MenuItem* files[];
 extern MenuItem* configurations[];
-
+// Local Methods Prototypes
+void displaySensingInstruction(char* input);
+void startSensingProcess(char* input);
 
 MAIN_MENU
 (
@@ -38,8 +41,8 @@ MAIN_MENU
 );
 
 SUB_MENU(macronutrientsSensing, mainMenu,
-    ITEM_BASIC("Date"),
-    ITEM_BASIC("Save and continue")
+    ITEM_INPUT("Sensing instrucctions", displaySensingInstruction),
+    ITEM_INPUT("Sensing Process", startSensingProcess)
 );   
 SUB_MENU(temperatureSensing, mainMenu,
     ITEM_BASIC("Date"),
@@ -121,7 +124,58 @@ void userInterfaceClass::userInitialConfiguration(void)
 //Local Methods
 void userInterfaceClass::userMainMenu(void)
 {
+    // Variable to Read the user Input
     char command = static_cast<char>(buttons.buttonPressed());
     
+    //Setting up the main menu in the LCD
+    menu.setupLcdWithMenu(0x27, mainMenu);
+
+    //Method to interact whit the user 
     processMenuCommand(menu, command, UP_BUTTON, DOWN_BUTTON, OK_BUTTON, BACK_BUTTON);
 }
+
+
+void displaySensingInstruction(char* input)
+{
+    /* TODO: To be implemented in User interface creation
+    int lineNumber = 0;
+    int lastLIne = 0;
+    char addressOfInstructtions[] = "Hello, Arduino!\nThis is a text file content.";
+    char* fileContentCopy = strdup(addressOfInstructtions);
+    const char* token = strtok(fileContentCopy, "\n");
+
+    while (token != NULL) 
+    {
+        lcd.metadataTodisplayInLCDAdvanceCursor(token,LEFT_ALIGNED_X,TOP_Y,0,(lineNumber + 1));
+        delay(1000);  // Adjust delay based on your preferences
+        lineNumber++;
+        token = strtok(NULL, "\n");
+    }
+   
+    if (lastLIne ==lineNumber)
+    {
+
+        
+    }
+    else 
+    {
+
+        lastLIne++;
+    }
+
+  free(fileContentCopy);
+  */
+}
+
+void startSensingProcess(char* input)
+{
+    if ( energy.batteryChargePercentage >= MINIMUM_TO_SENSING)
+    {
+        sensing.macronutrientSensingProcess();
+    }
+    else 
+    {
+        lcd.metadataTodisplayInLCD("the battery must has at least 10 percent of charge", LEFT_ALIGNED_X, MIDDLE_Y);
+    }
+}
+

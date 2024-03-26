@@ -3,19 +3,28 @@
 
 #include <Arduino.h>
 
-enum SENSING_PROCESS
+//Definitions
+const int photodiodeInput  = A0; 
+const int photodiodeOutput = A1; 
+const int redLedPin        = A2;
+const int yellowLedPin     = A3;
+const int blueLedPin       = A4;
+const int infraredLedPin   = A5;
+
+
+typedef enum 
 {
     MACRONUTRIENT,
     TEMPERATURE,
     HUMIDITY,
     ATMOSPHERIC_PRESSURE
-};
-enum SENSOR_SERIAL
+}SENSING_PROCESS;
+typedef enum 
 {
     TEMPERATURE_SERIAL,
     HUMIDITY_SERIAL,
     ATMOSPHERIC_PRESSURE_SERIAL
-};
+}SENSOR_SERIAL;
 
 class sensingClass{
     public:
@@ -27,25 +36,18 @@ class sensingClass{
     double pressureSensor;
 
     //Public Methods
-    void sensingProcessSelected(SENSING_PROCESS process);
+    void macronutrientSensingProcess();
+    void temperatureSensingProcess();
+    void humiditySensingProces();
+    void atmosphericPressureSensingProcess();
 
     private:
     //Private attributes
-    int redLedPin;
-    int yellowLedPin;
-    int blueLedPin;
-    int infraredLedPin;
-    int photodiodePinOut;
-    int photodiodePinIn;
     int serialTx;
     int serialRx;
     double serialSelector;
 
     // Private Methods
-    void macronutrientSensingProcess();
-    void temperatureSensingProcess();
-    void humiditySensingProces();
-    void atmosphericPressureSensingProcess();
     void serialMiltiplexor(SENSOR_SERIAL sensor);
 };
 

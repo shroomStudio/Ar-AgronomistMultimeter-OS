@@ -20,6 +20,12 @@ Pin5    Back Push Button    Pull-Up Resistor
 Pin4    Reset Device Pin
 Pin3    Activation Pin Relay Battery Charge
 Pin2    Activation Pin Relay Off
+PinA0   Photodiode Input
+PinA1   Photoiode OutPut
+PinA2   red Led Pin
+PinA3   yellow Led Pin
+PinA4   blue Led Pin
+PinA5   infrared Led Pin
 */
 
 
@@ -30,6 +36,7 @@ Pin2    Activation Pin Relay Off
 #define INDEX_LESS_ONE -1
 #define LCD_ROWS 60
 #define LCD_COLS 5
+#define MINIMUM_TO_SENSING 10
 
 //Enumerations 
 typedef enum 
