@@ -36,38 +36,29 @@ void lcdDisplayClass::initialDisplaySetup(void)
     lcdNokia.clear();
 
    // Bold font example
-    lcdNokia.setCursor(0, 5);
+    lcdNokia.setCursor(0, 2);
     lcdNokia.setDefaultFont();
     lcdNokia.print("hello putos!");
-    //nokia5110.print("THello Putos\n");
-   //metadataTodisplayInLCD("ShroomCorp",CENTERED_X,MIDDLE_Y);*/
+    delay(2000);
+    metadataTodisplayInLCD("ShroomCorp\n",LEFT_ALIGNED_X,MIDDLE_Y,true);
+    delay(2000);
+    metadataTodisplayInLCD("loading",LEFT_ALIGNED_X,BOTTOM_Y,false);
 }
 
 //Public methods
-void lcdDisplayClass::metadataTodisplayInLCD(String text, COORDINATES_X_DISCPLAY_ENUM xCoordinate, COORDINATES_Y_DISCPLAY_ENUM yCoordinate)
+void lcdDisplayClass::metadataTodisplayInLCD(const char* text,COORDINATES_X_DISCPLAY_ENUM xCoordinates, COORDINATES_Y_DISCPLAY_ENUM yCoordinates,bool clearScreen)
 {
-    /*
-    const char* textInChar = text.c_str();
-    nokia5110.setCursor(xCoordinate,yCoordinate);
-    nokia5110.println(*textInChar);*/
-}
-/*
-
-void lcdDisplayClass::metadataTodisplayInLCDAdvanceCursor(String text, COORDINATES_X_DISCPLAY_ENUM xCoordinate, 
-                                            COORDINATES_Y_DISCPLAY_ENUM yCoordinate, uint8_t advanceXcoordinate, uint8_t advanceYCoordinate)
-{
-    uint8_t customXCoordinates = (uint8_t)xCoordinate + advanceXcoordinate;
-    uint8_t customYCoordinates = (uint8_t)yCoordinate + advanceYCoordinate;
-
-    const char* textInChar = text.c_str();
-    nokia5110.setCursor(customXCoordinates,customYCoordinates);
-    nokia5110.println(*textInChar);
+    if (true == clearScreen)
+    {
+        lcdNokia.clear();
+    }
+    
+    lcdNokia.setCursor(xCoordinates,yCoordinates);
+    lcdNokia.print(text);
 }
 
-*/
-/*
-void lcdDisplayClass::moveCursor(uint8_t xCoordinates, uint8_t yCoordinates)
+
+void lcdDisplayClass::moveCursor(COORDINATES_X_DISCPLAY_ENUM xCoordinates, COORDINATES_Y_DISCPLAY_ENUM yCoordinates)
 {
-    nokia5110.setCursor(xCoordinates,yCoordinates);
+    lcdNokia.setCursor(xCoordinates,yCoordinates);
 }
-*/

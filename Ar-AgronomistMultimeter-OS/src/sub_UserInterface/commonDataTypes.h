@@ -58,7 +58,7 @@ typedef enum
 {
     // Coordinates on the y-axis, can be between 0 and 5
     TOP_Y = 0, 
-    MIDDLE_Y = 3, 
+    MIDDLE_Y = 2, 
     BOTTOM_Y = 5
 }COORDINATES_Y_DISCPLAY_ENUM;
 

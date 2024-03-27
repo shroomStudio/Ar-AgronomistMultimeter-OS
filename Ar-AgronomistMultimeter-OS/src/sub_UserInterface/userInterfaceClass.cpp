@@ -170,6 +170,7 @@ void displaySensingInstruction(char* input)
 
 void startSensingProcess(char* input)
 {
+    /*
     if ( energy.batteryChargePercentage >= MINIMUM_TO_SENSING)
     {
         sensing.macronutrientSensingProcess();
@@ -177,6 +178,6 @@ void startSensingProcess(char* input)
     else 
     {
         lcd.metadataTodisplayInLCD("the battery must has at least 10 percent of charge", LEFT_ALIGNED_X, MIDDLE_Y);
-    }
+    }*/
 }
 
