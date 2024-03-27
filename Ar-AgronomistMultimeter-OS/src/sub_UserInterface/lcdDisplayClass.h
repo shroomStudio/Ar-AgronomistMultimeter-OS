@@ -16,11 +16,11 @@ class lcdDisplayClass{
     void metadataTodisplayInLCDAdvanceCursor(String text, COORDINATES_X_DISCPLAY_ENUM xCoordinate, 
                                             COORDINATES_Y_DISCPLAY_ENUM yCoordinate, uint8_t advanceXcoordinate, uint8_t advanceYCoordinate);
     void moveCursor(uint8_t xCoordinates, uint8_t yCoordinates);
-    
+    void initialDisplaySetup(void);
     private:
     //Private attributes
     //Private methods
-    void initialDisplaySetup(void);
+    
 };
 
 #endif
