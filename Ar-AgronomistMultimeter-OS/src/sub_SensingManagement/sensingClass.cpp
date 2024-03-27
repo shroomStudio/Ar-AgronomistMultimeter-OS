@@ -44,7 +44,7 @@ sensingClass::~sensingClass(){
 }
 
 void sensingClass::macronutrientSensingProcess()
-{
+{/*
     bool sensingProcessFinished = false;
 
     while (buttonsSensing.buttonPressed() != OK_BUTTON)
@@ -56,6 +56,7 @@ void sensingClass::macronutrientSensingProcess()
     //TODO: get and Save date and time
     while (buttonsSensing.buttonPressed() != BACK_BUTTON || sensingProcessFinished)
     {
+        
         lcdSensing.metadataTodisplayInLCD
         ("sensing in process, press back to abort", LEFT_ALIGNED_X, MIDDLE_Y);
         lcdSensing.metadataTodisplayInLCDAdvanceCursor
@@ -66,7 +67,8 @@ void sensingClass::macronutrientSensingProcess()
         potassiumSensingProcess();
 
         sensingProcessFinished = true;
-    }
+        
+    }*/
 }
 void sensingClass::temperatureSensingProcess()
 {
