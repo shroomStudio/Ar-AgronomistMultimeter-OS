@@ -13,7 +13,7 @@
 #include "ExternalLibraries/ItemInput.h"
 
 // Class instances.
-energyManagementClass energy;
+//energyManagementClass energy;
 LcdMenu menu(LCD_ROWS, LCD_COLS);
 lcdDisplayClass lcd;
 buttonsClass buttons;
@@ -59,11 +59,11 @@ SUB_MENU(files, mainMenu,
 SUB_MENU(configurations, mainMenu,
     ITEM_BASIC("Date"),
     ITEM_BASIC("Save and continue")
-);   
+);  
 
 userInterfaceClass::userInterfaceClass(){
     initialConfigurationDone = VariableFromEEPROM_Get(0);
-    energy.voltageBatteryMonitor();
+    //energy.voltageBatteryMonitor();
 }
 
 userInterfaceClass::~userInterfaceClass(){
@@ -101,7 +101,7 @@ void userInterfaceClass::resetEEPROM(void)
 //Local Methods
 void userInterfaceClass::userInitialConfiguration(void)
 {
-    if(false == initialConfigurationDone)
+    /*if(false == initialConfigurationDone)
     {
         if (energy.batteryChargePercentage < MINIMUM_BATTERY_PERCENTAGE)
         {
@@ -118,10 +118,11 @@ void userInterfaceClass::userInitialConfiguration(void)
             initialConfigurationDone = true;
             VariableToEEPROM_Set(0,initialConfigurationDone);
         }
-    }  
+    }  */
 }
 
 //Local Methods
+
 void userInterfaceClass::userMainMenu(void)
 {
     // Variable to Read the user Input
