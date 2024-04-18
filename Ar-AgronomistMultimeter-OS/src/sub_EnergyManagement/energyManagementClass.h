@@ -11,22 +11,19 @@ class energyManagementClass{
     
     //Public attributes
     int batteryChargePercentage;
-
     //Public Methods
+    void initialSetUpEnergyManagament(void);
     void voltageBatteryMonitor(void);
     void turnOffDevice(void);
     void resetDevice(void);
 
     private:
     //Private attributes
-    int activationPinRelayOff = 2;
+    int activationPinRelayOff           = 2;
     int activationPinRelayBatteryCharge = 3;
-    int resetDevicePin = 4;
+    int resetDevicePin                  = 4;
     double voltageMeasuredBattery;
-    
-
     // Private Methods
-    void initialSetUpEnergyManagament(void);
     void chargeBattery(void);
 };
 

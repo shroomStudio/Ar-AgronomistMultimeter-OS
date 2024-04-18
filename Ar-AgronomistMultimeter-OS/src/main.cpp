@@ -6,26 +6,23 @@
 
 //Headers 
 #include <Arduino.h>
-//#include "sub_UserInterface/ExternalLibraries/Nokia_LCD.h"
-//#include "sub_UserInterface/ExternalLibraries/LCD_Fonts.h"
 #include "sub_UserInterface/lcdDisplayClass.h"
-//#include "ExternalLibraries/Nokia_LCD.h"
-//#include "ExternalLibraries/LCD_Fonts.h"
+#include "sub_UserInterface/commonDataTypes.h"
+#include "sub_EnergyManagement/energyManagementClass.h"
 /*#include <string.h>
-#include "commonDataTypes.h"
 #include "userInterfaceClass.h"*/
 
 //Namespaces 
 using namespace std;
 
 lcdDisplayClass lcdMultimeter;
-
+energyManagementClass energyMultimeter;
 
 
 void setup() 
 {
     lcdMultimeter.initialDisplaySetup();
-
+    energyMultimeter.initialSetUpEnergyManagament();
 }
 
 void loop()
