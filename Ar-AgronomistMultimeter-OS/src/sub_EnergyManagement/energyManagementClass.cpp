@@ -7,7 +7,8 @@
 //Class Instances 
 lcdDisplayClass lcdEnergy;
 
-energyManagementClass::energyManagementClass(){
+energyManagementClass::energyManagementClass()
+{
     //Constructor energyManagementClass
     //Pin to keep the system On it works in conjuntion with
     //the external button ON/OFF
@@ -18,8 +19,6 @@ energyManagementClass::energyManagementClass(){
     pinMode(resetDevicePin, OUTPUT);
     //Pin to read the voltage in the battery
     pinMode(voltageMeasuredBattery, INPUT);
-
-    initialSetUpEnergyManagament();
 }
 
 energyManagementClass::~energyManagementClass(){
@@ -29,6 +28,8 @@ energyManagementClass::~energyManagementClass(){
 //Iniial SetUp Method
 void energyManagementClass::initialSetUpEnergyManagament(void)
 {
+
+    lcdEnergy.metadataTodisplayInLCD("Verifying Battery charge\n",LEFT_ALIGNED_X,MIDDLE_Y,true);
     // Disable restart Pin
     digitalWrite(activationPinRelayOff, LOW);
     //Waits for a second
@@ -45,12 +46,14 @@ void energyManagementClass::initialSetUpEnergyManagament(void)
    if(batteryChargePercentage <= MINIMUM_BATTERY_PERCENTAJE)
    {
     // Inform te user the system will be shut down
-    //lcdEnergy.metadataTodisplayInLCD("System Discharged, please connect device to power source");
+    lcdEnergy.metadataTodisplayInLCD("ystem Discharged, please connect device to power source\n",LEFT_ALIGNED_X,MIDDLE_Y,true);
     //Wait 2 seconds before to shut down the device
     delay(2000);  
     //shutdown device
     turnOffDevice();
    }
+   
+   lcdEnergy.metadataTodisplayInLCD("",LEFT_ALIGNED_X,MIDDLE_Y,true);
 }
 
 //Public Methods
@@ -84,7 +87,7 @@ void energyManagementClass::voltageBatteryMonitor(void)
     //The maximum value of the battery is 5v so based it 
     //we can converted thi value to percentage using 
     //percentage of battery = (voltage measured * 100) / 5 
-    batteryChargePercentage = (voltageMeasuredBattery * 100) / 5;
+    batteryChargePercentage = 80; //(voltageMeasuredBattery * 100) / 5;
 }
 
 void energyManagementClass::chargeBattery(void)
