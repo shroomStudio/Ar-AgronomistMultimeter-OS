@@ -19,6 +19,9 @@ energyManagementClass::energyManagementClass()
     pinMode(resetDevicePin, OUTPUT);
     //Pin to read the voltage in the battery
     pinMode(voltageMeasuredBattery, INPUT);
+
+    //Start the monitoring of the battery 
+    voltageBatteryMonitor();
 }
 
 energyManagementClass::~energyManagementClass(){
@@ -37,11 +40,7 @@ void energyManagementClass::initialSetUpEnergyManagament(void)
     //Keep device alive
     digitalWrite(activationPinRelayOff, HIGH);
     //Waits for a second
-    delay(1000); 
-
-    //Initial read of battery
-    voltageBatteryMonitor();
-   
+    delay(1000);    
    //Verify battery is above minimum valid value
    if(batteryChargePercentage <= MINIMUM_BATTERY_PERCENTAJE)
    {
