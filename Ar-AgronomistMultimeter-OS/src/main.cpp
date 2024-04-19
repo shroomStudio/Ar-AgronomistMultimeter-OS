@@ -6,30 +6,31 @@
 
 //Headers 
 #include <Arduino.h>
-#include "sub_UserInterface/lcdDisplayClass.h"
 #include "sub_UserInterface/commonDataTypes.h"
+#include "sub_UserInterface/lcdDisplayClass.h"
 #include "sub_EnergyManagement/energyManagementClass.h"
+#include "sub_UserInterface/buttonsClass.h"
 /*#include <string.h>
 #include "userInterfaceClass.h"*/
 
 //Namespaces 
 using namespace std;
 
-lcdDisplayClass lcdMultimeter;
-energyManagementClass energyMultimeter;
+lcdDisplayClass lcdMain;
+energyManagementClass energyMain;
+buttonsClass buttonsMain;
 
 
 void setup() 
 {
-    lcdMultimeter.initialDisplaySetup();
-    energyMultimeter.initialSetUpEnergyManagament();
+    lcdMain.initialDisplaySetup();
+    energyMain.initialSetUpEnergyManagament();
+    buttonsMain.initialButtonsSetup();
 }
 
 void loop()
 {
-    //Serial.write("Hello putos ");
-    //delay(200);
-    //userInterface.userMainMenu();
-
+    //Method that as to be running all the time to detect the user interation
+    buttonsMain.navigationButtons();
 }
 

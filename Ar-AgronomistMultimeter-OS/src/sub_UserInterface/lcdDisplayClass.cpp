@@ -57,6 +57,17 @@ void lcdDisplayClass::metadataTodisplayInLCD(const char* text,COORDINATES_X_DISC
     lcdNokia.print(text);
 }
 
+void lcdDisplayClass::intNumberTodisplayInLCD(int number,COORDINATES_X_DISCPLAY_ENUM xCoordinates, COORDINATES_Y_DISCPLAY_ENUM yCoordinates,bool clearScreen)
+{
+    if (true == clearScreen)
+    {
+        lcdNokia.clear();
+    }
+
+    lcdNokia.setCursor(xCoordinates,yCoordinates);
+    lcdNokia.print(number); 
+}
+
 
 void lcdDisplayClass::moveCursor(COORDINATES_X_DISCPLAY_ENUM xCoordinates, COORDINATES_Y_DISCPLAY_ENUM yCoordinates)
 {
