@@ -66,11 +66,30 @@ void buttonsClass::navigationButtons(void)
             }
             else 
             {
-                currentButtonPressed = ((BUTTON_PRESSED)buttonstates[i]);
+                switch (i)
+                {
+                    case 0:
+                        /* code */
+                        currentButtonPressed = UP_BUTTON;
+                    break;
+                    case 1:
+                        /* code */
+                        currentButtonPressed = DOWN_BUTTON;
+                    break;
+                    case 2:
+                        /* code */
+                        currentButtonPressed = BACK_BUTTON;
+                    break;
+                    case 3:
+                        /* code */
+                        currentButtonPressed = OK_BUTTON;
+                    break;
+                    default:
+                        currentButtonPressed = NO_BUTTON;
+                    break;
+                }
             }
         }
     }
-    lcdButtons.intNumberTodisplayInLCD(((int)currentButtonPressed),LEFT_ALIGNED_X,MIDDLE_Y,true);
-    delay(2000);
 }
 
