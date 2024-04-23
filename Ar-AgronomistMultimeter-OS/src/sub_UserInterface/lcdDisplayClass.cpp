@@ -2,18 +2,11 @@
 #include "lcdDisplayClass.h"
 #include "sub_UserInterface/ExternalLibraries/Nokia_LCD.h"
 #include "sub_UserInterface/ExternalLibraries/LCD_Fonts.h"
-//LCD pinOut
-int clockLcdPin = 13;
-int dinLcdPin   = 12;
-int dcLcdPin    = 11;
-int ceLcdPin    = 10;
-int resetLcdPin = 9;
-int lightLcdPin = 9;
-
 
 //LCD Nokia instance declare inside this file to avoid any unauthorizated access
 Nokia_LCD lcdNokia(clockLcdPin/* CLK */, dinLcdPin /* DIN */, dcLcdPin /* DC */, ceLcdPin /* CE */, resetLcdPin /* RST */,lightLcdPin/* BL */);
 //Nokia_LCD lcdNokia(13 /* CLK */, 12 /* DIN */, 11 /* DC */, 10 /* CE */, 9 /* RST */,9 /* BL */);
+
 //LCD class
 lcdDisplayClass::lcdDisplayClass(){
     //Constructor lcdDisplayClass

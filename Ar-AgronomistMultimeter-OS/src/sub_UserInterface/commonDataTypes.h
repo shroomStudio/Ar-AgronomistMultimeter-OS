@@ -37,6 +37,12 @@ PinA5   infrared Led Pin
 #define LCD_ROWS 60
 #define LCD_COLS 5
 #define MINIMUM_TO_SENSING 10
+#define clockLcdPin 13
+#define dinLcdPin   12
+#define dcLcdPin    11
+#define ceLcdPin    10
+#define resetLcdPin 9
+#define lightLcdPin resetLcdPin
 
 //Enumerations 
 typedef enum 
