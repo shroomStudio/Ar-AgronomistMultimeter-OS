@@ -33,8 +33,9 @@ void setup()
 
 void loop()
 {
+    //int buttonPressed = ((int)buttonsMain.buttonPressed());
     //Method that as to be running all the time to detect the user interation
     buttonsMain.navigationButtons();
-    userInterfaceMain.selectOption();
+    //userInterfaceMain.menuSelectedOption(buttonPressed);
 }
 

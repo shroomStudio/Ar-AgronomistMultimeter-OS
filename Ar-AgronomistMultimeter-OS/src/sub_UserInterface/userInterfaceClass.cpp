@@ -144,9 +144,9 @@ void userInterfaceClass::navigateDown()
     }
 }
 
-void userInterfaceClass::selectOption() 
+void userInterfaceClass::menuSelectedOption(int buttonPressed)
 {
-    switch(buttonsUser.buttonPressed())
+    switch((BUTTON_PRESSED)buttonPressed)
     {
         case OK_BUTTON:
            

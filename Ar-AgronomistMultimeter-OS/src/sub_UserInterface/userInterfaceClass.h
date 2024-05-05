@@ -15,7 +15,7 @@ class userInterfaceClass{
     void displayMainMenu(void);
     void navigateUp(void);
     void navigateDown(void);
-    void selectOption(void);
+    void menuSelectedOption(int buttonPressed);
 
     private:
     //Private Attributes
