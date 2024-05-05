@@ -12,14 +12,21 @@
 #include "ExternalLibraries/utils/commandProccesors.h"
 #include "ExternalLibraries/ItemInput.h"
 
+#define RS_PIN dinLcdPin
+#define EN_PIN dcLcdPin
+#define D4_PIN clockLcdPin
+#define D5_PIN ceLcdPin
+#define D6_PIN resetLcdPin
+#define D7_PIN lightLcdPin
+
 // Class instances.
-//energyManagementClass energy;
+energyManagementClass energyUser;
 LcdMenu menu(LCD_ROWS, LCD_COLS);
-lcdDisplayClass lcd;
-buttonsClass buttons;
-usbConecttionClass usb;
-sensingClass sensing;
-signalConditioningClass conditioningSignals;
+lcdDisplayClass lcdUser;
+buttonsClass buttonsUser;
+usbConecttionClass usbUser;
+sensingClass sensingUser;
+signalConditioningClass conditioningSignalsUser;
 
 // Constructionc of main menu and submenus when is the first time the 
 extern MenuItem* macronutrientsSensing[];
@@ -62,6 +69,7 @@ SUB_MENU(configurations, mainMenu,
 );  
 
 userInterfaceClass::userInterfaceClass(){
+    VariableToEEPROM_Set(0,false);
     initialConfigurationDone = VariableFromEEPROM_Get(0);
     //energy.voltageBatteryMonitor();
 }
@@ -101,24 +109,27 @@ void userInterfaceClass::resetEEPROM(void)
 //Local Methods
 void userInterfaceClass::userInitialConfiguration(void)
 {
-    /*if(false == initialConfigurationDone)
+    lcdUser.metadataTodisplayInLCD("User interface initial configuration", LEFT_ALIGNED_X, MIDDLE_Y,true);
+    delay(2000);
+
+    if(false == initialConfigurationDone)
     {
-        if (energy.batteryChargePercentage < MINIMUM_BATTERY_PERCENTAGE)
+        if (energyUser.batteryChargePercentage < MINIMUM_BATTERY_PERCENTAGE)
         {
-            lcd.metadataTodisplayInLCD("System discharged please plug in to source power", LEFT_ALIGNED_X, MIDDLE_Y);
+            lcdUser.metadataTodisplayInLCD("System discharged please plug in to source power", LEFT_ALIGNED_X, MIDDLE_Y,true);
             delay(2000);
-            energy.turnOffDevice();
+            energyUser.turnOffDevice();
         }
         else
         {
-            if (buttons.buttonPressed() == OK_BUTTON )
+            if (buttonsUser.buttonPressed() == OK_BUTTON )
             {
             //TODO: time and Zone Main Menu to be done
             }
             initialConfigurationDone = true;
             VariableToEEPROM_Set(0,initialConfigurationDone);
         }
-    }  */
+    }
 }
 
 //Local Methods
@@ -126,7 +137,7 @@ void userInterfaceClass::userInitialConfiguration(void)
 void userInterfaceClass::userMainMenu(void)
 {
     // Variable to Read the user Input
-    char command = static_cast<char>(buttons.buttonPressed());
+    char command = static_cast<char>(buttonsUser.buttonPressed());
     
     //Setting up the main menu in the LCD
     menu.setupLcdWithMenu(0x27, mainMenu);
@@ -180,4 +191,3 @@ void startSensingProcess(char* input)
         lcd.metadataTodisplayInLCD("the battery must has at least 10 percent of charge", LEFT_ALIGNED_X, MIDDLE_Y);
     }*/
 }
-
