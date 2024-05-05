@@ -33,6 +33,7 @@ void energyManagementClass::initialSetUpEnergyManagament(void)
 {
 
     lcdEnergy.metadataTodisplayInLCD("Verifying Battery charge\n",LEFT_ALIGNED_X,MIDDLE_Y,true);
+    delay(2000);
     // Disable restart Pin
     digitalWrite(activationPinRelayOff, LOW);
     //Waits for a second

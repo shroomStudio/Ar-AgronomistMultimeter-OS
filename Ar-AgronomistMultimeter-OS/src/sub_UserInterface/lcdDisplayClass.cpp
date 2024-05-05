@@ -31,11 +31,11 @@ void lcdDisplayClass::initialDisplaySetup(void)
    // Bold font example
     lcdNokia.setCursor(0, 2);
     lcdNokia.setDefaultFont();
-    lcdNokia.print("hello putos!");
-    delay(2000);
+    
     metadataTodisplayInLCD("ShroomCorp\n",LEFT_ALIGNED_X,MIDDLE_Y,true);
     delay(2000);
     metadataTodisplayInLCD("loading",LEFT_ALIGNED_X,BOTTOM_Y,false);
+    delay(2000);
 }
 
 //Public methods

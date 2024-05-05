@@ -25,8 +25,6 @@ buttonsClass:: ~buttonsClass(){
  //Private Methods
 void buttonsClass::initialButtonsSetup(void)
 {
-    lcdButtons.metadataTodisplayInLCD("Initial SetUpButtons",LEFT_ALIGNED_X,MIDDLE_Y,true);
-    delay(2000);
     // Initial declaration for all the pins used as push buttons
     pinMode(pinOkButton,   INPUT_PULLUP);
     pinMode(pinUpButton,   INPUT_PULLUP);
