@@ -16,6 +16,9 @@ class lcdDisplayClass{
     void intNumberTodisplayInLCD(int number,COORDINATES_X_DISCPLAY_ENUM xCoordinates, COORDINATES_Y_DISCPLAY_ENUM yCoordinates,bool clearScreen);
     void metadataTodisplayInLCD(const char* text,COORDINATES_X_DISCPLAY_ENUM xCoordinates, COORDINATES_Y_DISCPLAY_ENUM yCoordinates,bool clearScreen);
     void moveCursor(COORDINATES_X_DISCPLAY_ENUM xCoordinates, COORDINATES_Y_DISCPLAY_ENUM yCoordinates);
+    void metadataTodisplayFreeCursor(const char* text, int x, int y, bool clearScreen);
+    void invertTextColor(void);
+    void restoreTextColor(void);
     
     private:
     //Private attributes

@@ -1,45 +1,34 @@
 #include <EEPROM.h>
+#include <string.h>
 #include <sub_SensingManagement/sensingClass.h>
 #include <sub_EnergyManagement/energyManagementClass.h>
 #include <sub_SignalConditioning/signalConditioningClass.h>
 #include "userInterfaceClass.h"
-#include "commonDataTypes.h"
 #include "lcdDisplayClass.h"
 #include "buttonsClass.h"
 #include "usbConecttionClass.h"
-#include "ExternalLibraries/LcdMenu.h"
-#include "ExternalLibraries/ItemSubMenu.h"
-#include "ExternalLibraries/utils/commandProccesors.h"
-#include "ExternalLibraries/ItemInput.h"
+
+
+#define RS_PIN dinLcdPin
+#define EN_PIN dcLcdPin
+#define D4_PIN clockLcdPin
+#define D5_PIN ceLcdPin
+#define D6_PIN resetLcdPin
+#define D7_PIN lightLcdPin
 
 // Class instances.
-//energyManagementClass energy;
-LcdMenu menu(LCD_ROWS, LCD_COLS);
-lcdDisplayClass lcd;
-buttonsClass buttons;
-usbConecttionClass usb;
-sensingClass sensing;
-signalConditioningClass conditioningSignals;
+energyManagementClass energyUser;
+lcdDisplayClass lcdUser;
+buttonsClass buttonsUser;
+usbConecttionClass usbUser;
+sensingClass sensingUser;
+signalConditioningClass conditioningSignalsUser;
 
-// Constructionc of main menu and submenus when is the first time the 
-extern MenuItem* macronutrientsSensing[];
-extern MenuItem* temperatureSensing[];
-extern MenuItem* atmosphericSensing[];
-extern MenuItem* files[];
-extern MenuItem* configurations[];
 // Local Methods Prototypes
 void displaySensingInstruction(char* input);
 void startSensingProcess(char* input);
 
-MAIN_MENU
-(
-    ITEM_SUBMENU("Macronutrients Sensing",macronutrientsSensing),
-    ITEM_SUBMENU("Temperature Sensing"   ,temperatureSensing),
-    ITEM_SUBMENU("Atmospheric Sensing"   ,atmosphericSensing),
-    ITEM_SUBMENU("sensing records"       ,files),
-    ITEM_SUBMENU("Configurations"        ,configurations)
-);
-
+/*
 SUB_MENU(macronutrientsSensing, mainMenu,
     ITEM_INPUT("Sensing instrucctions", displaySensingInstruction),
     ITEM_INPUT("Sensing Process", startSensingProcess)
@@ -59,9 +48,10 @@ SUB_MENU(files, mainMenu,
 SUB_MENU(configurations, mainMenu,
     ITEM_BASIC("Date"),
     ITEM_BASIC("Save and continue")
-);  
+);  */
 
 userInterfaceClass::userInterfaceClass(){
+    VariableToEEPROM_Set(0,false);
     initialConfigurationDone = VariableFromEEPROM_Get(0);
     //energy.voltageBatteryMonitor();
 }
@@ -101,40 +91,101 @@ void userInterfaceClass::resetEEPROM(void)
 //Local Methods
 void userInterfaceClass::userInitialConfiguration(void)
 {
-    /*if(false == initialConfigurationDone)
+    if(false == initialConfigurationDone)
     {
-        if (energy.batteryChargePercentage < MINIMUM_BATTERY_PERCENTAGE)
+        if (energyUser.batteryChargePercentage < MINIMUM_BATTERY_PERCENTAGE)
         {
-            lcd.metadataTodisplayInLCD("System discharged please plug in to source power", LEFT_ALIGNED_X, MIDDLE_Y);
+            lcdUser.metadataTodisplayInLCD("System discharged please plug in to source power", LEFT_ALIGNED_X, MIDDLE_Y,true);
             delay(2000);
-            energy.turnOffDevice();
+            energyUser.turnOffDevice();
         }
         else
         {
-            if (buttons.buttonPressed() == OK_BUTTON )
+            if (buttonsUser.buttonPressed() == OK_BUTTON )
             {
             //TODO: time and Zone Main Menu to be done
             }
             initialConfigurationDone = true;
             VariableToEEPROM_Set(0,initialConfigurationDone);
+            displayMainMenu();
         }
-    }  */
+    }
 }
 
 //Local Methods
-
-void userInterfaceClass::userMainMenu(void)
+void userInterfaceClass::displayMainMenu() 
 {
-    // Variable to Read the user Input
-    char command = static_cast<char>(buttons.buttonPressed());
-    
-    //Setting up the main menu in the LCD
-    menu.setupLcdWithMenu(0x27, mainMenu);
-
-    //Method to interact whit the user 
-    processMenuCommand(menu, command, UP_BUTTON, DOWN_BUTTON, OK_BUTTON, BACK_BUTTON);
+    displayMenu(mainMenuItems, 0);
 }
 
+void userInterfaceClass::navigateUp() 
+{
+    if (currentItemIndex > 0) 
+    {
+        // Invert colors of the current line before moving the cursor
+        lcdUser.invertTextColor();
+        lcdUser.metadataTodisplayFreeCursor(mainMenuItems[currentItemIndex], LEFT_ALIGNED_X, TOP_Y + currentItemIndex + 1, false);
+
+        currentItemIndex--;
+        displayMenu(mainMenuItems, currentItemIndex);
+    }
+}
+
+void userInterfaceClass::navigateDown() 
+{
+    if (currentItemIndex < NUMBER_OF_ITEMS_MAIN_MENU) 
+    {
+        // Invert colors of the current line before moving the cursor
+        lcdUser.invertTextColor();
+        lcdUser.metadataTodisplayFreeCursor(mainMenuItems[currentItemIndex], LEFT_ALIGNED_X, TOP_Y + currentItemIndex + 1, false);
+
+        currentItemIndex++;
+        displayMenu(mainMenuItems, currentItemIndex);
+    }
+}
+
+void userInterfaceClass::menuSelectedOption(int buttonPressed)
+{
+    switch((BUTTON_PRESSED)buttonPressed)
+    {
+        case OK_BUTTON:
+           
+            break;
+        case BACK_BUTTON:
+            // Handle going back if needed
+            break;
+        case DOWN_BUTTON:
+            navigateDown();
+            break;
+        case UP_BUTTON:
+            navigateUp();
+            break;
+        default:
+            // Handle other button states or no button press
+            break;
+    }
+}
+
+void userInterfaceClass::displayMenu(const char* menu[], int startIndex) 
+{
+    String menuItem = "\0";
+
+    delay(2000);
+    lcdUser.metadataTodisplayInLCD("Main Menu: \n", LEFT_ALIGNED_X, TOP_Y, true);
+
+    for (int i = startIndex; i < startIndex + 3; i++) 
+    {
+        if (i == currentItemIndex)
+        {
+            menuItem += menu[i];
+            lcdUser.metadataTodisplayFreeCursor(menuItem.c_str(), LEFT_ALIGNED_X, TOP_Y + (i - startIndex + 1), false);
+        } 
+        else 
+        {
+            lcdUser.metadataTodisplayFreeCursor(menu[i], LEFT_ALIGNED_X, TOP_Y + (i - startIndex + 1), false);
+        }
+    }
+}
 
 void displaySensingInstruction(char* input)
 {
@@ -180,4 +231,3 @@ void startSensingProcess(char* input)
         lcd.metadataTodisplayInLCD("the battery must has at least 10 percent of charge", LEFT_ALIGNED_X, MIDDLE_Y);
     }*/
 }
-

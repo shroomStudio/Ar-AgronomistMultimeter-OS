@@ -2,18 +2,11 @@
 #include "lcdDisplayClass.h"
 #include "sub_UserInterface/ExternalLibraries/Nokia_LCD.h"
 #include "sub_UserInterface/ExternalLibraries/LCD_Fonts.h"
-//LCD pinOut
-int clockLcdPin = 13;
-int dinLcdPin   = 12;
-int dcLcdPin    = 11;
-int ceLcdPin    = 10;
-int resetLcdPin = 9;
-int lightLcdPin = 9;
-
 
 //LCD Nokia instance declare inside this file to avoid any unauthorizated access
 Nokia_LCD lcdNokia(clockLcdPin/* CLK */, dinLcdPin /* DIN */, dcLcdPin /* DC */, ceLcdPin /* CE */, resetLcdPin /* RST */,lightLcdPin/* BL */);
 //Nokia_LCD lcdNokia(13 /* CLK */, 12 /* DIN */, 11 /* DC */, 10 /* CE */, 9 /* RST */,9 /* BL */);
+
 //LCD class
 lcdDisplayClass::lcdDisplayClass(){
     //Constructor lcdDisplayClass
@@ -54,7 +47,7 @@ void lcdDisplayClass::metadataTodisplayInLCD(const char* text,COORDINATES_X_DISC
     }
     
     lcdNokia.setCursor(xCoordinates,yCoordinates);
-    lcdNokia.print(text);
+    lcdNokia.println(text);
 }
 
 void lcdDisplayClass::intNumberTodisplayInLCD(int number,COORDINATES_X_DISCPLAY_ENUM xCoordinates, COORDINATES_Y_DISCPLAY_ENUM yCoordinates,bool clearScreen)
@@ -68,8 +61,29 @@ void lcdDisplayClass::intNumberTodisplayInLCD(int number,COORDINATES_X_DISCPLAY_
     lcdNokia.print(number); 
 }
 
+void lcdDisplayClass::metadataTodisplayFreeCursor(const char* text, int x, int y, bool clearScreen)
+ {
+    if (clearScreen) {
+        lcdNokia.clear();
+    }
+    
+    lcdNokia.setCursor(x, y);
+    lcdNokia.println(text);
+}
 
 void lcdDisplayClass::moveCursor(COORDINATES_X_DISCPLAY_ENUM xCoordinates, COORDINATES_Y_DISCPLAY_ENUM yCoordinates)
 {
     lcdNokia.setCursor(xCoordinates,yCoordinates);
+}
+
+void lcdDisplayClass::invertTextColor() 
+{
+    // Invert text color
+    lcdNokia.setInverted(true);
+}
+
+void lcdDisplayClass::restoreTextColor() 
+{
+    // Restore text color to default
+    lcdNokia.setInverted(false);
 }
