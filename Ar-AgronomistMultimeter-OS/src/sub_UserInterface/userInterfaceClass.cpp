@@ -24,10 +24,6 @@ usbConecttionClass usbUser;
 sensingClass sensingUser;
 signalConditioningClass conditioningSignalsUser;
 
-// Local Methods Prototypes
-void displaySensingInstruction(char* input);
-void startSensingProcess(char* input);
-
 /*
 SUB_MENU(macronutrientsSensing, mainMenu,
     ITEM_INPUT("Sensing instrucctions", displaySensingInstruction),
@@ -108,6 +104,7 @@ void userInterfaceClass::userInitialConfiguration(void)
             initialConfigurationDone = true;
             VariableToEEPROM_Set(0,initialConfigurationDone);
             displayMainMenu();
+            startSensingProcess();
         }
     }
 }
@@ -187,7 +184,7 @@ void userInterfaceClass::displayMenu(const char* menu[], int startIndex)
     }
 }
 
-void displaySensingInstruction(char* input)
+void userInterfaceClass::displaySensingInstruction(void)
 {
     /* TODO: To be implemented in User interface creation
     int lineNumber = 0;
@@ -219,15 +216,17 @@ void displaySensingInstruction(char* input)
   */
 }
 
-void startSensingProcess(char* input)
+void userInterfaceClass::startSensingProcess(void)
 {
-    /*
-    if ( energy.batteryChargePercentage >= MINIMUM_TO_SENSING)
+    delay(3000);
+    lcdUser.metadataTodisplayInLCD("Sensing Process  \n", LEFT_ALIGNED_X, MIDDLE_Y, true);
+
+    if ( energyUser.batteryChargePercentage >= MINIMUM_TO_SENSING)
     {
-        sensing.macronutrientSensingProcess();
+        sensingUser.macronutrientSensingProcess();
     }
     else 
     {
-        lcd.metadataTodisplayInLCD("the battery must has at least 10 percent of charge", LEFT_ALIGNED_X, MIDDLE_Y);
-    }*/
+        lcdUser.metadataTodisplayInLCD("the battery must has at least 10 percent of charge \n", LEFT_ALIGNED_X, MIDDLE_Y, true);
+    }
 }
