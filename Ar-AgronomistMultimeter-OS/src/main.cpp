@@ -35,5 +35,6 @@ void loop()
 {
     //Method that as to be running all the time to detect the user interation
     buttonsMain.navigationButtons();
+    userInterfaceMain.selectOption();
 }
 

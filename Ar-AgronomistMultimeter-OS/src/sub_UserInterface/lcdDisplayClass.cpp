@@ -47,7 +47,7 @@ void lcdDisplayClass::metadataTodisplayInLCD(const char* text,COORDINATES_X_DISC
     }
     
     lcdNokia.setCursor(xCoordinates,yCoordinates);
-    lcdNokia.print(text);
+    lcdNokia.println(text);
 }
 
 void lcdDisplayClass::intNumberTodisplayInLCD(int number,COORDINATES_X_DISCPLAY_ENUM xCoordinates, COORDINATES_Y_DISCPLAY_ENUM yCoordinates,bool clearScreen)
@@ -61,8 +61,29 @@ void lcdDisplayClass::intNumberTodisplayInLCD(int number,COORDINATES_X_DISCPLAY_
     lcdNokia.print(number); 
 }
 
+void lcdDisplayClass::metadataTodisplayFreeCursor(const char* text, int x, int y, bool clearScreen)
+ {
+    if (clearScreen) {
+        lcdNokia.clear();
+    }
+    
+    lcdNokia.setCursor(x, y);
+    lcdNokia.println(text);
+}
 
 void lcdDisplayClass::moveCursor(COORDINATES_X_DISCPLAY_ENUM xCoordinates, COORDINATES_Y_DISCPLAY_ENUM yCoordinates)
 {
     lcdNokia.setCursor(xCoordinates,yCoordinates);
+}
+
+void lcdDisplayClass::invertTextColor() 
+{
+    // Invert text color
+    lcdNokia.setInverted(true);
+}
+
+void lcdDisplayClass::restoreTextColor() 
+{
+    // Restore text color to default
+    lcdNokia.setInverted(false);
 }

@@ -43,6 +43,7 @@ PinA5   infrared Led Pin
 #define ceLcdPin    10
 #define resetLcdPin 9
 #define lightLcdPin resetLcdPin
+#define NUMBER_OF_ITEMS_MAIN_MENU 5
 
 //Enumerations 
 typedef enum 
