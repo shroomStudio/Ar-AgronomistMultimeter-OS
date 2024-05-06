@@ -44,32 +44,33 @@ sensingClass::~sensingClass(){
 }
 
 void sensingClass::macronutrientSensingProcess()
-{/*
+{
     bool sensingProcessFinished = false;
+    
 
     while (buttonsSensing.buttonPressed() != OK_BUTTON)
     {
-        lcdSensing.metadataTodisplayInLCD
-        ("please get ready the sample, press OK to continue", LEFT_ALIGNED_X, MIDDLE_Y);
+        lcdSensing.metadataTodisplayInLCD("please get ready the sample, press OK to continue", LEFT_ALIGNED_X, MIDDLE_Y,true);
         delay(2000);
+        buttonsSensing.navigationButtons();
     }
     //TODO: get and Save date and time
-    while (buttonsSensing.buttonPressed() != BACK_BUTTON || sensingProcessFinished)
+    if (!sensingProcessFinished)
     {
-        
-        lcdSensing.metadataTodisplayInLCD
-        ("sensing in process, press back to abort", LEFT_ALIGNED_X, MIDDLE_Y);
-        lcdSensing.metadataTodisplayInLCDAdvanceCursor
-        ("...",LEFT_ALIGNED_X,TOP_Y,0,1);
+        lcdSensing.metadataTodisplayInLCD("sensing in process, press back to abort... \n", LEFT_ALIGNED_X, MIDDLE_Y,true);
         delay(2000);
+        
         nitrogenSensingProcess();
         phosphorusSensingProcess();
         potassiumSensingProcess();
 
-        sensingProcessFinished = true;
-        
-    }*/
+        sensingProcessFinished = true;  
+    }
+
+    lcdSensing.metadataTodisplayFreeCursor("Sensing processs finished",LEFT_ALIGNED_X,TOP_Y,true);
+    delay(2000);
 }
+
 void sensingClass::temperatureSensingProcess()
 {
 
@@ -90,22 +91,24 @@ void nitrogenSensingProcess(void)
 {
     // const int photodiodeOutput = A1; 
     // Ensure all the leds and photodiode are off
-    turnOffAllElements();
+    lcdSensing.metadataTodisplayFreeCursor("Nitrogren",LEFT_ALIGNED_X,TOP_Y,true);
+    delay(2000);
+    //turnOffAllElements();
     //(analogRead(A0)*5)/1023.0
-    sensingProcessTakeReadings();
-
-
-    
+    //sensingProcessTakeReadings();  
 }
 
 void phosphorusSensingProcess(void)
 {
-
+    lcdSensing.metadataTodisplayFreeCursor("Phosphorus",LEFT_ALIGNED_X,TOP_Y,true);
+    delay(2000);
 }
 void potassiumSensingProcess(void)
 {
-
+    lcdSensing.metadataTodisplayFreeCursor("Potassium",LEFT_ALIGNED_X,TOP_Y,true);
+    delay(2000);
 }
+
 void turnOffAllElements(void)
 {
     digitalWrite(photodiodeOutput, LOW);

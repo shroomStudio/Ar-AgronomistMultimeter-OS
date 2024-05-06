@@ -45,6 +45,13 @@ PinA5   infrared Led Pin
 #define lightLcdPin resetLcdPin
 #define NUMBER_OF_ITEMS_MAIN_MENU 5
 
+const int photodiodeInput  = A0; 
+const int photodiodeOutput = A1; 
+const int redLedPin        = A2;
+const int yellowLedPin     = A3;
+const int blueLedPin       = A4;
+const int infraredLedPin   = A5;
+
 //Enumerations 
 typedef enum 
 {
