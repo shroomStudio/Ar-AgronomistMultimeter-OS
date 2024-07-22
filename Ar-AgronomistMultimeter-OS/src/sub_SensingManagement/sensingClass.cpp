@@ -1,43 +1,30 @@
 #include "sensingClass.h"
 #include "sub_UserInterface/lcdDisplayClass.h"
 #include "sub_UserInterface/buttonsClass.h"
+#include "sub_SignalConditioning/signalConditioningClass.h"
 
-#define NUMBER_OF_SAMPLES 10
-#define ELEMENT_TO_MEASURE 3
-#define NUM_RED_LED        0
-#define NUM_YELLOW_LED     1
-#define NUM_BLUE_LED       2
-#define NUM_IR_LED         3
-#define MAX_NUMBER_OF_LED 5
 
 //Clases instances 
 lcdDisplayClass lcdSensing;
 buttonsClass buttonsSensing;
+signalConditioningClass conditioningSensing;
 
-//Local Methods declare here to avoid ungranted access
-void nitrogenSensingProcess(void);
-void phosphorusSensingProcess(void);
-void potassiumSensingProcess(void);
-void turnOffAllElements(void);
-void turnOnAllElements(void);
-void sensingProcessTakeReadings(void);
-
-//Local variables 
-float nitrogenPhotodiodeRead   = 0.0; //Voltage read from photodiode in nitrogen sensing
-float phosphorusPhotodiodeRead = 0.0; //Voltage read from photodiode in phosphorus sensing
-float potassiumPhotodiodeRead  = 0.0; //Voltage read from potassium in nitrogen sensing
-int redLedVoltageMeasurement[NUMBER_OF_SAMPLES][MAX_NUMBER_OF_LED]      = {0};
-int yellowLedVoltageMeasurement[NUMBER_OF_SAMPLES][MAX_NUMBER_OF_LED]   = {0};
-int blueLedVoltageMeasurement[NUMBER_OF_SAMPLES][MAX_NUMBER_OF_LED]     = {0};
-int infraredLedVoltageMeasurement[NUMBER_OF_SAMPLES][MAX_NUMBER_OF_LED] = {0};
-
-
+//Global File scope Variables
+    float nitrogenPhotodiodeRead   = 0.0; //Voltage read from photodiode in nitrogen sensing
+    float phosphorusPhotodiodeRead = 0.0; //Voltage read from photodiode in phosphorus sensing
+    float potassiumPhotodiodeRead  = 0.0; //Voltage read from potassium in nitrogen sensing
+    int redLedVoltageMeasurement[NUMBER_OF_SAMPLES][MAX_NUMBER_OF_LED]      = {0};
+    int yellowLedVoltageMeasurement[NUMBER_OF_SAMPLES][MAX_NUMBER_OF_LED]   = {0};
+    int blueLedVoltageMeasurement[NUMBER_OF_SAMPLES][MAX_NUMBER_OF_LED]     = {0};
+    int infraredLedVoltageMeasurement[NUMBER_OF_SAMPLES][MAX_NUMBER_OF_LED] = {0};
+    
 sensingClass::sensingClass(){
     // Constructor sensing class
     pinMode(redLedPin,OUTPUT);
     pinMode(yellowLedPin,OUTPUT);
     pinMode(blueLedPin,OUTPUT);
     pinMode(infraredLedPin,OUTPUT);
+
 }
 sensingClass::~sensingClass(){
     //destructor sensing class
@@ -87,7 +74,7 @@ void sensingClass::serialMiltiplexor(SENSOR_SERIAL sensor)
 {
 
 }
-void nitrogenSensingProcess(void)
+void sensingClass::nitrogenSensingProcess(void)
 {
     lcdSensing.metadataTodisplayFreeCursor("Nitrogren",LEFT_ALIGNED_X,TOP_Y,true);
     delay(2000);
@@ -100,7 +87,7 @@ void nitrogenSensingProcess(void)
     sensingProcessTakeReadings();  
 }
 
-void phosphorusSensingProcess(void)
+void sensingClass::phosphorusSensingProcess(void)
 {
     lcdSensing.metadataTodisplayFreeCursor("Phosphorus",LEFT_ALIGNED_X,TOP_Y,true);
     delay(2000);
@@ -112,7 +99,7 @@ void phosphorusSensingProcess(void)
     //Starting The sensing process
     sensingProcessTakeReadings();  
 }
-void potassiumSensingProcess(void)
+void sensingClass::potassiumSensingProcess(void)
 {
     lcdSensing.metadataTodisplayFreeCursor("Potassium",LEFT_ALIGNED_X,TOP_Y,true);
     delay(2000);
@@ -125,7 +112,7 @@ void potassiumSensingProcess(void)
     sensingProcessTakeReadings();  
 }
 
-void turnOnAllElements(void)
+void sensingClass::turnOnAllElements(void)
 {
     digitalWrite(yellowLedPin, HIGH);
     digitalWrite(blueLedPin, HIGH);
@@ -134,7 +121,7 @@ void turnOnAllElements(void)
     delay(200);
 }
 
-void turnOffAllElements(void)
+void sensingClass::turnOffAllElements(void)
 {
     digitalWrite(yellowLedPin, LOW);
     digitalWrite(blueLedPin, LOW);
@@ -143,7 +130,7 @@ void turnOffAllElements(void)
     delay(200);
 }
 
-void sensingProcessTakeReadings(void)
+void sensingClass::sensingProcessTakeReadings(void)
 {
     //turn on red LED diode
     digitalWrite(redLedPin, HIGH);
@@ -208,4 +195,19 @@ void sensingProcessTakeReadings(void)
     //Turn Off IR LED
     digitalWrite(infraredLedPin, LOW);
     delay(200);
+
+    //Sendind readings to conditioning class
+    lcdSensing.metadataTodisplayFreeCursor("Saving readings",LEFT_ALIGNED_X,TOP_Y,true);
+    sensingProcessSendingReadingsToConditioning();
+    lcdSensing.metadataTodisplayFreeCursor("Readings Saved",LEFT_ALIGNED_X,TOP_Y,true);
+    delay(200);
+}
+
+void sensingClass::sensingProcessSendingReadingsToConditioning(void)
+{
+    // Copy readings to condition class arrays using memcpy
+    memcpy(conditioningSensing.redLedVoltageMeasurement,      redLedVoltageMeasurement,      sizeof(redLedVoltageMeasurement));
+    memcpy(conditioningSensing.yellowLedVoltageMeasurement,   yellowLedVoltageMeasurement,   sizeof(yellowLedVoltageMeasurement));
+    memcpy(conditioningSensing.blueLedVoltageMeasurement,     blueLedVoltageMeasurement,     sizeof(blueLedVoltageMeasurement));
+    memcpy(conditioningSensing.infraredLedVoltageMeasurement, infraredLedVoltageMeasurement, sizeof(infraredLedVoltageMeasurement));
 }
