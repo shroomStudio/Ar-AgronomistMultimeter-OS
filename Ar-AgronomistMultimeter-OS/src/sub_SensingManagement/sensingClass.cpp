@@ -34,7 +34,6 @@ uint8_t infraredLedVoltageMeasurement[NUMBER_OF_SAMPLES][MAX_NUMBER_OF_LED] = {0
 
 sensingClass::sensingClass(){
     // Constructor sensing class
-    pinMode(photodiodeOutput,OUTPUT);
     pinMode(redLedPin,OUTPUT);
     pinMode(yellowLedPin,OUTPUT);
     pinMode(blueLedPin,OUTPUT);
@@ -128,7 +127,6 @@ void potassiumSensingProcess(void)
 
 void turnOnAllElements(void)
 {
-    digitalWrite(photodiodeOutput, HIGH);
     digitalWrite(yellowLedPin, HIGH);
     digitalWrite(blueLedPin, HIGH);
     digitalWrite(infraredLedPin, HIGH);
@@ -138,7 +136,6 @@ void turnOnAllElements(void)
 
 void turnOffAllElements(void)
 {
-    digitalWrite(photodiodeOutput, LOW);
     digitalWrite(yellowLedPin, LOW);
     digitalWrite(blueLedPin, LOW);
     digitalWrite(infraredLedPin, LOW);
@@ -148,10 +145,6 @@ void turnOffAllElements(void)
 
 void sensingProcessTakeReadings(void)
 {
-   
-    //Turn On photodiode
-    digitalWrite(photodiodeOutput, HIGH);
-    delay(200);
     //turn on red LED diode
     digitalWrite(redLedPin, HIGH);
     delay(200);
