@@ -21,7 +21,7 @@ Pin4    Reset Device Pin
 Pin3    Activation Pin Relay Battery Charge
 Pin2    Activation Pin Relay Off
 PinA0   Photodiode Input
-PinA1   Photoiode OutPut
+PinA1   Not Used
 PinA2   red Led Pin
 PinA3   yellow Led Pin
 PinA4   blue Led Pin
@@ -44,6 +44,12 @@ PinA5   infrared Led Pin
 #define resetLcdPin 9
 #define lightLcdPin resetLcdPin
 #define NUMBER_OF_ITEMS_MAIN_MENU 5
+
+const int photodiodeInput  = A0; 
+const int redLedPin        = A2;
+const int yellowLedPin     = A3;
+const int blueLedPin       = A4;
+const int infraredLedPin   = A5;
 
 //Enumerations 
 typedef enum 

@@ -19,21 +19,21 @@ void nitrogenSensingProcess(void);
 void phosphorusSensingProcess(void);
 void potassiumSensingProcess(void);
 void turnOffAllElements(void);
+void turnOnAllElements(void);
 void sensingProcessTakeReadings(void);
 
 //Local variables 
 float nitrogenPhotodiodeRead   = 0.0; //Voltage read from photodiode in nitrogen sensing
 float phosphorusPhotodiodeRead = 0.0; //Voltage read from photodiode in phosphorus sensing
 float potassiumPhotodiodeRead  = 0.0; //Voltage read from potassium in nitrogen sensing
-uint8_t redLedVoltageMeasurement[NUMBER_OF_SAMPLES][MAX_NUMBER_OF_LED]      = {0};
-uint8_t yellowLedVoltageMeasurement[NUMBER_OF_SAMPLES][MAX_NUMBER_OF_LED]   = {0};
-uint8_t blueLedVoltageMeasurement[NUMBER_OF_SAMPLES][MAX_NUMBER_OF_LED]     = {0};
-uint8_t infraredLedVoltageMeasurement[NUMBER_OF_SAMPLES][MAX_NUMBER_OF_LED] = {0};
+int redLedVoltageMeasurement[NUMBER_OF_SAMPLES][MAX_NUMBER_OF_LED]      = {0};
+int yellowLedVoltageMeasurement[NUMBER_OF_SAMPLES][MAX_NUMBER_OF_LED]   = {0};
+int blueLedVoltageMeasurement[NUMBER_OF_SAMPLES][MAX_NUMBER_OF_LED]     = {0};
+int infraredLedVoltageMeasurement[NUMBER_OF_SAMPLES][MAX_NUMBER_OF_LED] = {0};
 
 
 sensingClass::sensingClass(){
     // Constructor sensing class
-    pinMode(photodiodeOutput,OUTPUT);
     pinMode(redLedPin,OUTPUT);
     pinMode(yellowLedPin,OUTPUT);
     pinMode(blueLedPin,OUTPUT);
@@ -44,32 +44,33 @@ sensingClass::~sensingClass(){
 }
 
 void sensingClass::macronutrientSensingProcess()
-{/*
+{
     bool sensingProcessFinished = false;
+    
 
     while (buttonsSensing.buttonPressed() != OK_BUTTON)
     {
-        lcdSensing.metadataTodisplayInLCD
-        ("please get ready the sample, press OK to continue", LEFT_ALIGNED_X, MIDDLE_Y);
+        lcdSensing.metadataTodisplayInLCD("please get ready the sample, press OK to continue", LEFT_ALIGNED_X, MIDDLE_Y,true);
         delay(2000);
+        buttonsSensing.navigationButtons();
     }
     //TODO: get and Save date and time
-    while (buttonsSensing.buttonPressed() != BACK_BUTTON || sensingProcessFinished)
+    if (!sensingProcessFinished)
     {
-        
-        lcdSensing.metadataTodisplayInLCD
-        ("sensing in process, press back to abort", LEFT_ALIGNED_X, MIDDLE_Y);
-        lcdSensing.metadataTodisplayInLCDAdvanceCursor
-        ("...",LEFT_ALIGNED_X,TOP_Y,0,1);
+        lcdSensing.metadataTodisplayInLCD("sensing in process, press back to abort... \n", LEFT_ALIGNED_X, MIDDLE_Y,true);
         delay(2000);
+        
         nitrogenSensingProcess();
         phosphorusSensingProcess();
         potassiumSensingProcess();
 
-        sensingProcessFinished = true;
-        
-    }*/
+        sensingProcessFinished = true;  
+    }
+
+    lcdSensing.metadataTodisplayFreeCursor("Sensing processs finished \n",LEFT_ALIGNED_X,TOP_Y,false);
+    delay(2000);
 }
+
 void sensingClass::temperatureSensingProcess()
 {
 
@@ -88,44 +89,62 @@ void sensingClass::serialMiltiplexor(SENSOR_SERIAL sensor)
 }
 void nitrogenSensingProcess(void)
 {
-    // const int photodiodeOutput = A1; 
-    // Ensure all the leds and photodiode are off
+    lcdSensing.metadataTodisplayFreeCursor("Nitrogren",LEFT_ALIGNED_X,TOP_Y,true);
+    delay(2000);
+    //Before Any process turn on all the elements 
+    turnOnAllElements();
+    delay(2000);
+    //Ensure all the leds and photodiode are off
     turnOffAllElements();
-    //(analogRead(A0)*5)/1023.0
-    sensingProcessTakeReadings();
-
-
-    
+    //Starting The sensing process
+    sensingProcessTakeReadings();  
 }
 
 void phosphorusSensingProcess(void)
 {
-
+    lcdSensing.metadataTodisplayFreeCursor("Phosphorus",LEFT_ALIGNED_X,TOP_Y,true);
+    delay(2000);
+    //Before Any process turn on all the elements 
+    turnOnAllElements();
+    delay(2000);
+    //Ensure all the leds and photodiode are off
+    turnOffAllElements();
+    //Starting The sensing process
+    sensingProcessTakeReadings();  
 }
 void potassiumSensingProcess(void)
 {
-
+    lcdSensing.metadataTodisplayFreeCursor("Potassium",LEFT_ALIGNED_X,TOP_Y,true);
+    delay(2000);
+    //Before Any process turn on all the elements 
+    turnOnAllElements();
+    delay(2000);
+    //Ensure all the leds and photodiode are off
+    turnOffAllElements();
+    //Starting The sensing process
+    sensingProcessTakeReadings();  
 }
+
+void turnOnAllElements(void)
+{
+    digitalWrite(yellowLedPin, HIGH);
+    digitalWrite(blueLedPin, HIGH);
+    digitalWrite(infraredLedPin, HIGH);
+    digitalWrite(redLedPin, HIGH);
+    delay(200);
+}
+
 void turnOffAllElements(void)
 {
-    digitalWrite(photodiodeOutput, LOW);
-    delay(200);
     digitalWrite(yellowLedPin, LOW);
-    delay(200);
     digitalWrite(blueLedPin, LOW);
-    delay(200);
     digitalWrite(infraredLedPin, LOW);
-    delay(200);
     digitalWrite(redLedPin, LOW);
     delay(200);
 }
 
 void sensingProcessTakeReadings(void)
 {
-   
-    //Turn On photodiode
-    digitalWrite(photodiodeOutput, HIGH);
-    delay(200);
     //turn on red LED diode
     digitalWrite(redLedPin, HIGH);
     delay(200);
@@ -133,7 +152,9 @@ void sensingProcessTakeReadings(void)
     for (int i = 0; i < NUMBER_OF_SAMPLES; i++)
     {
         /* //Start reading photodiode */
-        redLedVoltageMeasurement[i][NUM_RED_LED] =  analogRead(photodiodeInput);
+        redLedVoltageMeasurement[i][NUM_RED_LED] = analogRead(photodiodeInput);
+        delay(700);
+        lcdSensing.intNumberTodisplayInLCD(redLedVoltageMeasurement[i][NUM_RED_LED],LEFT_ALIGNED_X,TOP_Y,true);
         delay(200);
     }
     //Turn Off red LED
@@ -147,7 +168,9 @@ void sensingProcessTakeReadings(void)
     for (int i = 0; i < NUMBER_OF_SAMPLES; i++)
     {
         /* //Start reading photodiode */
-        redLedVoltageMeasurement[i][NUM_YELLOW_LED] =  analogRead(photodiodeInput);
+        yellowLedVoltageMeasurement[i][NUM_YELLOW_LED] = analogRead(photodiodeInput);
+        delay(700);
+        lcdSensing.intNumberTodisplayInLCD(yellowLedVoltageMeasurement[i][NUM_YELLOW_LED],LEFT_ALIGNED_X,TOP_Y,true);
         delay(200);
     }
     //Turn Off yellow LED
@@ -161,7 +184,9 @@ void sensingProcessTakeReadings(void)
     for (int i = 0; i < NUMBER_OF_SAMPLES; i++)
     {
         /* //Start reading photodiode */
-        redLedVoltageMeasurement[i][NUM_BLUE_LED] =  analogRead(photodiodeInput);
+        blueLedVoltageMeasurement[i][NUM_BLUE_LED] = analogRead(photodiodeInput);
+        delay(700);
+        lcdSensing.intNumberTodisplayInLCD(blueLedVoltageMeasurement[i][NUM_BLUE_LED],LEFT_ALIGNED_X,TOP_Y,true);
         delay(200);
     }
     //Turn Off blue LED
@@ -175,7 +200,9 @@ void sensingProcessTakeReadings(void)
     for (int i = 0; i < NUMBER_OF_SAMPLES; i++)
     {
         /* //Start reading photodiode */
-        redLedVoltageMeasurement[i][NUM_IR_LED] =  analogRead(photodiodeInput);
+        infraredLedVoltageMeasurement[i][NUM_IR_LED] = analogRead(photodiodeInput);
+        delay(700);
+        lcdSensing.intNumberTodisplayInLCD(infraredLedVoltageMeasurement[i][NUM_IR_LED],LEFT_ALIGNED_X,TOP_Y,true);
         delay(200);
     }
     //Turn Off IR LED

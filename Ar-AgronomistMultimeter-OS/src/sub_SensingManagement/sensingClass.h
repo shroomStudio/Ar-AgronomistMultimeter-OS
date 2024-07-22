@@ -2,15 +2,7 @@
 #define SENSINGCLASS_H
 
 #include <Arduino.h>
-
-//Definitions
-const int photodiodeInput  = A0; 
-const int photodiodeOutput = A1; 
-const int redLedPin        = A2;
-const int yellowLedPin     = A3;
-const int blueLedPin       = A4;
-const int infraredLedPin   = A5;
-
+#include "sub_UserInterface/commonDataTypes.h"
 
 typedef enum 
 {

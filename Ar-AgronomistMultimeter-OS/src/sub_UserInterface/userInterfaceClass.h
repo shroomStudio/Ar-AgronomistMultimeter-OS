@@ -32,6 +32,8 @@ class userInterfaceClass{
     void VariableToEEPROM_Set(uint8_t address, uint8_t variable);
     void resetEEPROM(void); 
     void displayMenu(const char* menu[], int startIndex);
+    void displaySensingInstruction(void);
+    void startSensingProcess(void);
 };
 
 #endif
