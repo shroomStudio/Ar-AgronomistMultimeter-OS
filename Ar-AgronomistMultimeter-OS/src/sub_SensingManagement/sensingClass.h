@@ -41,7 +41,14 @@ class sensingClass{
    
     // Private Methods
     void serialMiltiplexor(SENSOR_SERIAL sensor);
-    
+    //Global File scope methods
+    void nitrogenSensingProcess(void);
+    void phosphorusSensingProcess(void);
+    void potassiumSensingProcess(void);
+    void turnOffAllElements(void);
+    void turnOnAllElements(void);
+    void sensingProcessTakeReadings(void);
+    void sensingProcessSendingReadingsToConditioning(void);
 };
 
 #endif

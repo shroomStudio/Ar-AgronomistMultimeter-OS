@@ -8,6 +8,7 @@
 lcdDisplayClass lcdSensing;
 buttonsClass buttonsSensing;
 signalConditioningClass conditioningSensing;
+
 //Global File scope Variables
     float nitrogenPhotodiodeRead   = 0.0; //Voltage read from photodiode in nitrogen sensing
     float phosphorusPhotodiodeRead = 0.0; //Voltage read from photodiode in phosphorus sensing
@@ -16,15 +17,7 @@ signalConditioningClass conditioningSensing;
     int yellowLedVoltageMeasurement[NUMBER_OF_SAMPLES][MAX_NUMBER_OF_LED]   = {0};
     int blueLedVoltageMeasurement[NUMBER_OF_SAMPLES][MAX_NUMBER_OF_LED]     = {0};
     int infraredLedVoltageMeasurement[NUMBER_OF_SAMPLES][MAX_NUMBER_OF_LED] = {0};
-    //Global File scope methods
-    void nitrogenSensingProcess(void);
-    void phosphorusSensingProcess(void);
-    void potassiumSensingProcess(void);
-    void turnOffAllElements(void);
-    void turnOnAllElements(void);
-    void sensingProcessTakeReadings(void);
-    void sensingProcessSendingReadingsToConditioning(void);
-
+    
 sensingClass::sensingClass(){
     // Constructor sensing class
     pinMode(redLedPin,OUTPUT);
@@ -81,7 +74,7 @@ void sensingClass::serialMiltiplexor(SENSOR_SERIAL sensor)
 {
 
 }
-void nitrogenSensingProcess(void)
+void sensingClass::nitrogenSensingProcess(void)
 {
     lcdSensing.metadataTodisplayFreeCursor("Nitrogren",LEFT_ALIGNED_X,TOP_Y,true);
     delay(2000);
@@ -94,7 +87,7 @@ void nitrogenSensingProcess(void)
     sensingProcessTakeReadings();  
 }
 
-void phosphorusSensingProcess(void)
+void sensingClass::phosphorusSensingProcess(void)
 {
     lcdSensing.metadataTodisplayFreeCursor("Phosphorus",LEFT_ALIGNED_X,TOP_Y,true);
     delay(2000);
@@ -106,7 +99,7 @@ void phosphorusSensingProcess(void)
     //Starting The sensing process
     sensingProcessTakeReadings();  
 }
-void potassiumSensingProcess(void)
+void sensingClass::potassiumSensingProcess(void)
 {
     lcdSensing.metadataTodisplayFreeCursor("Potassium",LEFT_ALIGNED_X,TOP_Y,true);
     delay(2000);
@@ -119,7 +112,7 @@ void potassiumSensingProcess(void)
     sensingProcessTakeReadings();  
 }
 
-void turnOnAllElements(void)
+void sensingClass::turnOnAllElements(void)
 {
     digitalWrite(yellowLedPin, HIGH);
     digitalWrite(blueLedPin, HIGH);
@@ -128,7 +121,7 @@ void turnOnAllElements(void)
     delay(200);
 }
 
-void turnOffAllElements(void)
+void sensingClass::turnOffAllElements(void)
 {
     digitalWrite(yellowLedPin, LOW);
     digitalWrite(blueLedPin, LOW);
@@ -137,7 +130,7 @@ void turnOffAllElements(void)
     delay(200);
 }
 
-void sensingProcessTakeReadings(void)
+void sensingClass::sensingProcessTakeReadings(void)
 {
     //turn on red LED diode
     digitalWrite(redLedPin, HIGH);
@@ -210,7 +203,7 @@ void sensingProcessTakeReadings(void)
     delay(200);
 }
 
-void sensingProcessSendingReadingsToConditioning(void)
+void sensingClass::sensingProcessSendingReadingsToConditioning(void)
 {
     // Copy readings to condition class arrays using memcpy
     memcpy(conditioningSensing.redLedVoltageMeasurement,      redLedVoltageMeasurement,      sizeof(redLedVoltageMeasurement));
