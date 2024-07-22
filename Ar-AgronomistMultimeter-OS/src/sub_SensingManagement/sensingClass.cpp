@@ -210,4 +210,7 @@ void sensingClass::sensingProcessSendingReadingsToConditioning(void)
     memcpy(conditioningSensing.yellowLedVoltageMeasurement,   yellowLedVoltageMeasurement,   sizeof(yellowLedVoltageMeasurement));
     memcpy(conditioningSensing.blueLedVoltageMeasurement,     blueLedVoltageMeasurement,     sizeof(blueLedVoltageMeasurement));
     memcpy(conditioningSensing.infraredLedVoltageMeasurement, infraredLedVoltageMeasurement, sizeof(infraredLedVoltageMeasurement));
+
+    //Starting signal conditioning process
+    conditioningSensing.macronutrientsMapping();
 }

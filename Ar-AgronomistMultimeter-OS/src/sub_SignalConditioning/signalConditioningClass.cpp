@@ -18,41 +18,51 @@ signalConditioningClass::~signalConditioningClass(){
 }
 
 //Public Methods
-void signalConditioningClass::photodiodeVoltage( LED_COLOR led, double voltage)
-{
-
-}
 
 //Private Methods
-void signalConditioningClass::macronutrientsMapping(LED_COLOR led, double voltage)
+void signalConditioningClass::macronutrientsMapping(void)
+{
+    lcdConditioning.metadataTodisplayFreeCursor("Processing readings lease ",LEFT_ALIGNED_X,TOP_Y,true);
+    delay(1000);
+    redLedMapping();
+    yellowLedMapping();
+    blueLedMapping();
+    infraredLedMapping();
+    
+}
+
+void signalConditioningClass::redLedMapping(void)
 {
 
 }
-void signalConditioningClass::redLedMapping(double voltage)
+
+void signalConditioningClass::yellowLedMapping(void)
 {
 
 }
-void signalConditioningClass::yellowLedMapping(double voltage)
+
+void signalConditioningClass::blueLedMapping(void)
 {
 
 }
-void signalConditioningClass::blueLedMapping(double voltage)
+
+void signalConditioningClass::infraredLedMapping(void)
 {
 
 }
-void signalConditioningClass::infraredLedMapping(double voltage)
+
+//TODO in next SW version
+void signalConditioningClass::temperatureMapping(void)
 {
 
 }
-void signalConditioningClass::temperatureMapping(String tValues)
+
+void signalConditioningClass::humidityMapping(void)
 {
 
 }
-void signalConditioningClass::humidityMapping(String hValues)
-{
 
-}
-void signalConditioningClass::atmosphericHighMapping(String aValues)
+void signalConditioningClass::atmosphericHighMapping(void)
 {
     
 }
