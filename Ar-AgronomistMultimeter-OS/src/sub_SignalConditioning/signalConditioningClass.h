@@ -37,6 +37,10 @@ class signalConditioningClass{
 
     private:
     //Private attributes
+    double redAverageRead;
+    double yellowAverageRead;
+    double blueAverageRead;
+    double infraRedAverageRead;
    
     // Private Methods 
     void redLedMapping(void);
