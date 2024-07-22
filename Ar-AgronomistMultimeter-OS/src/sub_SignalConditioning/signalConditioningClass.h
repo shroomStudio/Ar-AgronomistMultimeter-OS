@@ -3,6 +3,7 @@
 #define SIGNALCONDITIONINGCLASS_H
 
 #include <Arduino.h>
+#include "sub_UserInterface/commonDataTypes.h"
 
 enum LED_COLOR
 {

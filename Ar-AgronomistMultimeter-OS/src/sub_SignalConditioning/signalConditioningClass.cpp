@@ -1,5 +1,11 @@
 #include "signalConditioningClass.h"
+#include "sub_UserInterface/lcdDisplayClass.h"
+#include "sub_UserInterface/buttonsClass.h"
 
+
+//Clases instances 
+lcdDisplayClass lcdConditioning;
+buttonsClass buttonsConditioning;
 
 signalConditioningClass::signalConditioningClass(){
     //Constructor signalConditioningClass
