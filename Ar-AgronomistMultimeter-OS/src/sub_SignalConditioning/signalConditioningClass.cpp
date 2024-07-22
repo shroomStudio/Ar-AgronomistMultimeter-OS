@@ -24,17 +24,22 @@ void signalConditioningClass::macronutrientsMapping(void)
 {
     lcdConditioning.metadataTodisplayFreeCursor("Processing readings",LEFT_ALIGNED_X,TOP_Y,true);
     delay(1000);
-    redLedMapping();
-    yellowLedMapping();
-    blueLedMapping();
-    infraredLedMapping();  
+
+    for (int i = 0; i < MAX_NUMBER_OF_LED; i++)
+    {
+        LedMapping(i);
+    }
+    
 }
 
-void signalConditioningClass::redLedMapping(void)
+void signalConditioningClass::LedMapping(int ledIndex)
 {
     int sum = 0;
 
-    // Sum all the values in the array
+    switch (ledIndex)
+    {
+    case NUM_RED_LED:
+        // Sum all the values in the array
     for (int i = 0; i < NUMBER_OF_SAMPLES; i++)
     {
         sum += redLedVoltageMeasurement[i][NUM_RED_LED];
@@ -42,12 +47,9 @@ void signalConditioningClass::redLedMapping(void)
 
     // Calculate the average
     redAverageRead = sum / NUMBER_OF_SAMPLES;
-}
-
-void signalConditioningClass::yellowLedMapping(void)
-{
-    int sum = 0;
-
+    sum = 0;
+    break;
+    case NUM_YELLOW_LED:
     // Sum all the values in the array
     for (int i = 0; i < NUMBER_OF_SAMPLES; i++)
     {
@@ -56,13 +58,9 @@ void signalConditioningClass::yellowLedMapping(void)
 
     // Calculate the average
     yellowAverageRead = sum / NUMBER_OF_SAMPLES;
-
-}
-
-void signalConditioningClass::blueLedMapping(void)
-{
-    int sum = 0;
-
+    sum = 0;
+    break;
+    case NUM_BLUE_LED:
     // Sum all the values in the array
     for (int i = 0; i < NUMBER_OF_SAMPLES; i++)
     {
@@ -71,13 +69,10 @@ void signalConditioningClass::blueLedMapping(void)
 
     // Calculate the average
     blueAverageRead = sum / NUMBER_OF_SAMPLES;
-
-}
-
-void signalConditioningClass::infraredLedMapping(void)
-{
-    int sum = 0;
-
+    sum = 0;
+    break;
+    case NUM_IR_LED:
+        // Sum all the values in the array
     // Sum all the values in the array
     for (int i = 0; i < NUMBER_OF_SAMPLES; i++)
     {
@@ -86,7 +81,12 @@ void signalConditioningClass::infraredLedMapping(void)
 
     // Calculate the average
     infraRedAverageRead = sum / NUMBER_OF_SAMPLES;
-
+    sum = 0;
+    break;
+    
+    default:
+        break;
+    }   
 }
 
 //TODO in next SW version

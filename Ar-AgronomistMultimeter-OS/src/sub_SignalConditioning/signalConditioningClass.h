@@ -43,10 +43,7 @@ class signalConditioningClass{
     double infraRedAverageRead;
    
     // Private Methods 
-    void redLedMapping(void);
-    void yellowLedMapping(void);
-    void blueLedMapping(void);
-    void infraredLedMapping(void);
+    void LedMapping(int ledIndex);
 
     //TODO in next SW version
     void temperatureMapping(void);
