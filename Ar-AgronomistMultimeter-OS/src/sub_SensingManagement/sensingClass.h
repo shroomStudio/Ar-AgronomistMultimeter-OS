@@ -38,9 +38,10 @@ class sensingClass{
     int serialTx;
     int serialRx;
     double serialSelector;
-
+   
     // Private Methods
     void serialMiltiplexor(SENSOR_SERIAL sensor);
+    
 };
 
 #endif

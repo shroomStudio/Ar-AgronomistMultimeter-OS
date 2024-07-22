@@ -25,6 +25,10 @@ class signalConditioningClass{
     int temperatureMeasured;
     int humidityMeasured;
     int atmosphericHighMeasuered;
+    int redLedVoltageMeasurement[NUMBER_OF_SAMPLES][NUM_RED_LED];
+    int yellowLedVoltageMeasurement[NUMBER_OF_SAMPLES][NUM_YELLOW_LED];
+    int blueLedVoltageMeasurement[NUMBER_OF_SAMPLES][NUM_BLUE_LED];
+    int infraredLedVoltageMeasurement[NUMBER_OF_SAMPLES][NUM_IR_LED];
 
     //Public Methods
     void photodiodeVoltage( LED_COLOR led, double voltage);
