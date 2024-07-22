@@ -26,10 +26,10 @@ void sensingProcessTakeReadings(void);
 float nitrogenPhotodiodeRead   = 0.0; //Voltage read from photodiode in nitrogen sensing
 float phosphorusPhotodiodeRead = 0.0; //Voltage read from photodiode in phosphorus sensing
 float potassiumPhotodiodeRead  = 0.0; //Voltage read from potassium in nitrogen sensing
-uint8_t redLedVoltageMeasurement[NUMBER_OF_SAMPLES][MAX_NUMBER_OF_LED]      = {0};
-uint8_t yellowLedVoltageMeasurement[NUMBER_OF_SAMPLES][MAX_NUMBER_OF_LED]   = {0};
-uint8_t blueLedVoltageMeasurement[NUMBER_OF_SAMPLES][MAX_NUMBER_OF_LED]     = {0};
-uint8_t infraredLedVoltageMeasurement[NUMBER_OF_SAMPLES][MAX_NUMBER_OF_LED] = {0};
+int redLedVoltageMeasurement[NUMBER_OF_SAMPLES][MAX_NUMBER_OF_LED]      = {0};
+int yellowLedVoltageMeasurement[NUMBER_OF_SAMPLES][MAX_NUMBER_OF_LED]   = {0};
+int blueLedVoltageMeasurement[NUMBER_OF_SAMPLES][MAX_NUMBER_OF_LED]     = {0};
+int infraredLedVoltageMeasurement[NUMBER_OF_SAMPLES][MAX_NUMBER_OF_LED] = {0};
 
 
 sensingClass::sensingClass(){
