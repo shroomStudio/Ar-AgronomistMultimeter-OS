@@ -44,17 +44,27 @@ void sensingClass::macronutrientSensingProcess()
     if (!sensingProcessFinished)
     {
         lcdSensing.metadataTodisplayInLCD("sensing in process, press back to abort... \n", LEFT_ALIGNED_X, MIDDLE_Y,true);
-        delay(2000);
+        delay(3000);
         
         nitrogenSensingProcess();
         phosphorusSensingProcess();
         potassiumSensingProcess();
 
+        //Process of sensing finished values 
         sensingProcessFinished = true;  
     }
 
-    lcdSensing.metadataTodisplayFreeCursor("Sensing processs finished \n",LEFT_ALIGNED_X,TOP_Y,false);
+    if (true == sensingProcessFinished)
+    {
+    lcdSensing.metadataTodisplayFreeCursor("Readings Saved",LEFT_ALIGNED_X,TOP_Y,true);
     delay(2000);
+    lcdSensing.metadataTodisplayFreeCursor("Sensing process finished \n",LEFT_ALIGNED_X,TOP_Y,false);
+    delay(2000);
+
+     //Sendind readings to conditioning class
+    sensingProcessSendingReadingsToConditioning();
+    }
+    
 }
 
 void sensingClass::temperatureSensingProcess()
@@ -194,17 +204,12 @@ void sensingClass::sensingProcessTakeReadings(void)
     //Turn Off IR LED
     digitalWrite(infraredLedPin, LOW);
     delay(200);
-
-    //Sendind readings to conditioning class
-    lcdSensing.metadataTodisplayFreeCursor("Saving readings",LEFT_ALIGNED_X,TOP_Y,true);
-    delay(2000);
-    //sensingProcessSendingReadingsToConditioning();
-    lcdSensing.metadataTodisplayFreeCursor("Readings Saved",LEFT_ALIGNED_X,TOP_Y,true);
-    delay(2000);
 }
 
 void sensingClass::sensingProcessSendingReadingsToConditioning(void)
 {
+    lcdSensing.metadataTodisplayFreeCursor("Inside Sending\n",LEFT_ALIGNED_X,TOP_Y,true);
+    delay(5000);
     // Copy readings to condition class arrays using memcpy
     memcpy(conditioningSensing.redLedVoltageMeasurement,      redLedVoltageMeasurement,      sizeof(redLedVoltageMeasurement));
     memcpy(conditioningSensing.yellowLedVoltageMeasurement,   yellowLedVoltageMeasurement,   sizeof(yellowLedVoltageMeasurement));
