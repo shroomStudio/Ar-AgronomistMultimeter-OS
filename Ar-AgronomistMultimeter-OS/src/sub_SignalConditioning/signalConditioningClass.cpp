@@ -34,7 +34,7 @@ void signalConditioningClass::macronutrientsMapping(void)
 }
 
 void signalConditioningClass::LedMapping(int ledIndex)
-{
+{/*
     int sum = 0;
 
     Serial.begin(9600);
@@ -43,7 +43,7 @@ void signalConditioningClass::LedMapping(int ledIndex)
     {
     case NUM_RED_LED:
         // Sum all the values in the array
-    for (int i = 0; i < NUMBER_OF_SAMPLES; i++)
+    for (int i = 0; i < MAX_NUMBER_OF_SAMPLES; i++)
     {
         sum += redLedVoltageMeasurement[i][NUM_RED_LED];
 
@@ -55,13 +55,13 @@ void signalConditioningClass::LedMapping(int ledIndex)
     }
 
     // Calculate the average
-    redAverageRead = sum / NUMBER_OF_SAMPLES;
+    redAverageRead = sum / MAX_NUMBER_OF_SAMPLES;
     sum = 0;
      
     break;
     case NUM_YELLOW_LED:
     // Sum all the values in the array
-    for (int i = 0; i < NUMBER_OF_SAMPLES; i++)
+    for (int i = 0; i < MAX_NUMBER_OF_SAMPLES; i++)
     {
         sum += yellowLedVoltageMeasurement[i][NUM_YELLOW_LED];
         //Printing the sensor read to grapth it before to clear the array 
@@ -72,12 +72,12 @@ void signalConditioningClass::LedMapping(int ledIndex)
     }
 
     // Calculate the average
-    yellowAverageRead = sum / NUMBER_OF_SAMPLES;
+    yellowAverageRead = sum / MAX_NUMBER_OF_SAMPLES;
     sum = 0;
     break;
     case NUM_BLUE_LED:
     // Sum all the values in the array
-    for (int i = 0; i < NUMBER_OF_SAMPLES; i++)
+    for (int i = 0; i < MAX_NUMBER_OF_SAMPLES; i++)
     {
         sum += blueLedVoltageMeasurement[i][NUM_BLUE_LED];
         //Printing the sensor read to grapth it before to clear the array 
@@ -88,13 +88,13 @@ void signalConditioningClass::LedMapping(int ledIndex)
     }
 
     // Calculate the average
-    blueAverageRead = sum / NUMBER_OF_SAMPLES;
+    blueAverageRead = sum / MAX_NUMBER_OF_SAMPLES;
     sum = 0;
     break;
     case NUM_IR_LED:
         // Sum all the values in the array
     // Sum all the values in the array
-    for (int i = 0; i < NUMBER_OF_SAMPLES; i++)
+    for (int i = 0; i < MAX_NUMBER_OF_SAMPLES; i++)
     {
         sum += infraredLedVoltageMeasurement[i][NUM_IR_LED];
         //Printing the sensor read to grapth it before to clear the array 
@@ -105,13 +105,13 @@ void signalConditioningClass::LedMapping(int ledIndex)
     }
 
     // Calculate the average
-    infraRedAverageRead = sum / NUMBER_OF_SAMPLES;
+    infraRedAverageRead = sum / MAX_NUMBER_OF_SAMPLES;
     sum = 0;
     break;
     
     default:
         break;
-    }   
+    }  */ 
 }
 
 //TODO in next SW version

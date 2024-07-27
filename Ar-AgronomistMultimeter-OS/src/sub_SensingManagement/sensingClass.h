@@ -47,7 +47,7 @@ class sensingClass{
     void potassiumSensingProcess(void);
     void turnOffAllElements(void);
     void turnOnAllElements(void);
-    void sensingProcessTakeReadings(void);
+    void sensingProcessTakeReadings(int indexElement);
     void sensingProcessSendingReadingsToConditioning(void);
 };
 

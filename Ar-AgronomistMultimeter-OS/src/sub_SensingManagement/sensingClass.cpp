@@ -13,10 +13,9 @@ signalConditioningClass conditioningSensing;
     float nitrogenPhotodiodeRead   = 0.0; //Voltage read from photodiode in nitrogen sensing
     float phosphorusPhotodiodeRead = 0.0; //Voltage read from photodiode in phosphorus sensing
     float potassiumPhotodiodeRead  = 0.0; //Voltage read from potassium in nitrogen sensing
-    int redLedVoltageMeasurement[NUMBER_OF_SAMPLES][MAX_NUMBER_OF_LED]      = {0};
-    int yellowLedVoltageMeasurement[NUMBER_OF_SAMPLES][MAX_NUMBER_OF_LED]   = {0};
-    int blueLedVoltageMeasurement[NUMBER_OF_SAMPLES][MAX_NUMBER_OF_LED]     = {0};
-    int infraredLedVoltageMeasurement[NUMBER_OF_SAMPLES][MAX_NUMBER_OF_LED] = {0};
+    int nitrogenMeasurements[MAX_NUMBER_OF_SAMPLES];
+    int potassiumMeasurements[MAX_NUMBER_OF_SAMPLES];
+    int phosphorusMeasurement[MAX_NUMBER_OF_SAMPLES];
     
 sensingClass::sensingClass(){
     // Constructor sensing class
@@ -93,7 +92,7 @@ void sensingClass::nitrogenSensingProcess(void)
     //Ensure all the leds and photodiode are off
     turnOffAllElements();
     //Starting The sensing process
-    sensingProcessTakeReadings();  
+    sensingProcessTakeReadings(N_MEASURE);  
 }
 
 void sensingClass::phosphorusSensingProcess(void)
@@ -106,10 +105,11 @@ void sensingClass::phosphorusSensingProcess(void)
     //Ensure all the leds and photodiode are off
     turnOffAllElements();
     //Starting The sensing process
-    sensingProcessTakeReadings();  
+    sensingProcessTakeReadings(P_MEASURE);  
 }
 void sensingClass::potassiumSensingProcess(void)
 {
+    
     lcdSensing.metadataTodisplayFreeCursor("Potassium",LEFT_ALIGNED_X,TOP_Y,true);
     delay(2000);
     //Before Any process turn on all the elements 
@@ -118,7 +118,7 @@ void sensingClass::potassiumSensingProcess(void)
     //Ensure all the leds and photodiode are off
     turnOffAllElements();
     //Starting The sensing process
-    sensingProcessTakeReadings();  
+    sensingProcessTakeReadings(K_MEASURE);  
 }
 
 void sensingClass::turnOnAllElements(void)
@@ -139,82 +139,142 @@ void sensingClass::turnOffAllElements(void)
     delay(200);
 }
 
-void sensingClass::sensingProcessTakeReadings(void)
+void sensingClass::sensingProcessTakeReadings(int indexElement)
 {
+    int sample = 0;
+    int tempArray[MAX_NUMBER_OF_SAMPLES];
+
     //turn on red LED diode
     digitalWrite(redLedPin, HIGH);
     delay(200);
     //reading values for Red LED
-    for (int i = 0; i < NUMBER_OF_SAMPLES; i++)
+     for(int i=0; i < MEASURES_PER_LED; i++ )
     {
         /* //Start reading photodiode */
-        redLedVoltageMeasurement[i][NUM_RED_LED] = analogRead(photodiodeInput);
-        delay(700);
-        lcdSensing.intNumberTodisplayInLCD(redLedVoltageMeasurement[i][NUM_RED_LED],LEFT_ALIGNED_X,TOP_Y,true);
+        tempArray[(sample +i)] = analogRead(photodiodeInput);
+        delay(100);
+        lcdSensing.intNumberTodisplayInLCD((tempArray[(sample +i)]),LEFT_ALIGNED_X,TOP_Y,true);
         delay(200);
     }
     //Turn Off red LED
     digitalWrite(redLedPin, LOW);
     delay(200);
-
+    sample += MEASURES_PER_LED;
     //turn on yellow LED diode
     digitalWrite(yellowLedPin, HIGH);
     delay(200);
     //reading values for yellow LED
-    for (int i = 0; i < NUMBER_OF_SAMPLES; i++)
+    for(int i=0; i < MEASURES_PER_LED; i++ )
     {
         /* //Start reading photodiode */
-        yellowLedVoltageMeasurement[i][NUM_YELLOW_LED] = analogRead(photodiodeInput);
-        delay(700);
-        lcdSensing.intNumberTodisplayInLCD(yellowLedVoltageMeasurement[i][NUM_YELLOW_LED],LEFT_ALIGNED_X,TOP_Y,true);
+        tempArray[(sample +i)] = analogRead(photodiodeInput);
+        delay(100);
+        lcdSensing.intNumberTodisplayInLCD((tempArray[(sample +i)]),LEFT_ALIGNED_X,TOP_Y,true);
         delay(200);
     }
     //Turn Off yellow LED
     digitalWrite(yellowLedPin, LOW);
     delay(200);
-
+    sample += MEASURES_PER_LED;
     //turn on blue LED diode
     digitalWrite(blueLedPin, HIGH);
     delay(200);
     //reading values for blue LED
-    for (int i = 0; i < NUMBER_OF_SAMPLES; i++)
+    for(int i=0; i < MEASURES_PER_LED; i++ )
     {
         /* //Start reading photodiode */
-        blueLedVoltageMeasurement[i][NUM_BLUE_LED] = analogRead(photodiodeInput);
-        delay(700);
-        lcdSensing.intNumberTodisplayInLCD(blueLedVoltageMeasurement[i][NUM_BLUE_LED],LEFT_ALIGNED_X,TOP_Y,true);
+        tempArray[(sample +i)] = analogRead(photodiodeInput);
+        delay(100);
+        lcdSensing.intNumberTodisplayInLCD((tempArray[(sample +i)]),LEFT_ALIGNED_X,TOP_Y,true);
         delay(200);
     }
     //Turn Off blue LED
     digitalWrite(blueLedPin, LOW);
     delay(200);
 
+    sample += MEASURES_PER_LED;
+
     //turn on IR LED diode
     digitalWrite(infraredLedPin, HIGH);
     delay(200);
     //reading values for IR LED
-    for (int i = 0; i < NUMBER_OF_SAMPLES; i++)
+   for(int i=0; i < MEASURES_PER_LED; i++ )
     {
         /* //Start reading photodiode */
-        infraredLedVoltageMeasurement[i][NUM_IR_LED] = analogRead(photodiodeInput);
-        delay(700);
-        lcdSensing.intNumberTodisplayInLCD(infraredLedVoltageMeasurement[i][NUM_IR_LED],LEFT_ALIGNED_X,TOP_Y,true);
+        tempArray[(sample +i)] = analogRead(photodiodeInput);
+        delay(100);
+        lcdSensing.intNumberTodisplayInLCD((tempArray[(sample +i)]),LEFT_ALIGNED_X,TOP_Y,true);
         delay(200);
     }
     //Turn Off IR LED
     digitalWrite(infraredLedPin, LOW);
     delay(200);
+
+    //Copy the information took to the correct array
+    switch (indexElement)
+    {
+    case N_MEASURE:
+        /* code */
+        for (int i =0; i < MAX_NUMBER_OF_SAMPLES; i++)
+        {
+            nitrogenMeasurements[i] = tempArray[i];
+        }
+        break;
+    case K_MEASURE:
+        /* code */
+        for (int i =0; i < MAX_NUMBER_OF_SAMPLES; i++)
+        {
+            potassiumMeasurements[i] = tempArray[i];
+        }
+        break;
+    case P_MEASURE:
+        /* code */
+        for (int i =0; i < MAX_NUMBER_OF_SAMPLES; i++)
+        {
+            
+            phosphorusMeasurement[i] = tempArray[i];
+        }
+        break;
+    default:
+        break;
+    }
 }
 
 void sensingClass::sensingProcessSendingReadingsToConditioning(void)
 {
-    lcdSensing.metadataTodisplayFreeCursor("Inside Sending\n",LEFT_ALIGNED_X,TOP_Y,true);
-    delay(5000);
-    // Copy readings to condition class arrays using memcpy
-    memcpy(conditioningSensing.redLedVoltageMeasurement,      redLedVoltageMeasurement,      sizeof(redLedVoltageMeasurement));
-    memcpy(conditioningSensing.yellowLedVoltageMeasurement,   yellowLedVoltageMeasurement,   sizeof(yellowLedVoltageMeasurement));
-    memcpy(conditioningSensing.blueLedVoltageMeasurement,     blueLedVoltageMeasurement,     sizeof(blueLedVoltageMeasurement));
-    memcpy(conditioningSensing.infraredLedVoltageMeasurement, infraredLedVoltageMeasurement, sizeof(infraredLedVoltageMeasurement));
+    // Copy Nitrogen readings to condition class arrays
+    for (int i = 0; i < MAX_NUMBER_OF_SAMPLES; i++)
+    {
+        conditioningSensing.nitrogenMeasurements[i] = nitrogenMeasurements[i];
+        //Clearing global scope file array to be ready for next process 
+        Serial.println(conditioningSensing.nitrogenMeasurements[i]);
+        delay(200);
+        nitrogenMeasurements[i] = {'\0'};
+    }
+     Serial.println("N sent");
+     delay(200);
+    // Copy Potassium readings to condition class arrays
+    for (int i = 0; i < MAX_NUMBER_OF_SAMPLES; i++)
+    {
+        conditioningSensing.potassiumMeasurements[i] = potassiumMeasurements[i];
+        //Clearing global scope file array to be ready for next process 
+        Serial.println(conditioningSensing.potassiumMeasurements[i]);
+        delay(200);
+        potassiumMeasurements[i] = {'\0'};
+    }
+    Serial.println("K sent");
+    delay(200);
+    // Copy Phosphorus readings to condition class arrays
+    for (int i = 0; i < MAX_NUMBER_OF_SAMPLES; i++)
+    {
+        conditioningSensing.phosphorusMeasurement[i] = phosphorusMeasurement[i];
+        //Clearing global scope file array to be ready for next process 
+        Serial.println(conditioningSensing.phosphorusMeasurement[i]);
+        delay(200);
+        phosphorusMeasurement[i] = {'\0'};
+    }
+    Serial.println("P sent");
+    delay(200);
 
     //Starting signal conditioning process
     conditioningSensing.macronutrientsMapping();

@@ -25,6 +25,7 @@ userInterfaceClass userInterfaceMain;
 
 void setup() 
 {
+    Serial.begin(9600);
     lcdMain.initialDisplaySetup();
     energyMain.initialSetUpEnergyManagament();
     buttonsMain.initialButtonsSetup();

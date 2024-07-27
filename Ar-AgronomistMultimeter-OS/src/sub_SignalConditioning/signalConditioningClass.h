@@ -22,10 +22,9 @@ class signalConditioningClass{
     int phosphorusMeasured;
     int nitrogenMeasured;
     int potassiumMeasured;
-    int redLedVoltageMeasurement[NUMBER_OF_SAMPLES][NUM_RED_LED];
-    int yellowLedVoltageMeasurement[NUMBER_OF_SAMPLES][NUM_YELLOW_LED];
-    int blueLedVoltageMeasurement[NUMBER_OF_SAMPLES][NUM_BLUE_LED];
-    int infraredLedVoltageMeasurement[NUMBER_OF_SAMPLES][NUM_IR_LED];
+    int nitrogenMeasurements [MAX_NUMBER_OF_SAMPLES];
+    int potassiumMeasurements[MAX_NUMBER_OF_SAMPLES];
+    int phosphorusMeasurement[MAX_NUMBER_OF_SAMPLES];
 
     //TODO next SW version
     int temperatureMeasured;
