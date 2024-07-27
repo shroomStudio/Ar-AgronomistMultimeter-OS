@@ -104,6 +104,13 @@ void userInterfaceClass::userInitialConfiguration(void)
             initialConfigurationDone = true;
             VariableToEEPROM_Set(0,initialConfigurationDone);
             displayMainMenu();
+            while (buttonsUser.buttonPressed() != OK_BUTTON)
+            {
+            lcdUser.metadataTodisplayInLCD("Press Ok to start Sensing Process  \n", LEFT_ALIGNED_X, MIDDLE_Y, true);
+            buttonsUser.navigationButtons();
+            delay(3000);
+            }
+            //Starting sensing process
             startSensingProcess();
         }
     }
@@ -182,6 +189,7 @@ void userInterfaceClass::displayMenu(const char* menu[], int startIndex)
             lcdUser.metadataTodisplayFreeCursor(menu[i], LEFT_ALIGNED_X, TOP_Y + (i - startIndex + 1), false);
         }
     }
+   delay(5000);
 }
 
 void userInterfaceClass::displaySensingInstruction(void)
@@ -218,9 +226,6 @@ void userInterfaceClass::displaySensingInstruction(void)
 
 void userInterfaceClass::startSensingProcess(void)
 {
-    delay(3000);
-    lcdUser.metadataTodisplayInLCD("Sensing Process  \n", LEFT_ALIGNED_X, MIDDLE_Y, true);
-
     if ( energyUser.batteryChargePercentage >= MINIMUM_TO_SENSING)
     {
         sensingUser.macronutrientSensingProcess();
@@ -228,5 +233,6 @@ void userInterfaceClass::startSensingProcess(void)
     else 
     {
         lcdUser.metadataTodisplayInLCD("the battery must has at least 10 percent of charge \n", LEFT_ALIGNED_X, MIDDLE_Y, true);
+        delay(2000);
     }
 }

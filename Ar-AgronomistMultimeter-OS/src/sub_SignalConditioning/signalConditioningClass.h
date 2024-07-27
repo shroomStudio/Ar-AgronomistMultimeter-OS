@@ -22,38 +22,32 @@ class signalConditioningClass{
     int phosphorusMeasured;
     int nitrogenMeasured;
     int potassiumMeasured;
+    int nitrogenMeasurements [MAX_NUMBER_OF_SAMPLES];
+    int potassiumMeasurements[MAX_NUMBER_OF_SAMPLES];
+    int phosphorusMeasurement[MAX_NUMBER_OF_SAMPLES];
+
+    //TODO next SW version
     int temperatureMeasured;
     int humidityMeasured;
     int atmosphericHighMeasuered;
-    int redLedVoltageMeasurement[NUMBER_OF_SAMPLES][NUM_RED_LED];
-    int yellowLedVoltageMeasurement[NUMBER_OF_SAMPLES][NUM_YELLOW_LED];
-    int blueLedVoltageMeasurement[NUMBER_OF_SAMPLES][NUM_BLUE_LED];
-    int infraredLedVoltageMeasurement[NUMBER_OF_SAMPLES][NUM_IR_LED];
-
+    
     //Public Methods
-    void photodiodeVoltage( LED_COLOR led, double voltage);
+    void macronutrientsMapping(void);
 
     private:
     //Private attributes
-    int redLedPin;
-    int yellowLedPin;
-    int blueLedPin;
-    int infraredLedPin;
-    int photodiodePinOut;
-    int photodiodePinIn;
-    int serialTx;
-    int serialRx;
-    double serialSelector;
+    double redAverageRead;
+    double yellowAverageRead;
+    double blueAverageRead;
+    double infraRedAverageRead;
+   
+    // Private Methods 
+    void LedMapping(int ledIndex);
 
-    // Private Methods
-    void macronutrientsMapping(LED_COLOR led, double voltage);
-    void redLedMapping(double voltage);
-    void yellowLedMapping(double voltage);
-    void blueLedMapping(double voltage);
-    void infraredLedMapping(double voltage);
-    void temperatureMapping(String tValues);
-    void humidityMapping(String hValues);
-    void atmosphericHighMapping(String aValues);
+    //TODO in next SW version
+    void temperatureMapping(void);
+    void humidityMapping(void);
+    void atmosphericHighMapping(void);
 };
 
 #endif

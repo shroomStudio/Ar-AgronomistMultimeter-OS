@@ -44,13 +44,18 @@ PinA5   infrared Led Pin
 #define resetLcdPin 9
 #define lightLcdPin resetLcdPin
 #define NUMBER_OF_ITEMS_MAIN_MENU 5
-#define NUMBER_OF_SAMPLES 10
+#define MAX_NUMBER_OF_SAMPLES 40
+#define MEASURES_PER_LED 10
+#define N_MEASURE 0
+#define K_MEASURE 1
+#define P_MEASURE 2
+#define NITROGEN_MEASURE 0
 #define ELEMENT_TO_MEASURE 3
 #define NUM_RED_LED        0
 #define NUM_YELLOW_LED     1
 #define NUM_BLUE_LED       2
 #define NUM_IR_LED         3
-#define MAX_NUMBER_OF_LED 5
+#define MAX_NUMBER_OF_LED  5
 
 const int photodiodeInput  = A0; 
 const int redLedPin        = A2;
