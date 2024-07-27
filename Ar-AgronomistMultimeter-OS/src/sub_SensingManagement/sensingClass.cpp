@@ -247,35 +247,22 @@ void sensingClass::sensingProcessSendingReadingsToConditioning(void)
     {
         conditioningSensing.nitrogenMeasurements[i] = nitrogenMeasurements[i];
         //Clearing global scope file array to be ready for next process 
-        Serial.println(conditioningSensing.nitrogenMeasurements[i]);
-        delay(200);
         nitrogenMeasurements[i] = {'\0'};
     }
-     Serial.println("N sent");
-     delay(200);
     // Copy Potassium readings to condition class arrays
     for (int i = 0; i < MAX_NUMBER_OF_SAMPLES; i++)
     {
         conditioningSensing.potassiumMeasurements[i] = potassiumMeasurements[i];
         //Clearing global scope file array to be ready for next process 
-        Serial.println(conditioningSensing.potassiumMeasurements[i]);
-        delay(200);
         potassiumMeasurements[i] = {'\0'};
     }
-    Serial.println("K sent");
-    delay(200);
     // Copy Phosphorus readings to condition class arrays
     for (int i = 0; i < MAX_NUMBER_OF_SAMPLES; i++)
     {
         conditioningSensing.phosphorusMeasurement[i] = phosphorusMeasurement[i];
         //Clearing global scope file array to be ready for next process 
-        Serial.println(conditioningSensing.phosphorusMeasurement[i]);
-        delay(200);
         phosphorusMeasurement[i] = {'\0'};
     }
-    Serial.println("P sent");
-    delay(200);
-
     //Starting signal conditioning process
     conditioningSensing.macronutrientsMapping();
 }
