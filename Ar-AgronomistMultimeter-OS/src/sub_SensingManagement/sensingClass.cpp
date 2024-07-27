@@ -198,9 +198,10 @@ void sensingClass::sensingProcessTakeReadings(void)
 
     //Sendind readings to conditioning class
     lcdSensing.metadataTodisplayFreeCursor("Saving readings",LEFT_ALIGNED_X,TOP_Y,true);
-    sensingProcessSendingReadingsToConditioning();
+    delay(2000);
+    //sensingProcessSendingReadingsToConditioning();
     lcdSensing.metadataTodisplayFreeCursor("Readings Saved",LEFT_ALIGNED_X,TOP_Y,true);
-    delay(200);
+    delay(2000);
 }
 
 void sensingClass::sensingProcessSendingReadingsToConditioning(void)

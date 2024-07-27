@@ -218,8 +218,9 @@ void userInterfaceClass::displaySensingInstruction(void)
 
 void userInterfaceClass::startSensingProcess(void)
 {
-    delay(3000);
+    
     lcdUser.metadataTodisplayInLCD("Sensing Process  \n", LEFT_ALIGNED_X, MIDDLE_Y, true);
+    delay(3000);
 
     if ( energyUser.batteryChargePercentage >= MINIMUM_TO_SENSING)
     {

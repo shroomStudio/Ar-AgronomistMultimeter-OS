@@ -22,6 +22,7 @@ signalConditioningClass::~signalConditioningClass(){
 //Private Methods
 void signalConditioningClass::macronutrientsMapping(void)
 {
+
     lcdConditioning.metadataTodisplayFreeCursor("Processing readings",LEFT_ALIGNED_X,TOP_Y,true);
     delay(1000);
 
