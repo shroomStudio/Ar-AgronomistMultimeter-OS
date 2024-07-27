@@ -33,7 +33,6 @@ sensingClass::~sensingClass(){
 void sensingClass::macronutrientSensingProcess()
 {
     bool sensingProcessFinished = false;
-    
 
     while (buttonsSensing.buttonPressed() != OK_BUTTON)
     {
