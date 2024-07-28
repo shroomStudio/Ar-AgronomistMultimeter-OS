@@ -19,9 +19,9 @@ class signalConditioningClass{
     ~signalConditioningClass();
     
     //Public attributes
-    int phosphorusMeasured;
-    int nitrogenMeasured;
-    int potassiumMeasured;
+    int nitrogenAverage;
+    int potassiumAverage;
+    int phosphorusAverage;
     int nitrogenMeasurements [MAX_NUMBER_OF_SAMPLES];
     int potassiumMeasurements[MAX_NUMBER_OF_SAMPLES];
     int phosphorusMeasurement[MAX_NUMBER_OF_SAMPLES];
@@ -36,13 +36,9 @@ class signalConditioningClass{
 
     private:
     //Private attributes
-    double redAverageRead;
-    double yellowAverageRead;
-    double blueAverageRead;
-    double infraRedAverageRead;
-   
+
     // Private Methods 
-    void LedMapping(int ledIndex);
+    void LedMapping(void);
 
     //TODO in next SW version
     void temperatureMapping(void);

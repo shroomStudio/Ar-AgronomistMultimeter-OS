@@ -49,6 +49,7 @@ PinA5   infrared Led Pin
 #define N_MEASURE 0
 #define K_MEASURE 1
 #define P_MEASURE 2
+#define MAX_NUMBER_OF_ELEMENTS 3
 #define NITROGEN_MEASURE 0
 #define ELEMENT_TO_MEASURE 3
 #define NUM_RED_LED        0
