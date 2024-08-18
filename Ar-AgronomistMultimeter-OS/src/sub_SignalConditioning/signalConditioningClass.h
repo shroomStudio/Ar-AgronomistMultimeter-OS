@@ -19,12 +19,16 @@ class signalConditioningClass{
     ~signalConditioningClass();
     
     //Public attributes
-    int phosphorusMeasured;
-    int nitrogenMeasured;
-    int potassiumMeasured;
-    int nitrogenMeasurements [MAX_NUMBER_OF_SAMPLES];
-    int potassiumMeasurements[MAX_NUMBER_OF_SAMPLES];
-    int phosphorusMeasurement[MAX_NUMBER_OF_SAMPLES];
+    int whiteLedAverage;
+    int redLedAverage;
+    int yellowLedAverage;
+    int blueLedAverage;
+    int greenLedAverage;
+    int whiteLedMeasurements [MAX_NUMBER_OF_SAMPLES];
+    int redLedMeasurements[MAX_NUMBER_OF_SAMPLES];
+    int yellowLedMeasurements[MAX_NUMBER_OF_SAMPLES];
+    int blueLedMeasurements[MAX_NUMBER_OF_SAMPLES];
+    int greenLedMeasurements[MAX_NUMBER_OF_SAMPLES];
 
     //TODO next SW version
     int temperatureMeasured;
@@ -36,13 +40,9 @@ class signalConditioningClass{
 
     private:
     //Private attributes
-    double redAverageRead;
-    double yellowAverageRead;
-    double blueAverageRead;
-    double infraRedAverageRead;
-   
+
     // Private Methods 
-    void LedMapping(int ledIndex);
+    void LedMapping(void);
 
     //TODO in next SW version
     void temperatureMapping(void);
