@@ -21,11 +21,11 @@ Pin4    Reset Device Pin
 Pin3    Activation Pin Relay Battery Charge
 Pin2    Activation Pin Relay Off
 PinA0   Photodiode Input
-PinA1   Not Used
-PinA2   red Led Pin
-PinA3   yellow Led Pin
-PinA4   blue Led Pin
-PinA5   infrared Led Pin
+PinA1   White LED
+PinA2   Red LED
+PinA3   Yellow LED
+PinA4   Blue LED
+PinA5   Green LED
 */
 
 
@@ -59,10 +59,11 @@ PinA5   infrared Led Pin
 #define MAX_NUMBER_OF_LED  5
 
 const int photodiodeInput  = A0; 
+const int whiteLedPin      = A1;
 const int redLedPin        = A2;
 const int yellowLedPin     = A3;
 const int blueLedPin       = A4;
-const int infraredLedPin   = A5;
+const int greenLedPin      = A5;
 
 //Enumerations 
 typedef enum 

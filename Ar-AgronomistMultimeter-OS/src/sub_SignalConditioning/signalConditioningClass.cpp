@@ -22,82 +22,158 @@ signalConditioningClass::~signalConditioningClass(){
 //Private Methods
 void signalConditioningClass::macronutrientsMapping(void)
 {
-    int sum = 0;
+    long int sum = 0;
+
+    whiteLedAverage = 0;
+    redLedAverage = 0;
+    yellowLedAverage = 0;
+    blueLedAverage = 0;
+    greenLedAverage = 0;
+
 
     lcdConditioning.metadataTodisplayFreeCursor("Processing readings",LEFT_ALIGNED_X,TOP_Y,true);
     delay(1000);
 
     for (int i = 0; i < MAX_NUMBER_OF_SAMPLES; i++)
     {
-        sum += nitrogenMeasurements[i];
+        sum += whiteLedMeasurements[i];
 
         //Printing the sensor read to grapth it before to clear the array 
-        Serial.println(nitrogenMeasurements[i]);
-        delay(100);
+        //Serial.println(whiteLedMeasurements[i]);
+        //delay(100);
         //Cleaning the array to leave it ready beore the next sensing
-        nitrogenMeasurements[i] = {'\0'};
+        whiteLedMeasurements[i] = 0;
     }
     // Calculate the average
-    nitrogenAverage = sum / MAX_NUMBER_OF_SAMPLES;
+    //Serial.println("N sum: ");
+    //Serial.println(sum);
+    //delay(100);
+    whiteLedAverage = static_cast<int>(sum / MAX_NUMBER_OF_SAMPLES);
+    Serial.println("\n White average: ");
+    Serial.print(whiteLedAverage);
+    delay(100);
+    //whiteLedAverage = 0;
+    //Serial.println("N average: ");
+    //Serial.print(whiteLedAverage);
+    //delay(100);
 
     //Printing the information to user
-    lcdConditioning.metadataTodisplayFreeCursor("Nitrogen average: \t",LEFT_ALIGNED_X,TOP_Y,true);
+    lcdConditioning.metadataTodisplayFreeCursor("White average: \t",LEFT_ALIGNED_X,TOP_Y,true);
     delay(1000);
-    lcdConditioning.intNumberTodisplayInLCD(nitrogenAverage,LEFT_ALIGNED_X,MIDDLE_Y,false);
+    lcdConditioning.intNumberTodisplayInLCD(whiteLedAverage,LEFT_ALIGNED_X,MIDDLE_Y,false);
     delay(1000);
-    Serial.println("N average: ");
-    Serial.print(nitrogenAverage);
-    delay(100);
 
     //Clearing the temp variable sum to start the calculation of another element
     sum = 0;
 
     for (int i = 0; i < MAX_NUMBER_OF_SAMPLES; i++)
     {
-        sum += potassiumMeasurements[i];
+        sum += redLedMeasurements[i];
 
         //Printing the sensor read to grapth it before to clear the array 
-        Serial.println(potassiumMeasurements[i]);
-        delay(100);
+        //Serial.println(redLedMeasurements[i]);
+        //delay(100);
         //Cleaning the array to leave it ready beore the next sensing
-        potassiumMeasurements[i] = {'\0'};
+        redLedMeasurements[i] = 0;
     }
+    //Serial.println("K sum: ");
+    //Serial.println(sum);
+    //delay(100);
     // Calculate the average
-    potassiumAverage = sum / MAX_NUMBER_OF_SAMPLES;
+    redLedAverage = static_cast<int>(sum / MAX_NUMBER_OF_SAMPLES);
+    Serial.println("\n Red average: ");
+    Serial.print(redLedAverage);
+    delay(100);
 
     //Printing the information to user
-    lcdConditioning.metadataTodisplayFreeCursor("Potassium average: \t",LEFT_ALIGNED_X,TOP_Y,true);
+    lcdConditioning.metadataTodisplayFreeCursor("Red average: \t",LEFT_ALIGNED_X,TOP_Y,true);
     delay(1000);
-    lcdConditioning.intNumberTodisplayInLCD(potassiumAverage,LEFT_ALIGNED_X,MIDDLE_Y,false);
+    lcdConditioning.intNumberTodisplayInLCD(redLedAverage,LEFT_ALIGNED_X,MIDDLE_Y,false);
     delay(1000);
-    Serial.println("K average: ");
-    Serial.print(potassiumAverage);
+    
+    //Clearing the temp variable sum to start the calculation of another element
+    sum = 0;
+
+    for (int i = 0; i < MAX_NUMBER_OF_SAMPLES; i++)
+    {
+        sum += yellowLedMeasurements[i];
+
+        //Printing the sensor read to grapth it before to clear the array 
+        //Serial.println(yellowLedMeasurements[i]);
+        //delay(100);
+        //Cleaning the array to leave it ready beore the next sensing
+        yellowLedMeasurements[i] = 0;
+    }
+   // Serial.println("P sum: ");
+   // Serial.println(sum);
+   // delay(100);
+    // Calculate the average
+    yellowLedAverage = static_cast<int>(sum / MAX_NUMBER_OF_SAMPLES);
+    Serial.println("\n Yellow average: ");
+    Serial.print(yellowLedAverage);
     delay(100);
+
+    //Printing the information to user
+    lcdConditioning.metadataTodisplayFreeCursor("yellow average: \t",LEFT_ALIGNED_X,TOP_Y,true);
+    delay(1000);
+    lcdConditioning.intNumberTodisplayInLCD(yellowLedAverage,LEFT_ALIGNED_X,MIDDLE_Y,false);
+    delay(1000);
 
     //Clearing the temp variable sum to start the calculation of another element
     sum = 0;
 
     for (int i = 0; i < MAX_NUMBER_OF_SAMPLES; i++)
     {
-        sum += phosphorusMeasurement[i];
+        sum += blueLedMeasurements[i];
 
         //Printing the sensor read to grapth it before to clear the array 
-        Serial.println(phosphorusMeasurement[i]);
-        delay(100);
+        //Serial.println(yellowLedMeasurements[i]);
+        //delay(100);
         //Cleaning the array to leave it ready beore the next sensing
-        phosphorusMeasurement[i] = {'\0'};
+        blueLedMeasurements[i] = 0;
     }
+   // Serial.println("P sum: ");
+   // Serial.println(sum);
+   // delay(100);
     // Calculate the average
-    phosphorusAverage = sum / MAX_NUMBER_OF_SAMPLES;
+    blueLedAverage = static_cast<int>(sum / MAX_NUMBER_OF_SAMPLES);
+    Serial.println("\n Blue average: ");
+    Serial.print(blueLedAverage);
+    delay(100);
 
     //Printing the information to user
-    lcdConditioning.metadataTodisplayFreeCursor("Phosphorus average: \t",LEFT_ALIGNED_X,TOP_Y,true);
+    lcdConditioning.metadataTodisplayFreeCursor("blue average: \t",LEFT_ALIGNED_X,TOP_Y,true);
     delay(1000);
-    lcdConditioning.intNumberTodisplayInLCD(phosphorusAverage,LEFT_ALIGNED_X,MIDDLE_Y,false);
+    lcdConditioning.intNumberTodisplayInLCD(blueLedAverage,LEFT_ALIGNED_X,MIDDLE_Y,false);
     delay(1000);
-    Serial.println("P average: ");
-    Serial.print(phosphorusAverage);
+
+    //Clearing the temp variable sum to start the calculation of another element
+    sum = 0;
+
+    for (int i = 0; i < MAX_NUMBER_OF_SAMPLES; i++)
+    {
+        sum += greenLedMeasurements[i];
+
+        //Printing the sensor read to grapth it before to clear the array 
+        //Serial.println(yellowLedMeasurements[i]);
+        //delay(100);
+        //Cleaning the array to leave it ready beore the next sensing
+        greenLedMeasurements[i] = 0;
+    }
+   // Serial.println("P sum: ");
+   // Serial.println(sum);
+   // delay(100);
+    // Calculate the average
+    greenLedAverage = static_cast<int>(sum / MAX_NUMBER_OF_SAMPLES);
+    Serial.println("\n Green average: ");
+    Serial.print(greenLedAverage);
     delay(100);
+
+    //Printing the information to user
+    lcdConditioning.metadataTodisplayFreeCursor("green average: \t",LEFT_ALIGNED_X,TOP_Y,true);
+    delay(1000);
+    lcdConditioning.intNumberTodisplayInLCD(greenLedAverage,LEFT_ALIGNED_X,MIDDLE_Y,false);
+    delay(1000);  
 }
 
 

@@ -19,12 +19,16 @@ class signalConditioningClass{
     ~signalConditioningClass();
     
     //Public attributes
-    int nitrogenAverage;
-    int potassiumAverage;
-    int phosphorusAverage;
-    int nitrogenMeasurements [MAX_NUMBER_OF_SAMPLES];
-    int potassiumMeasurements[MAX_NUMBER_OF_SAMPLES];
-    int phosphorusMeasurement[MAX_NUMBER_OF_SAMPLES];
+    int whiteLedAverage;
+    int redLedAverage;
+    int yellowLedAverage;
+    int blueLedAverage;
+    int greenLedAverage;
+    int whiteLedMeasurements [MAX_NUMBER_OF_SAMPLES];
+    int redLedMeasurements[MAX_NUMBER_OF_SAMPLES];
+    int yellowLedMeasurements[MAX_NUMBER_OF_SAMPLES];
+    int blueLedMeasurements[MAX_NUMBER_OF_SAMPLES];
+    int greenLedMeasurements[MAX_NUMBER_OF_SAMPLES];
 
     //TODO next SW version
     int temperatureMeasured;
