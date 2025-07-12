@@ -12,14 +12,14 @@ class buttonsClass{
     ~buttonsClass();    
     //Public Attributtes
     //Public Methods
+    void initialButtonsSetup(void);
     BUTTON_PRESSED buttonPressed(void);
-    
+    static void navigationButtons(void);
 
+    
     private:
     //Private Attributes
     //Private Methods
-    void initialButtonsSetup(void);
-    static void navigationButtons(void);
 };
 
 

@@ -3,6 +3,7 @@
 #define SIGNALCONDITIONINGCLASS_H
 
 #include <Arduino.h>
+#include "sub_UserInterface/commonDataTypes.h"
 
 enum LED_COLOR
 {
@@ -18,37 +19,35 @@ class signalConditioningClass{
     ~signalConditioningClass();
     
     //Public attributes
-    int phosphorusMeasured;
-    int nitrogenMeasured;
-    int potassiumMeasured;
+    int whiteLedAverage;
+    int redLedAverage;
+    int yellowLedAverage;
+    int blueLedAverage;
+    int greenLedAverage;
+    int whiteLedMeasurements [MAX_NUMBER_OF_SAMPLES];
+    int redLedMeasurements[MAX_NUMBER_OF_SAMPLES];
+    int yellowLedMeasurements[MAX_NUMBER_OF_SAMPLES];
+    int blueLedMeasurements[MAX_NUMBER_OF_SAMPLES];
+    int greenLedMeasurements[MAX_NUMBER_OF_SAMPLES];
+
+    //TODO next SW version
     int temperatureMeasured;
     int humidityMeasured;
     int atmosphericHighMeasuered;
-
+    
     //Public Methods
-    void photodiodeVoltage( LED_COLOR led, double voltage);
+    void macronutrientsMapping(void);
 
     private:
     //Private attributes
-    int redLedPin;
-    int yellowLedPin;
-    int blueLedPin;
-    int infraredLedPin;
-    int photodiodePinOut;
-    int photodiodePinIn;
-    int serialTx;
-    int serialRx;
-    double serialSelector;
 
-    // Private Methods
-    void macronutrientsMapping(LED_COLOR led, double voltage);
-    void redLedMapping(double voltage);
-    void yellowLedMapping(double voltage);
-    void blueLedMapping(double voltage);
-    void infraredLedMapping(double voltage);
-    void temperatureMapping(String tValues);
-    void humidityMapping(String hValues);
-    void atmosphericHighMapping(String aValues);
+    // Private Methods 
+    void LedMapping(void);
+
+    //TODO in next SW version
+    void temperatureMapping(void);
+    void humidityMapping(void);
+    void atmosphericHighMapping(void);
 };
 
 #endif

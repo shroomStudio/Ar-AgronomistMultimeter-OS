@@ -3,7 +3,6 @@
 
 #include <Arduino.h>
 #include "commonDataTypes.h"
-
 class usbConecttionClass{
     public:
     usbConecttionClass();

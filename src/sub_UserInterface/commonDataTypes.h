@@ -20,6 +20,12 @@ Pin5    Back Push Button    Pull-Up Resistor
 Pin4    Reset Device Pin
 Pin3    Activation Pin Relay Battery Charge
 Pin2    Activation Pin Relay Off
+PinA0   Photodiode Input
+PinA1   White LED
+PinA2   Red LED
+PinA3   Yellow LED
+PinA4   Blue LED
+PinA5   Green LED
 */
 
 
@@ -30,6 +36,34 @@ Pin2    Activation Pin Relay Off
 #define INDEX_LESS_ONE -1
 #define LCD_ROWS 60
 #define LCD_COLS 5
+#define MINIMUM_TO_SENSING 10
+#define clockLcdPin 13
+#define dinLcdPin   12
+#define dcLcdPin    11
+#define ceLcdPin    10
+#define resetLcdPin 9
+#define lightLcdPin resetLcdPin
+#define NUMBER_OF_ITEMS_MAIN_MENU 5
+#define MAX_NUMBER_OF_SAMPLES 40
+#define MEASURES_PER_LED 10
+#define N_MEASURE 0
+#define K_MEASURE 1
+#define P_MEASURE 2
+#define MAX_NUMBER_OF_ELEMENTS 3
+#define NITROGEN_MEASURE 0
+#define ELEMENT_TO_MEASURE 3
+#define NUM_RED_LED        0
+#define NUM_YELLOW_LED     1
+#define NUM_BLUE_LED       2
+#define NUM_IR_LED         3
+#define MAX_NUMBER_OF_LED  5
+
+const int photodiodeInput  = A0; 
+const int whiteLedPin      = A1;
+const int redLedPin        = A2;
+const int yellowLedPin     = A3;
+const int blueLedPin       = A4;
+const int greenLedPin      = A5;
 
 //Enumerations 
 typedef enum 
@@ -51,7 +85,7 @@ typedef enum
 {
     // Coordinates on the y-axis, can be between 0 and 5
     TOP_Y = 0, 
-    MIDDLE_Y = 3, 
+    MIDDLE_Y = 2, 
     BOTTOM_Y = 5
 }COORDINATES_Y_DISCPLAY_ENUM;
 

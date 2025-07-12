@@ -12,15 +12,17 @@ class lcdDisplayClass{
     ~lcdDisplayClass();
     //Public attributes 
     //Public methods
-    void metadataTodisplayInLCD(String text, COORDINATES_X_DISCPLAY_ENUM xCoordinate, COORDINATES_Y_DISCPLAY_ENUM yCoordinate);
-    void metadataTodisplayInLCDAdvanceCursor(String text, COORDINATES_X_DISCPLAY_ENUM xCoordinate, 
-                                            COORDINATES_Y_DISCPLAY_ENUM yCoordinate, uint8_t advanceXcoordinate, uint8_t advanceYCoordinate);
-    void moveCursor(uint8_t xCoordinates, uint8_t yCoordinates);
+    void initialDisplaySetup(void);
+    void intNumberTodisplayInLCD(int number,COORDINATES_X_DISCPLAY_ENUM xCoordinates, COORDINATES_Y_DISCPLAY_ENUM yCoordinates,bool clearScreen);
+    void metadataTodisplayInLCD(const char* text,COORDINATES_X_DISCPLAY_ENUM xCoordinates, COORDINATES_Y_DISCPLAY_ENUM yCoordinates,bool clearScreen);
+    void moveCursor(COORDINATES_X_DISCPLAY_ENUM xCoordinates, COORDINATES_Y_DISCPLAY_ENUM yCoordinates);
+    void metadataTodisplayFreeCursor(const char* text, int x, int y, bool clearScreen);
+    void invertTextColor(void);
+    void restoreTextColor(void);
     
     private:
     //Private attributes
-    //Private methods
-    void initialDisplaySetup(void);
+    //Private methods 
 };
 
 #endif

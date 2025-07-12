@@ -2,20 +2,21 @@
 #define SENSINGCLASS_H
 
 #include <Arduino.h>
+#include "sub_UserInterface/commonDataTypes.h"
 
-enum SENSING_PROCESS
+typedef enum 
 {
     MACRONUTRIENT,
     TEMPERATURE,
     HUMIDITY,
     ATMOSPHERIC_PRESSURE
-};
-enum SENSOR_SERIAL
+}SENSING_PROCESS;
+typedef enum 
 {
     TEMPERATURE_SERIAL,
     HUMIDITY_SERIAL,
     ATMOSPHERIC_PRESSURE_SERIAL
-};
+}SENSOR_SERIAL;
 
 class sensingClass{
     public:
@@ -27,26 +28,24 @@ class sensingClass{
     double pressureSensor;
 
     //Public Methods
-    void sensingProcessSelected(SENSING_PROCESS process);
-
-    private:
-    //Private attributes
-    int redLedPin;
-    int yellowLedPin;
-    int blueLedPin;
-    int infraredLedPin;
-    int photodiodePinOut;
-    int photodiodePinIn;
-    int serialTx;
-    int serialRx;
-    double serialSelector;
-
-    // Private Methods
     void macronutrientSensingProcess();
     void temperatureSensingProcess();
     void humiditySensingProces();
     void atmosphericPressureSensingProcess();
+
+    private:
+    //Private attributes
+    int serialTx;
+    int serialRx;
+    double serialSelector;
+   
+    // Private Methods
     void serialMiltiplexor(SENSOR_SERIAL sensor);
+    //Global File scope methods
+    void turnOffAllElements(void);
+    void turnOnAllElements(void);
+    void sensingProcessTakeReadings(void);
+    void sensingProcessSendingReadingsToConditioning(void);
 };
 
 #endif

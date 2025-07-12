@@ -1,4 +1,5 @@
 #include "buttonsClass.h"
+#include "lcdDisplayClass.h"
 
 // Global Variables for this file
 const uint8_t pinOkButton   = 8;
@@ -10,17 +11,17 @@ const uint8_t buttonPins[4] = {pinOkButton,pinUpButton,pinDownButton,pinBackButt
 volatile uint8_t buttonstates[4] = {LOW,LOW,LOW,LOW}; 
 volatile uint8_t previousButtonstates[4] = {LOW,LOW,LOW,LOW}; 
 
+lcdDisplayClass lcdButtons;
+
 buttonsClass::buttonsClass(){
     //Constructor class buttonsClass
-   initialButtonsSetup();
-   navigationButtons();
 }
 
 buttonsClass:: ~buttonsClass(){
     //destructor class buttonsClass
 }
 
- /*   
+    
  //Private Methods
 void buttonsClass::initialButtonsSetup(void)
 {
@@ -30,11 +31,10 @@ void buttonsClass::initialButtonsSetup(void)
     pinMode(pinDownButton, INPUT_PULLUP);
     pinMode(pinBackButton, INPUT_PULLUP);
 
-    buttonPressed();
     // Initialization of interruptions
     for (int  i = 0; i < 4; i++)
     {
-        
+        /* code */
         pinMode(buttonPins[i], INPUT_PULLUP);
         attachInterrupt(buttonPins[i],navigationButtons,CHANGE);
     }
@@ -42,12 +42,13 @@ void buttonsClass::initialButtonsSetup(void)
 
 BUTTON_PRESSED buttonsClass::buttonPressed(void)
 {
+
     return currentButtonPressed;
 }
 
 void buttonsClass::navigationButtons(void)
 {
-    // Initialization of interruptions
+   // Initialization of interruptions
     for (int  i = 0; i < 4; i++)
     {
         // Read state of current button
@@ -63,9 +64,30 @@ void buttonsClass::navigationButtons(void)
             }
             else 
             {
-                currentButtonPressed = ((BUTTON_PRESSED)buttonstates[i]);
+                switch (i)
+                {
+                    case 0:
+                        /* code */
+                        currentButtonPressed = UP_BUTTON;
+                    break;
+                    case 1:
+                        /* code */
+                        currentButtonPressed = DOWN_BUTTON;
+                    break;
+                    case 2:
+                        /* code */
+                        currentButtonPressed = BACK_BUTTON;
+                    break;
+                    case 3:
+                        /* code */
+                        currentButtonPressed = OK_BUTTON;
+                    break;
+                    default:
+                        currentButtonPressed = NO_BUTTON;
+                    break;
+                }
             }
         }
     }
 }
-*/
+

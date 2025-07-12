@@ -1,45 +1,33 @@
 #include <EEPROM.h>
-#include "sub_SensingManagement/sensingClass.h"
-#include "sub_EnergyManagement/energyManagementClass.h"
-#include "sub_SignalConditioning/signalConditioningClass.h"
+#include <string.h>
+#include <sub_SensingManagement/sensingClass.h>
+#include <sub_EnergyManagement/energyManagementClass.h>
+#include <sub_SignalConditioning/signalConditioningClass.h>
 #include "userInterfaceClass.h"
-#include "commonDataTypes.h"
 #include "lcdDisplayClass.h"
 #include "buttonsClass.h"
 #include "usbConecttionClass.h"
-#include "ExternalLibraries/LcdMenu.h"
-#include "ExternalLibraries/ItemSubMenu.h"
-#include "ExternalLibraries/utils/commandProccesors.h"
+
+
+#define RS_PIN dinLcdPin
+#define EN_PIN dcLcdPin
+#define D4_PIN clockLcdPin
+#define D5_PIN ceLcdPin
+#define D6_PIN resetLcdPin
+#define D7_PIN lightLcdPin
 
 // Class instances.
-/*energyManagementClass energy;
-LcdMenu menu(LCD_ROWS, LCD_COLS);
-lcdDisplayClass lcd;
-buttonsClass buttons;
-usbConecttionClass usb;
-sensingClass sensing;
-signalConditioningClass conditioningSignals;*/
+energyManagementClass energyUser;
+lcdDisplayClass lcdUser;
+buttonsClass buttonsUser;
+usbConecttionClass usbUser;
+sensingClass sensingUser;
+signalConditioningClass conditioningSignalsUser;
+
 /*
-// Constructionc of main menu and submenus when is the first time the 
-extern MenuItem* macronutrientsSensing[];
-extern MenuItem* temperatureSensing[];
-extern MenuItem* atmosphericSensing[];
-extern MenuItem* files[];
-extern MenuItem* configurations[];
-
-
-MAIN_MENU
-(
-    ITEM_SUBMENU("Macronutrients Sensing",macronutrientsSensing),
-    ITEM_SUBMENU("Temperature Sensing"   ,temperatureSensing),
-    ITEM_SUBMENU("Atmospheric Sensing"   ,atmosphericSensing),
-    ITEM_SUBMENU("sensing records"       ,files),
-    ITEM_SUBMENU("Configurations"        ,configurations)
-);
-
 SUB_MENU(macronutrientsSensing, mainMenu,
-    ITEM_BASIC("Date"),
-    ITEM_BASIC("Save and continue")
+    ITEM_INPUT("Sensing instrucctions", displaySensingInstruction),
+    ITEM_INPUT("Sensing Process", startSensingProcess)
 );   
 SUB_MENU(temperatureSensing, mainMenu,
     ITEM_BASIC("Date"),
@@ -56,17 +44,18 @@ SUB_MENU(files, mainMenu,
 SUB_MENU(configurations, mainMenu,
     ITEM_BASIC("Date"),
     ITEM_BASIC("Save and continue")
-);   
-*/
+);  */
+
 userInterfaceClass::userInterfaceClass(){
-    //initialConfigurationDone = VariableFromEEPROM_Get(0);
+    VariableToEEPROM_Set(0,false);
+    initialConfigurationDone = VariableFromEEPROM_Get(0);
     //energy.voltageBatteryMonitor();
 }
 
 userInterfaceClass::~userInterfaceClass(){
     //Destructor class usbConecttionClass
 }
-/*
+
 uint8_t userInterfaceClass::VariableFromEEPROM_Get(uint8_t address) 
 {
   uint8_t readValue = 0;
@@ -100,29 +89,150 @@ void userInterfaceClass::userInitialConfiguration(void)
 {
     if(false == initialConfigurationDone)
     {
-        if (energy.batteryChargePercentage < MINIMUM_BATTERY_PERCENTAGE)
+        if (energyUser.batteryChargePercentage < MINIMUM_BATTERY_PERCENTAGE)
         {
-            lcd.metadataTodisplayInLCD("System discharged please plug in to source power", LEFT_ALIGNED_X, MIDDLE_Y);
+            lcdUser.metadataTodisplayInLCD("System discharged please plug in to source power", LEFT_ALIGNED_X, MIDDLE_Y,true);
             delay(2000);
-            energy.turnOffDevice();
+            energyUser.turnOffDevice();
         }
         else
         {
-            if (buttons.buttonPressed() == OK_BUTTON )
+            if (buttonsUser.buttonPressed() == OK_BUTTON )
             {
             //TODO: time and Zone Main Menu to be done
             }
             initialConfigurationDone = true;
             VariableToEEPROM_Set(0,initialConfigurationDone);
+            displayMainMenu();
+            while (buttonsUser.buttonPressed() != OK_BUTTON)
+            {
+            lcdUser.metadataTodisplayInLCD("Press Ok to start Sensing Process  \n", LEFT_ALIGNED_X, MIDDLE_Y, true);
+            buttonsUser.navigationButtons();
+            delay(3000);
+            }
+            //Starting sensing process
+            startSensingProcess();
         }
-    }  
+    }
 }
 
 //Local Methods
-void userInterfaceClass::userMainMenu(void)
+void userInterfaceClass::displayMainMenu() 
 {
-    char command = static_cast<char>(buttons.buttonPressed());
-    
-    processMenuCommand(menu, command, UP_BUTTON, DOWN_BUTTON, OK_BUTTON, BACK_BUTTON);
+    displayMenu(mainMenuItems, 0);
 }
-*/
+
+void userInterfaceClass::navigateUp() 
+{
+    if (currentItemIndex > 0) 
+    {
+        // Invert colors of the current line before moving the cursor
+        lcdUser.invertTextColor();
+        lcdUser.metadataTodisplayFreeCursor(mainMenuItems[currentItemIndex], LEFT_ALIGNED_X, TOP_Y + currentItemIndex + 1, false);
+
+        currentItemIndex--;
+        displayMenu(mainMenuItems, currentItemIndex);
+    }
+}
+
+void userInterfaceClass::navigateDown() 
+{
+    if (currentItemIndex < NUMBER_OF_ITEMS_MAIN_MENU) 
+    {
+        // Invert colors of the current line before moving the cursor
+        lcdUser.invertTextColor();
+        lcdUser.metadataTodisplayFreeCursor(mainMenuItems[currentItemIndex], LEFT_ALIGNED_X, TOP_Y + currentItemIndex + 1, false);
+
+        currentItemIndex++;
+        displayMenu(mainMenuItems, currentItemIndex);
+    }
+}
+
+void userInterfaceClass::menuSelectedOption(int buttonPressed)
+{
+    switch((BUTTON_PRESSED)buttonPressed)
+    {
+        case OK_BUTTON:
+           
+            break;
+        case BACK_BUTTON:
+            // Handle going back if needed
+            break;
+        case DOWN_BUTTON:
+            navigateDown();
+            break;
+        case UP_BUTTON:
+            navigateUp();
+            break;
+        default:
+            // Handle other button states or no button press
+            break;
+    }
+}
+
+void userInterfaceClass::displayMenu(const char* menu[], int startIndex) 
+{
+    String menuItem = "\0";
+
+    delay(2000);
+    lcdUser.metadataTodisplayInLCD("Main Menu: \n", LEFT_ALIGNED_X, TOP_Y, true);
+
+    for (int i = startIndex; i < startIndex + 3; i++) 
+    {
+        if (i == currentItemIndex)
+        {
+            menuItem += menu[i];
+            lcdUser.metadataTodisplayFreeCursor(menuItem.c_str(), LEFT_ALIGNED_X, TOP_Y + (i - startIndex + 1), false);
+        } 
+        else 
+        {
+            lcdUser.metadataTodisplayFreeCursor(menu[i], LEFT_ALIGNED_X, TOP_Y + (i - startIndex + 1), false);
+        }
+    }
+   delay(5000);
+}
+
+void userInterfaceClass::displaySensingInstruction(void)
+{
+    /* TODO: To be implemented in User interface creation
+    int lineNumber = 0;
+    int lastLIne = 0;
+    char addressOfInstructtions[] = "Hello, Arduino!\nThis is a text file content.";
+    char* fileContentCopy = strdup(addressOfInstructtions);
+    const char* token = strtok(fileContentCopy, "\n");
+
+    while (token != NULL) 
+    {
+        lcd.metadataTodisplayInLCDAdvanceCursor(token,LEFT_ALIGNED_X,TOP_Y,0,(lineNumber + 1));
+        delay(1000);  // Adjust delay based on your preferences
+        lineNumber++;
+        token = strtok(NULL, "\n");
+    }
+   
+    if (lastLIne ==lineNumber)
+    {
+
+        
+    }
+    else 
+    {
+
+        lastLIne++;
+    }
+
+  free(fileContentCopy);
+  */
+}
+
+void userInterfaceClass::startSensingProcess(void)
+{
+    if ( energyUser.batteryChargePercentage >= MINIMUM_TO_SENSING)
+    {
+        sensingUser.macronutrientSensingProcess();
+    }
+    else 
+    {
+        lcdUser.metadataTodisplayInLCD("the battery must has at least 10 percent of charge \n", LEFT_ALIGNED_X, MIDDLE_Y, true);
+        delay(2000);
+    }
+}

@@ -6,27 +6,37 @@
 
 //Headers 
 #include <Arduino.h>
-//#include <string.h>
-//#include "sub_UserInterface/commonDataTypes.h"
-//#include "sub_UserInterface/userInterfaceClass.h"
+#include "sub_UserInterface/commonDataTypes.h"
+#include "sub_UserInterface/lcdDisplayClass.h"
+#include "sub_EnergyManagement/energyManagementClass.h"
+#include "sub_UserInterface/buttonsClass.h"
+#include "sub_UserInterface/userInterfaceClass.h"
+/*#include <string.h>
+#include "userInterfaceClass.h"*/
 
 //Namespaces 
 using namespace std;
 
-// Class instances
-//userInterfaceClass userInterface;
+lcdDisplayClass lcdMain;
+energyManagementClass energyMain;
+buttonsClass buttonsMain;
+userInterfaceClass userInterfaceMain;
 
-void setup() {
-  // put your setup code here, to run once:
-  Serial.begin(9600);
 
+void setup() 
+{
+    Serial.begin(9600);
+    lcdMain.initialDisplaySetup();
+    energyMain.initialSetUpEnergyManagament();
+    buttonsMain.initialButtonsSetup();
+    userInterfaceMain.userInitialConfiguration();
 }
 
-void loop() {
-  // put your main code here, to run repeatedly:
-  Serial.write("Hello Puto");
-  delay(200);
+void loop()
+{
+    //int buttonPressed = ((int)buttonsMain.buttonPressed());
+    //Method that as to be running all the time to detect the user interation
+    //buttonsMain.navigationButtons();
+    //userInterfaceMain.menuSelectedOption(buttonPressed);
 }
-
-
 
