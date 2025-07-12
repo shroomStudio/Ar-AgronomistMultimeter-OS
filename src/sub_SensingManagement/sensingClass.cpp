@@ -3,11 +3,13 @@
 #include "sub_UserInterface/buttonsClass.h"
 #include "sub_SignalConditioning/signalConditioningClass.h"
 #include "ExternalLibraries/Adafruit_AS7341.h"
+#include "ExternalLibraries/SoftwareWire.h"
 
 //Clases instances 
 lcdDisplayClass lcdSensing;
 buttonsClass buttonsSensing;
 signalConditioningClass conditioningSensing;
+Adafruit_AS7341 as7341Sensing;
 
 //Global File scope Variables
     int whiteLedMeasurements[MAX_NUMBER_OF_SAMPLES];
@@ -18,7 +20,7 @@ signalConditioningClass conditioningSensing;
     
 sensingClass::sensingClass(){
     // Constructor sensing class
-    pinMode(redLedPin,OUTPUT);
+   pinMode(redLedPin,OUTPUT);
     pinMode(yellowLedPin,OUTPUT);
     pinMode(blueLedPin,OUTPUT);
     pinMode(whiteLedPin,OUTPUT);
@@ -57,7 +59,7 @@ void sensingClass::macronutrientSensingProcess()
     delay(2000);
 
      //Sendind readings to conditioning class
-    sensingProcessSendingReadingsToConditioning();
+    //sensingProcessSendingReadingsToConditioning();
     }
     
 }
@@ -101,95 +103,6 @@ void sensingClass::turnOffAllElements(void)
 
 void sensingClass::sensingProcessTakeReadings(void)
 {
-    lcdSensing.metadataTodisplayFreeCursor("Sensing in Process",LEFT_ALIGNED_X,TOP_Y,true);
-    delay(2000);
-
-    //Before Any process turn on all the elements 
-    turnOnAllElements();
-    delay(2000);
-    //Ensure all the leds and photodiode are off
-    turnOffAllElements();
-
-    //turn on white LED diode
-    digitalWrite(whiteLedPin, HIGH);
-    delay(200);
-    //reading values for White LED
-    for(int i=0; i < MAX_NUMBER_OF_SAMPLES; i++ )
-    {
-        /* //Start reading photodiode */
-        whiteLedMeasurements[i] = analogRead(photodiodeInput);
-        delay(100);
-        lcdSensing.intNumberTodisplayInLCD((whiteLedMeasurements[i]),LEFT_ALIGNED_X,TOP_Y,true);
-        delay(200);
-    }
-    //Turn Off White LED
-    digitalWrite(whiteLedPin, LOW);
-    delay(200);
-    
-    //turn on Red LED diode
-    digitalWrite(redLedPin, HIGH);
-    delay(200);
-    //reading values for Red LED
-    for(int i=0; i < MAX_NUMBER_OF_SAMPLES; i++ )
-    {
-        /* //Start reading photodiode */
-        redLedMeasurements[i] = analogRead(photodiodeInput);
-        delay(100);
-        lcdSensing.intNumberTodisplayInLCD((redLedMeasurements[i]),LEFT_ALIGNED_X,TOP_Y,true);
-        delay(200);
-    }
-    //Turn Off Red LED
-    digitalWrite(redLedPin, LOW);
-    delay(200);
-
-    //turn on Yellow LED diode
-    digitalWrite(yellowLedPin, HIGH);
-    delay(200);
-    //reading values for Yellow LED
-    for(int i=0; i < MAX_NUMBER_OF_SAMPLES; i++ )
-    {
-        /* //Start reading photodiode */
-        yellowLedMeasurements[i] = analogRead(photodiodeInput);
-        delay(100);
-        lcdSensing.intNumberTodisplayInLCD(yellowLedMeasurements[i],LEFT_ALIGNED_X,TOP_Y,true);
-        delay(200);
-    }
-    //Turn Off Yellow LED
-    digitalWrite(yellowLedPin, LOW);
-    delay(200);
-
-
-    //turn on Blue LED diode
-    digitalWrite(blueLedPin, HIGH);
-    delay(200);
-    //reading values for IR LED
-   for(int i=0; i < MAX_NUMBER_OF_SAMPLES; i++ )
-    {
-        /* //Start reading photodiode */
-        blueLedMeasurements[i] = analogRead(photodiodeInput);
-        delay(100);
-        lcdSensing.intNumberTodisplayInLCD((blueLedMeasurements[i]),LEFT_ALIGNED_X,TOP_Y,true);
-        delay(200);
-    }
-    //Turn Off Blue LED
-    digitalWrite(blueLedPin, LOW);
-    delay(200);
-
-    //turn on Green LED diode
-    digitalWrite(greenLedPin, HIGH);
-    delay(200);
-
-     for(int i=0; i < MAX_NUMBER_OF_SAMPLES; i++ )
-    {
-        /* //Start reading photodiode */
-        greenLedMeasurements[i] = analogRead(photodiodeInput);
-        delay(100);
-        lcdSensing.intNumberTodisplayInLCD((greenLedMeasurements[i]),LEFT_ALIGNED_X,TOP_Y,true);
-        delay(200);
-    }
-    //Turn Off Green LED
-    digitalWrite(greenLedPin, LOW);
-    delay(200);
 }
 
 void sensingClass::sensingProcessSendingReadingsToConditioning(void)

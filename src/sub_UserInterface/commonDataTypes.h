@@ -68,11 +68,11 @@ const int greenLedPin      = A5;
 //Enumerations 
 typedef enum 
 {
-    UP_BUTTON = 56,
+    UP_BUTTON   = 56,
     DOWN_BUTTON = 50,
     BACK_BUTTON = 55,
-    OK_BUTTON = 53,
-    NO_BUTTON = 255,
+    OK_BUTTON   = 53,
+    NO_BUTTON   = 255,
 }BUTTON_PRESSED;
 typedef enum 
 {
