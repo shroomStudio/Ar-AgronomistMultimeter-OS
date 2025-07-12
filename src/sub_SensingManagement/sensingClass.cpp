@@ -11,6 +11,11 @@ buttonsClass buttonsSensing;
 signalConditioningClass conditioningSensing;
 Adafruit_AS7341 as7341Sensing;
 
+// SoftwareWire instances for I2C communication
+SoftwareWire myWire1(2, 3); // SDA = D2, SCL = D3
+SoftwareWire myWire2(4, 5); // SDA = D4, SCL = D5
+SoftwareWire myWire3(6, 7); // SDA = D6, SCL = D7
+
 //Global File scope Variables
     int whiteLedMeasurements[MAX_NUMBER_OF_SAMPLES];
     int blueLedMeasurements[MAX_NUMBER_OF_SAMPLES];
@@ -18,18 +23,24 @@ Adafruit_AS7341 as7341Sensing;
     int yellowLedMeasurements[MAX_NUMBER_OF_SAMPLES];
     int greenLedMeasurements[MAX_NUMBER_OF_SAMPLES];
     
-sensingClass::sensingClass(){
+sensingClass::sensingClass()
+{
     // Constructor sensing class
-   pinMode(redLedPin,OUTPUT);
-    pinMode(yellowLedPin,OUTPUT);
-    pinMode(blueLedPin,OUTPUT);
-    pinMode(whiteLedPin,OUTPUT);
-    pinMode(greenLedPin, OUTPUT);
-}
+    initialSensingClassSetup();
+}   
 
-sensingClass::~sensingClass(){
+sensingClass::~sensingClass()
+{
     //destructor sensing class
 }
+
+void sensingClass::initialSensingClassSetup(void)
+{
+    myWire1.begin();
+    myWire2.begin();
+    myWire3.begin();
+}
+
 
 void sensingClass::macronutrientSensingProcess()
 {
@@ -83,22 +94,12 @@ void sensingClass::serialMiltiplexor(SENSOR_SERIAL sensor)
 
 void sensingClass::turnOnAllElements(void)
 {
-    digitalWrite(yellowLedPin, HIGH);
-    digitalWrite(blueLedPin, HIGH);
-    digitalWrite(whiteLedPin, HIGH);
-    digitalWrite(redLedPin, HIGH);
-    digitalWrite(greenLedPin, HIGH);
-    delay(200);
+
 }
 
 void sensingClass::turnOffAllElements(void)
 {
-    digitalWrite(yellowLedPin, LOW);
-    digitalWrite(blueLedPin, LOW);
-    digitalWrite(whiteLedPin, LOW);
-    digitalWrite(redLedPin, LOW);
-    digitalWrite(greenLedPin, LOW);
-    delay(200);
+
 }
 
 void sensingClass::sensingProcessTakeReadings(void)

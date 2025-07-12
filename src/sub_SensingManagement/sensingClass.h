@@ -40,6 +40,7 @@ class sensingClass{
     double serialSelector;
    
     // Private Methods
+    void initialSensingClassSetup(void);
     void serialMiltiplexor(SENSOR_SERIAL sensor);
     //Global File scope methods
     void turnOffAllElements(void);

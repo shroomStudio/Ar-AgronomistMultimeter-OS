@@ -2,10 +2,6 @@
 #include "lcdDisplayClass.h"
 
 // Global Variables for this file
-const uint8_t pinOkButton   = 8;
-const uint8_t pinUpButton   = 7;
-const uint8_t pinDownButton = 6;
-const uint8_t pinBackButton = 5;
 BUTTON_PRESSED currentButtonPressed = NO_BUTTON;
 const uint8_t buttonPins[4] = {pinOkButton,pinUpButton,pinDownButton,pinBackButton};
 volatile uint8_t buttonstates[4] = {LOW,LOW,LOW,LOW}; 
@@ -15,6 +11,10 @@ lcdDisplayClass lcdButtons;
 
 buttonsClass::buttonsClass(){
     //Constructor class buttonsClass
+    pinMode(pinOkButton,OUTPUT);
+    pinMode(pinUpButton,OUTPUT);
+    pinMode(pinBackButton,OUTPUT);
+    pinMode(pinDownButton,OUTPUT);
 }
 
 buttonsClass:: ~buttonsClass(){
