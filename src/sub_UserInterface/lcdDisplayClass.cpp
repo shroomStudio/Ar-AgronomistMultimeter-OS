@@ -1,7 +1,8 @@
 #include <string.h>
 #include "lcdDisplayClass.h"
-#include "sub_UserInterface/ExternalLibraries/Nokia_LCD.h"
-#include "sub_UserInterface/ExternalLibraries/LCD_Fonts.h"
+#include "ExternalLibraries/Nokia_LCD.h"
+#include "ExternalLibraries/LCD_Fonts.h"
+#include "ExternalLibraries/LCD_Fonts.h"
 
 //LCD Nokia instance declare inside this file to avoid any unauthorizated access
 Nokia_LCD lcdNokia(clockLcdPin/* CLK */, dinLcdPin /* DIN */, dcLcdPin /* DC */, ceLcdPin /* CE */, resetLcdPin /* RST */,lightLcdPin/* BL */);

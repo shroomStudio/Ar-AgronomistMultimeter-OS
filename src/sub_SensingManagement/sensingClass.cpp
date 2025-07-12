@@ -2,7 +2,7 @@
 #include "sub_UserInterface/lcdDisplayClass.h"
 #include "sub_UserInterface/buttonsClass.h"
 #include "sub_SignalConditioning/signalConditioningClass.h"
-
+#include "ExternalLibraries/Adafruit_AS7341.h"
 
 //Clases instances 
 lcdDisplayClass lcdSensing;
