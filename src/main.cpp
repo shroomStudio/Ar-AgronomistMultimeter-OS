@@ -11,8 +11,7 @@
 #include "sub_EnergyManagement/energyManagementClass.h"
 #include "sub_UserInterface/buttonsClass.h"
 #include "sub_UserInterface/userInterfaceClass.h"
-/*#include <string.h>
-#include "userInterfaceClass.h"*/
+#include "sub_SensingManagement/sensingClass.h"
 
 //Namespaces 
 using namespace std;
@@ -22,7 +21,6 @@ energyManagementClass energyMain;
 buttonsClass buttonsMain;
 userInterfaceClass userInterfaceMain;
 
-
 void setup() 
 {
     Serial.begin(115200);
@@ -30,6 +28,7 @@ void setup()
     energyMain.initialSetUpEnergyManagament();
     buttonsMain.initialButtonsSetup();
     userInterfaceMain.userInitialConfiguration();
+
 }
 
 void loop()

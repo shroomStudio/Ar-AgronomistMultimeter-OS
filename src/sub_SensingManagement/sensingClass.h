@@ -3,6 +3,7 @@
 
 #include <Arduino.h>
 #include "sub_UserInterface/commonDataTypes.h"
+#include "ExternalLibraries/Adafruit_AS7341.h"
 
 typedef enum 
 {
@@ -40,13 +41,14 @@ class sensingClass{
     double serialSelector;
    
     // Private Methods
-    void initialSensingClassSetup(void);
+    void initialSensingClassSetup();
     void serialMiltiplexor(SENSOR_SERIAL sensor);
     //Global File scope methods
     void turnOffAllElements(void);
     void turnOnAllElements(void);
     void sensingProcessTakeReadings(void);
     void sensingProcessSendingReadingsToConditioning(void);
+    Adafruit_AS7341 as7341;
 };
 
 #endif
