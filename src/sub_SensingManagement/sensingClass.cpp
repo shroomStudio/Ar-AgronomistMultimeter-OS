@@ -2,7 +2,7 @@
 #include "sub_UserInterface/lcdDisplayClass.h"
 #include "sub_UserInterface/buttonsClass.h"
 #include "sub_SignalConditioning/signalConditioningClass.h"
-//#include "ExternalLibraries/SoftwareWire.h"
+#include "ExternalLibraries/SoftwareWire.h"
 
 //Clases instances 
 lcdDisplayClass lcdSensing;
@@ -12,20 +12,12 @@ signalConditioningClass conditioningSensing;
 //Adafruit_AS7341 as7341Sensing;
 
 // SoftwareWire instances for I2C communication
-/*SoftwareWire myWire1(2, 3); // SDA = D2, SCL = D3
+SoftwareWire myWire1(2, 3); // SDA = D2, SCL = D3
 SoftwareWire myWire2(4, 5); // SDA = D4, SCL = D5
-SoftwareWire myWire3(6, 7); // SDA = D6, SCL = D7*/
-
-//Global File scope Variables
-    int whiteLedMeasurements[MAX_NUMBER_OF_SAMPLES];
-    int blueLedMeasurements[MAX_NUMBER_OF_SAMPLES];
-    int redLedMeasurements[MAX_NUMBER_OF_SAMPLES];
-    int yellowLedMeasurements[MAX_NUMBER_OF_SAMPLES];
-    int greenLedMeasurements[MAX_NUMBER_OF_SAMPLES];
    
 sensingClass::sensingClass()
 {
-  //initialSensingClassSetup();
+  initialSensingClassSetup();
 }   
 
 sensingClass::~sensingClass()
@@ -35,15 +27,8 @@ sensingClass::~sensingClass()
 
 void sensingClass::initialSensingClassSetup()
 {
-    /*myWire1.begin();
+    myWire1.begin();
     myWire2.begin();
-    myWire3.begin();*/
-//as7341Sensing.begin(AS7341_I2CADDR_DEFAULT, &Wire, -1);
-    /*if (!as7341Sensing.begin(AS7341_I2CADDR_DEFAULT, &Wire, -1))
-    {
-        Serial.println("Could not find AS7341");
-        while (1) { delay(10); }
-    }*/
 }
 
 
@@ -82,7 +67,17 @@ void sensingClass::macronutrientSensingProcess()
 
 void sensingClass::temperatureSensingProcess()
 {
+    if (1)
+    {
+        auto temperatureAmbient = myWire1.read();
 
+        Serial.print("Temperature Ambient: ");
+        Serial.println(temperatureAmbient);
+    }
+    else
+    {
+        Serial.println("No temperature data available.");
+    }
 }
 void sensingClass::humiditySensingProces()
 {
@@ -138,7 +133,7 @@ void sensingClass::sensingProcessTakeReadings(void)
 
 
 
-        lcdSensing.metadataTodisplayFreeCursor(" \n \n \n \n \n \n",LEFT_ALIGNED_X,TOP_Y,true);
+     Serial.println("\n\n\n\n\n\n");
         delay(1000);
 
 
@@ -172,6 +167,8 @@ void sensingClass::sensingProcessTakeReadings(void)
 
         Serial.println();
 
+        temperatureSensingProcess();
+        
         delay(500); // Optional: add a small delay to avoid flooding output
         buttonsSensing.navigationButtons(); // Update button state
         delay(1000);
@@ -180,46 +177,5 @@ void sensingClass::sensingProcessTakeReadings(void)
 
 void sensingClass::sensingProcessSendingReadingsToConditioning(void)
 {
-    // Copy White led readings to condition class arrays
-    for (int i = 0; i < MAX_NUMBER_OF_SAMPLES; i++)
-    {
-        conditioningSensing.whiteLedMeasurements[i] = whiteLedMeasurements[i];
-        //Clearing global scope file array to be ready for next process 
-        whiteLedMeasurements[i] = 0;
-    }
 
-    // Copy Red LEd readings to condition class arrays
-    for (int i = 0; i < MAX_NUMBER_OF_SAMPLES; i++)
-    {
-        conditioningSensing.redLedMeasurements[i] = redLedMeasurements[i];
-        //Clearing global scope file array to be ready for next process 
-        redLedMeasurements[i] = 0;
-    }
-
-    // Copy Yellow Led readings to condition class arrays
-    for (int i = 0; i < MAX_NUMBER_OF_SAMPLES; i++)
-    {
-        conditioningSensing.yellowLedMeasurements[i] = yellowLedMeasurements[i];
-        //Clearing global scope file array to be ready for next process 
-        yellowLedMeasurements[i] = 0;
-    }
-
-    // Copy Blue readings to condition class arrays
-    for (int i = 0; i < MAX_NUMBER_OF_SAMPLES; i++)
-    {
-        conditioningSensing.blueLedMeasurements[i] = blueLedMeasurements[i];
-        //Clearing global scope file array to be ready for next process 
-        blueLedMeasurements[i] = 0;
-    }
-
-    // Copy Green readings to condition class arrays
-    for (int i = 0; i < MAX_NUMBER_OF_SAMPLES; i++)
-    {
-        conditioningSensing.greenLedMeasurements[i] = greenLedMeasurements[i];
-        //Clearing global scope file array to be ready for next process 
-        greenLedMeasurements[i] = 0;
-    }
-    
-    //Starting signal conditioning process
-    conditioningSensing.macronutrientsMapping();
 }

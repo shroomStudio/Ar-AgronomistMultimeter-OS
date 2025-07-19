@@ -4,6 +4,7 @@
 #include <Arduino.h>
 #include "sub_UserInterface/commonDataTypes.h"
 #include "ExternalLibraries/Adafruit_AS7341.h"
+#include "ExternalLibraries/Adafruit_AS726x.h"
 
 typedef enum 
 {
@@ -12,6 +13,7 @@ typedef enum
     HUMIDITY,
     ATMOSPHERIC_PRESSURE
 }SENSING_PROCESS;
+
 typedef enum 
 {
     TEMPERATURE_SERIAL,
@@ -49,6 +51,7 @@ class sensingClass{
     void sensingProcessTakeReadings(void);
     void sensingProcessSendingReadingsToConditioning(void);
     Adafruit_AS7341 as7341;
+    Adafruit_AS726x as726x;
 };
 
 #endif
