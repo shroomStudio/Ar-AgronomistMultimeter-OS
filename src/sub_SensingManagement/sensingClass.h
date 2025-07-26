@@ -1,6 +1,17 @@
 #ifndef SENSINGCLASS_H
 #define SENSINGCLASS_H
 
+
+/* GY-276x
+VIN   - 3.3V or 5V input
+GND   - Ground
+SCL   - I2C Clock
+SDA   - I2C Data
+INT   - Interrupt (optional)
+RST   - Reset (optional)
+SET   - Mode select (I2C or UART)
+GND   - (second ground pin)
+*/
 #include <Arduino.h>
 #include "sub_UserInterface/commonDataTypes.h"
 #include "ExternalLibraries/Adafruit_AS7341.h"

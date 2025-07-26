@@ -2,20 +2,17 @@
 #include "sub_UserInterface/lcdDisplayClass.h"
 #include "sub_UserInterface/buttonsClass.h"
 #include "sub_SignalConditioning/signalConditioningClass.h"
-#include "ExternalLibraries/SoftwareWire.h"
 
 //Clases instances 
 lcdDisplayClass lcdSensing;
 buttonsClass buttonsSensing;
 signalConditioningClass conditioningSensing;
 
-//Adafruit_AS7341 as7341Sensing;
-
 // SoftwareWire instances for I2C communication
-SoftwareWire myWire1(2, 3); // SDA = D2, SCL = D3
-SoftwareWire myWire2(4, 5); // SDA = D4, SCL = D5
+
    
-sensingClass::sensingClass()
+sensingClass::sensingClass(): as7341(), 
+                              as726x()
 {
   initialSensingClassSetup();
 }   
@@ -27,8 +24,7 @@ sensingClass::~sensingClass()
 
 void sensingClass::initialSensingClassSetup()
 {
-    myWire1.begin();
-    myWire2.begin();
+    
 }
 
 
@@ -67,9 +63,9 @@ void sensingClass::macronutrientSensingProcess()
 
 void sensingClass::temperatureSensingProcess()
 {
-    if (1)
+    /*if (1)
     {
-        auto temperatureAmbient = myWire1.read();
+        auto temperatureAmbient = 0;
 
         Serial.print("Temperature Ambient: ");
         Serial.println(temperatureAmbient);
@@ -77,7 +73,7 @@ void sensingClass::temperatureSensingProcess()
     else
     {
         Serial.println("No temperature data available.");
-    }
+    }*/
 }
 void sensingClass::humiditySensingProces()
 {
@@ -103,26 +99,36 @@ void sensingClass::turnOffAllElements(void)
 }
 
 void sensingClass::sensingProcessTakeReadings(void)
-{
-   while (!Serial) 
-   {
-    delay(1);
-   }
-    
+{    
    Serial.println("sensingProcessTakeReadings");
 
-    if (!as7341.begin())
+   // Initial setup for sensing class
+    while (!Serial) 
+    {
+        delay(3); // Wait for serial port to connect. Needed for native USB
+    }
+
+
+    // Initialize sensors
+    if (!as7341.begin(AS7341_I2CADDR_DEFAULT, &Wire))
     {
         Serial.println("Could not find AS7341");
-        while (1) { delay(10); }
+        while (1) 
+        {
+            delay(3); 
+        }
     }
-    as7341.setATIME(100);
-    as7341.setASTEP(999);
-    as7341.setGain(AS7341_GAIN_256X);
-
+    else
+    {
+        Serial.println("AS7341 initialized successfully");
+        as7341.setATIME(100);
+        as7341.setASTEP(999);
+        as7341.setGain(AS7341_GAIN_256X);
+    }
+    
     uint16_t readings[12] = {0}; // Array to hold readings from the AS7341 sensor
 
-// Loop to keep taking readings until the STOP button is pressed
+    //Loop to keep taking readings until the STOP button is pressed
     while (buttonsSensing.buttonPressed() != BACK_BUTTON) 
     {
         if (!as7341.readAllChannels(readings))
@@ -131,11 +137,8 @@ void sensingClass::sensingProcessTakeReadings(void)
             return;
         }
 
-
-
-     Serial.println("\n\n\n\n\n\n");
+        Serial.println("\n\n\n\n\n\n");
         delay(1000);
-
 
         Serial.print("ADC0/F1 415nm : ");
         Serial.println(readings[0]);
@@ -165,14 +168,47 @@ void sensingClass::sensingProcessTakeReadings(void)
         Serial.print("ADC5/NIR      : ");
         Serial.println(readings[11]);
 
-        Serial.println();
-
-        temperatureSensingProcess();
-        
         delay(500); // Optional: add a small delay to avoid flooding output
         buttonsSensing.navigationButtons(); // Update button state
         delay(1000);
     }
+
+    Serial.println("AS7263");
+    
+    if (!as726x.begin(&Wire))
+    {
+        Serial.println("Could not find AS726x");
+        while (!as726x.begin()) { delay(3); }
+    }
+    else
+    {
+        Serial.println("AS726x initialized successfully");
+        as726x.setGain(GAIN_1X);
+    }
+
+    do
+    {
+        as726x.startMeasurement();
+        Serial.print("Violet: ");
+        Serial.println(as726x.readViolet());
+        Serial.print("Blue: ");
+        Serial.println(as726x.readBlue());      
+        Serial.print("Green: ");
+        Serial.println(as726x.readGreen());
+        Serial.print("Yellow: ");
+        Serial.println(as726x.readYellow());
+        Serial.print("Orange: ");
+        Serial.println(as726x.readOrange());
+        Serial.print("Red: ");
+        Serial.println(as726x.readRed());
+        
+        delay(500); 
+        buttonsSensing.navigationButtons(); 
+        delay(500);
+    } 
+    while (buttonsSensing.buttonPressed() != BACK_BUTTON); 
+
+    //temperatureSensingProcess();
 }
 
 void sensingClass::sensingProcessSendingReadingsToConditioning(void)

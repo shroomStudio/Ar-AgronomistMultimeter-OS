@@ -41,7 +41,8 @@ Adafruit_AS726x::~Adafruit_AS726x(void) {
 bool Adafruit_AS726x::begin(TwoWire *theWire) {
   if (i2c_dev)
     delete i2c_dev;
-  i2c_dev = new Adafruit_I2CDevice(_i2caddr, theWire);
+  //i2c_dev = new Adafruit_I2CDevice(_i2caddr, theWire);AS726x_ADDRESS
+  i2c_dev = new Adafruit_I2CDevice(AS726x_ADDRESS, theWire);
   if (!i2c_dev->begin()) {
     return false;
   }
