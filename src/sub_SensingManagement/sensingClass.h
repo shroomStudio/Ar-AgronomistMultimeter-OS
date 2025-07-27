@@ -52,7 +52,7 @@ class sensingClass{
     //Public Methods
     void macronutrientSensingProcess();
     void temperatureSensingProcess();
-    void humiditySensingProces();
+    void humiditySensingProcess();
     void atmosphericPressureSensingProcess();
 
     private:
