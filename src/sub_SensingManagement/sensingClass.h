@@ -70,6 +70,7 @@ class sensingClass{
     void sensingProcessTakeReadings(void);
     void sensingProcessSendingReadingsToConditioning(void);
     void as7341TakeReads(void);
+    void as726xTakeReads(void);
     Adafruit_AS7341 as7341;
     Adafruit_AS726x as726x;
 };

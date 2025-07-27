@@ -123,43 +123,8 @@ void sensingClass::sensingProcessTakeReadings(void)
     }
 
     as7341TakeReads();
-
-    Serial.println("AS7263");
-    
-    if (!as726x.begin(&Wire))
-    {
-        Serial.println("Could not find AS726x");
-        while (!as726x.begin()) { delay(3); }
-    }
-    else
-    {
-        Serial.println("AS726x initialized successfully");
-        as726x.setGain(GAIN_1X);
-    }
-
-    do
-    {
-        /*as726x.startMeasurement();
-        Serial.print("Violet: ");
-        Serial.println(as726x.readViolet());
-        Serial.print("Blue: ");
-        Serial.println(as726x.readBlue());      
-        Serial.print("Green: ");
-        Serial.println(as726x.readGreen());
-        Serial.print("Yellow: ");
-        Serial.println(as726x.readYellow());
-        Serial.print("Orange: ");
-        Serial.println(as726x.readOrange());
-        Serial.print("Red: ");
-        Serial.println(as726x.readRed());*/
-        
-        delay(500); 
-        buttonsSensing.navigationButtons(); 
-        delay(500);
-    } 
-    while (buttonsSensing.buttonPressed() != BACK_BUTTON); 
-
-    //temperatureSensingProcess();
+    as726xTakeReads();
+    temperatureSensingProcess();
 }
 
 void sensingClass::sensingProcessSendingReadingsToConditioning(void)
@@ -231,4 +196,39 @@ void sensingClass::as7341TakeReads(void)
     As7341Wavelenght630nm /= MaxNumberOfSamples;
     As7341Wavelenght680nm /= MaxNumberOfSamples;
 
+}
+
+void sensingClass::as726xTakeReads(void)
+{
+    if (!as726x.begin(&Wire))
+    {
+        Serial.println("Could not find AS726x");
+        while (!as726x.begin()) { delay(3); }
+    }
+    else
+    {
+        Serial.println("AS726x initialized successfully");
+        as726x.setGain(GAIN_1X);
+    }
+    /*
+
+    do {
+        as726x.startMeasurement();
+        Serial.print("Violet: ");
+        Serial.println(as726x.readViolet());
+        Serial.print("Blue: ");
+        Serial.println(as726x.readBlue());      
+        Serial.print("Green: ");
+        Serial.println(as726x.readGreen());
+        Serial.print("Yellow: ");
+        Serial.println(as726x.readYellow());
+        Serial.print("Orange: ");
+        Serial.println(as726x.readOrange());
+        Serial.print("Red: ");
+        Serial.println(as726x.readRed());
+        
+        delay(500); 
+        buttonsSensing.navigationButtons(); 
+        delay(500);
+    } while (buttonsSensing.buttonPressed() != BACK_BUTTON);*/ 
 }
