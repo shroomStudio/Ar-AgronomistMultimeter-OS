@@ -11,6 +11,14 @@ INT   - Interrupt (optional)
 RST   - Reset (optional)
 SET   - Mode select (I2C or UART)
 GND   - (second ground pin)
+
+Red: 620-700 nm 
+Orange: 590-620 nm 
+Yellow: 570-590 nm 
+Green: 495-570 nm 
+Blue: 450-495 nm 
+White: While not a single wavelength, white LEDs are characterized by their color temperature, measured in Kelvin (K). Lower Kelvin values (e.g., 2700K) indicate warm white, while higher values (e.g., 6000K) indicate cool white. 
+Other colors: Purple LEDs typically have wavelengths between 370-410 nm, and ultraviolet (UV) LEDs have wavelengths less than 380 nm. 
 */
 #include <Arduino.h>
 #include "sub_UserInterface/commonDataTypes.h"
@@ -61,6 +69,7 @@ class sensingClass{
     void turnOnAllElements(void);
     void sensingProcessTakeReadings(void);
     void sensingProcessSendingReadingsToConditioning(void);
+    void as7341TakeReads(void);
     Adafruit_AS7341 as7341;
     Adafruit_AS726x as726x;
 };

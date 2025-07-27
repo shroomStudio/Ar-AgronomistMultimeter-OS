@@ -8,6 +8,20 @@ lcdDisplayClass lcdSensing;
 buttonsClass buttonsSensing;
 signalConditioningClass conditioningSensing;
 
+const uint8_t MaxNumberOfSamples = 30; 
+const uint8_t ZeroValue = 0; 
+const uint8_t MaxNumberOfReadingsAS7341 = 12; // Number of readings for AS7341 sensor
+static uint16_t As7341Wavelenght415nm;
+static uint16_t As7341Wavelenght445nm;
+static uint16_t As7341Wavelenght480nm;
+static uint16_t As7341Wavelenght515nm;
+static uint16_t As7341WavelenghtClear;
+static uint16_t As7341WavelenghtNIR;
+static uint16_t As7341Wavelenght555nm;
+static uint16_t As7341Wavelenght590nm;
+static uint16_t As7341Wavelenght630nm;
+static uint16_t As7341Wavelenght680nm;
+
 // SoftwareWire instances for I2C communication
 
    
@@ -108,7 +122,53 @@ void sensingClass::sensingProcessTakeReadings(void)
         delay(3); // Wait for serial port to connect. Needed for native USB
     }
 
+    as7341TakeReads();
 
+    Serial.println("AS7263");
+    
+    if (!as726x.begin(&Wire))
+    {
+        Serial.println("Could not find AS726x");
+        while (!as726x.begin()) { delay(3); }
+    }
+    else
+    {
+        Serial.println("AS726x initialized successfully");
+        as726x.setGain(GAIN_1X);
+    }
+
+    do
+    {
+        /*as726x.startMeasurement();
+        Serial.print("Violet: ");
+        Serial.println(as726x.readViolet());
+        Serial.print("Blue: ");
+        Serial.println(as726x.readBlue());      
+        Serial.print("Green: ");
+        Serial.println(as726x.readGreen());
+        Serial.print("Yellow: ");
+        Serial.println(as726x.readYellow());
+        Serial.print("Orange: ");
+        Serial.println(as726x.readOrange());
+        Serial.print("Red: ");
+        Serial.println(as726x.readRed());*/
+        
+        delay(500); 
+        buttonsSensing.navigationButtons(); 
+        delay(500);
+    } 
+    while (buttonsSensing.buttonPressed() != BACK_BUTTON); 
+
+    //temperatureSensingProcess();
+}
+
+void sensingClass::sensingProcessSendingReadingsToConditioning(void)
+{
+
+}
+
+void sensingClass::as7341TakeReads(void)
+{
     // Initialize sensors
     if (!as7341.begin(AS7341_I2CADDR_DEFAULT, &Wire))
     {
@@ -126,92 +186,49 @@ void sensingClass::sensingProcessTakeReadings(void)
         as7341.setGain(AS7341_GAIN_256X);
     }
     
-    uint16_t readings[12] = {0}; // Array to hold readings from the AS7341 sensor
-
     //Loop to keep taking readings until the STOP button is pressed
-    while (buttonsSensing.buttonPressed() != BACK_BUTTON) 
+    for (int totalReadings = ZeroValue; totalReadings < MaxNumberOfSamples; totalReadings++)
     {
-        if (!as7341.readAllChannels(readings))
+        uint16_t as7341Readings[MaxNumberOfReadingsAS7341] = {ZeroValue}; // Array to hold readings from the AS7341 sensor
+
+        if (buttonsSensing.buttonPressed() == BACK_BUTTON)
+        {
+            Serial.println("Sensing process aborted by user.");
+            break;
+        }
+        // Read all channels from the AS7341 sensor
+        if (!as7341.readAllChannels(as7341Readings))
         {
             Serial.println("Error reading all channels!");
-            return;
+            break;
         }
 
-        Serial.println("\n\n\n\n\n\n");
-        delay(1000);
+        As7341Wavelenght415nm += as7341Readings[0];
+        As7341Wavelenght445nm += as7341Readings[1];
+        As7341Wavelenght480nm += as7341Readings[2];
+        As7341Wavelenght515nm += as7341Readings[3];
+        As7341WavelenghtClear += as7341Readings[4];
+        As7341WavelenghtNIR += as7341Readings[5];
+        As7341Wavelenght555nm += as7341Readings[6];
+        As7341Wavelenght590nm += as7341Readings[7];
+        As7341Wavelenght630nm += as7341Readings[8];
+        As7341Wavelenght680nm += as7341Readings[9];
+        As7341WavelenghtClear += as7341Readings[10];
+        As7341WavelenghtNIR += as7341Readings[11];
 
-        Serial.print("ADC0/F1 415nm : ");
-        Serial.println(readings[0]);
-        Serial.print("ADC1/F2 445nm : ");
-        Serial.println(readings[1]);
-        Serial.print("ADC2/F3 480nm : ");
-        Serial.println(readings[2]);
-        Serial.print("ADC3/F4 515nm : ");
-        Serial.println(readings[3]);
-        Serial.print("ADC0/F5 555nm : ");
-
-        // we skip the first set of duplicate clear/NIR readings
-        Serial.print("ADC4/Clear-");
-        Serial.println(readings[4]);
-        Serial.print("ADC5/NIR-");
-        Serial.println(readings[5]);
-        
-        Serial.println(readings[6]);
-        Serial.print("ADC1/F6 590nm : ");
-        Serial.println(readings[7]);
-        Serial.print("ADC2/F7 630nm : ");
-        Serial.println(readings[8]);
-        Serial.print("ADC3/F8 680nm : ");
-        Serial.println(readings[9]);
-        Serial.print("ADC4/Clear    : ");
-        Serial.println(readings[10]);
-        Serial.print("ADC5/NIR      : ");
-        Serial.println(readings[11]);
-
-        delay(500); // Optional: add a small delay to avoid flooding output
-        buttonsSensing.navigationButtons(); // Update button state
-        delay(1000);
-    }
-
-    Serial.println("AS7263");
-    
-    if (!as726x.begin(&Wire))
-    {
-        Serial.println("Could not find AS726x");
-        while (!as726x.begin()) { delay(3); }
-    }
-    else
-    {
-        Serial.println("AS726x initialized successfully");
-        as726x.setGain(GAIN_1X);
-    }
-
-    do
-    {
-        as726x.startMeasurement();
-        Serial.print("Violet: ");
-        Serial.println(as726x.readViolet());
-        Serial.print("Blue: ");
-        Serial.println(as726x.readBlue());      
-        Serial.print("Green: ");
-        Serial.println(as726x.readGreen());
-        Serial.print("Yellow: ");
-        Serial.println(as726x.readYellow());
-        Serial.print("Orange: ");
-        Serial.println(as726x.readOrange());
-        Serial.print("Red: ");
-        Serial.println(as726x.readRed());
-        
-        delay(500); 
+        delay(100); 
         buttonsSensing.navigationButtons(); 
-        delay(500);
-    } 
-    while (buttonsSensing.buttonPressed() != BACK_BUTTON); 
+    }
 
-    //temperatureSensingProcess();
-}
-
-void sensingClass::sensingProcessSendingReadingsToConditioning(void)
-{
+    As7341Wavelenght415nm /= MaxNumberOfSamples;
+    As7341Wavelenght445nm /= MaxNumberOfSamples;
+    As7341Wavelenght480nm /= MaxNumberOfSamples;
+    As7341Wavelenght515nm /= MaxNumberOfSamples;
+    As7341WavelenghtClear /= MaxNumberOfSamples;
+    As7341WavelenghtNIR /= MaxNumberOfSamples;
+    As7341Wavelenght555nm /= MaxNumberOfSamples;
+    As7341Wavelenght590nm /= MaxNumberOfSamples;
+    As7341Wavelenght630nm /= MaxNumberOfSamples;
+    As7341Wavelenght680nm /= MaxNumberOfSamples;
 
 }
