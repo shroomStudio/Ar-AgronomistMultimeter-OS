@@ -2,32 +2,45 @@
 #include "sub_UserInterface/lcdDisplayClass.h"
 #include "sub_UserInterface/buttonsClass.h"
 #include "sub_SignalConditioning/signalConditioningClass.h"
-#include "ExternalLibraries/Adafruit_AS7341.h"
 
 //Clases instances 
 lcdDisplayClass lcdSensing;
 buttonsClass buttonsSensing;
 signalConditioningClass conditioningSensing;
 
-//Global File scope Variables
-    int whiteLedMeasurements[MAX_NUMBER_OF_SAMPLES];
-    int blueLedMeasurements[MAX_NUMBER_OF_SAMPLES];
-    int redLedMeasurements[MAX_NUMBER_OF_SAMPLES];
-    int yellowLedMeasurements[MAX_NUMBER_OF_SAMPLES];
-    int greenLedMeasurements[MAX_NUMBER_OF_SAMPLES];
-    
-sensingClass::sensingClass(){
-    // Constructor sensing class
-    pinMode(redLedPin,OUTPUT);
-    pinMode(yellowLedPin,OUTPUT);
-    pinMode(blueLedPin,OUTPUT);
-    pinMode(whiteLedPin,OUTPUT);
-    pinMode(greenLedPin, OUTPUT);
-}
+const uint8_t MaxNumberOfSamples = 30; 
+const uint8_t ZeroValue = 0; 
+const uint8_t MaxNumberOfReadingsAS7341 = 12; // Number of readings for AS7341 sensor
+static uint16_t As7341Wavelenght415nm;
+static uint16_t As7341Wavelenght445nm;
+static uint16_t As7341Wavelenght480nm;
+static uint16_t As7341Wavelenght515nm;
+static uint16_t As7341WavelenghtClear;
+static uint16_t As7341WavelenghtNIR;
+static uint16_t As7341Wavelenght555nm;
+static uint16_t As7341Wavelenght590nm;
+static uint16_t As7341Wavelenght630nm;
+static uint16_t As7341Wavelenght680nm;
 
-sensingClass::~sensingClass(){
+// SoftwareWire instances for I2C communication
+
+   
+sensingClass::sensingClass(): as7341(), 
+                              as726x()
+{
+  initialSensingClassSetup();
+}   
+
+sensingClass::~sensingClass()
+{
     //destructor sensing class
 }
+
+void sensingClass::initialSensingClassSetup()
+{
+    
+}
+
 
 void sensingClass::macronutrientSensingProcess()
 {
@@ -57,16 +70,26 @@ void sensingClass::macronutrientSensingProcess()
     delay(2000);
 
      //Sendind readings to conditioning class
-    sensingProcessSendingReadingsToConditioning();
+    //sensingProcessSendingReadingsToConditioning();
     }
-    
+
 }
 
 void sensingClass::temperatureSensingProcess()
 {
+    /*if (1)
+    {
+        auto temperatureAmbient = 0;
 
+        Serial.print("Temperature Ambient: ");
+        Serial.println(temperatureAmbient);
+    }
+    else
+    {
+        Serial.println("No temperature data available.");
+    }*/
 }
-void sensingClass::humiditySensingProces()
+void sensingClass::humiditySensingProcess()
 {
 
 }
@@ -81,159 +104,131 @@ void sensingClass::serialMiltiplexor(SENSOR_SERIAL sensor)
 
 void sensingClass::turnOnAllElements(void)
 {
-    digitalWrite(yellowLedPin, HIGH);
-    digitalWrite(blueLedPin, HIGH);
-    digitalWrite(whiteLedPin, HIGH);
-    digitalWrite(redLedPin, HIGH);
-    digitalWrite(greenLedPin, HIGH);
-    delay(200);
+
 }
 
 void sensingClass::turnOffAllElements(void)
 {
-    digitalWrite(yellowLedPin, LOW);
-    digitalWrite(blueLedPin, LOW);
-    digitalWrite(whiteLedPin, LOW);
-    digitalWrite(redLedPin, LOW);
-    digitalWrite(greenLedPin, LOW);
-    delay(200);
+
 }
 
 void sensingClass::sensingProcessTakeReadings(void)
-{
-    lcdSensing.metadataTodisplayFreeCursor("Sensing in Process",LEFT_ALIGNED_X,TOP_Y,true);
-    delay(2000);
+{    
+   Serial.println("sensingProcessTakeReadings");
 
-    //Before Any process turn on all the elements 
-    turnOnAllElements();
-    delay(2000);
-    //Ensure all the leds and photodiode are off
-    turnOffAllElements();
-
-    //turn on white LED diode
-    digitalWrite(whiteLedPin, HIGH);
-    delay(200);
-    //reading values for White LED
-    for(int i=0; i < MAX_NUMBER_OF_SAMPLES; i++ )
+   // Initial setup for sensing class
+    while (!Serial) 
     {
-        /* //Start reading photodiode */
-        whiteLedMeasurements[i] = analogRead(photodiodeInput);
-        delay(100);
-        lcdSensing.intNumberTodisplayInLCD((whiteLedMeasurements[i]),LEFT_ALIGNED_X,TOP_Y,true);
-        delay(200);
+        delay(3); // Wait for serial port to connect. Needed for native USB
     }
-    //Turn Off White LED
-    digitalWrite(whiteLedPin, LOW);
-    delay(200);
-    
-    //turn on Red LED diode
-    digitalWrite(redLedPin, HIGH);
-    delay(200);
-    //reading values for Red LED
-    for(int i=0; i < MAX_NUMBER_OF_SAMPLES; i++ )
-    {
-        /* //Start reading photodiode */
-        redLedMeasurements[i] = analogRead(photodiodeInput);
-        delay(100);
-        lcdSensing.intNumberTodisplayInLCD((redLedMeasurements[i]),LEFT_ALIGNED_X,TOP_Y,true);
-        delay(200);
-    }
-    //Turn Off Red LED
-    digitalWrite(redLedPin, LOW);
-    delay(200);
 
-    //turn on Yellow LED diode
-    digitalWrite(yellowLedPin, HIGH);
-    delay(200);
-    //reading values for Yellow LED
-    for(int i=0; i < MAX_NUMBER_OF_SAMPLES; i++ )
-    {
-        /* //Start reading photodiode */
-        yellowLedMeasurements[i] = analogRead(photodiodeInput);
-        delay(100);
-        lcdSensing.intNumberTodisplayInLCD(yellowLedMeasurements[i],LEFT_ALIGNED_X,TOP_Y,true);
-        delay(200);
-    }
-    //Turn Off Yellow LED
-    digitalWrite(yellowLedPin, LOW);
-    delay(200);
-
-
-    //turn on Blue LED diode
-    digitalWrite(blueLedPin, HIGH);
-    delay(200);
-    //reading values for IR LED
-   for(int i=0; i < MAX_NUMBER_OF_SAMPLES; i++ )
-    {
-        /* //Start reading photodiode */
-        blueLedMeasurements[i] = analogRead(photodiodeInput);
-        delay(100);
-        lcdSensing.intNumberTodisplayInLCD((blueLedMeasurements[i]),LEFT_ALIGNED_X,TOP_Y,true);
-        delay(200);
-    }
-    //Turn Off Blue LED
-    digitalWrite(blueLedPin, LOW);
-    delay(200);
-
-    //turn on Green LED diode
-    digitalWrite(greenLedPin, HIGH);
-    delay(200);
-
-     for(int i=0; i < MAX_NUMBER_OF_SAMPLES; i++ )
-    {
-        /* //Start reading photodiode */
-        greenLedMeasurements[i] = analogRead(photodiodeInput);
-        delay(100);
-        lcdSensing.intNumberTodisplayInLCD((greenLedMeasurements[i]),LEFT_ALIGNED_X,TOP_Y,true);
-        delay(200);
-    }
-    //Turn Off Green LED
-    digitalWrite(greenLedPin, LOW);
-    delay(200);
+    as7341TakeReads();
+    as726xTakeReads();
+    temperatureSensingProcess();
 }
 
 void sensingClass::sensingProcessSendingReadingsToConditioning(void)
 {
-    // Copy White led readings to condition class arrays
-    for (int i = 0; i < MAX_NUMBER_OF_SAMPLES; i++)
-    {
-        conditioningSensing.whiteLedMeasurements[i] = whiteLedMeasurements[i];
-        //Clearing global scope file array to be ready for next process 
-        whiteLedMeasurements[i] = 0;
-    }
 
-    // Copy Red LEd readings to condition class arrays
-    for (int i = 0; i < MAX_NUMBER_OF_SAMPLES; i++)
-    {
-        conditioningSensing.redLedMeasurements[i] = redLedMeasurements[i];
-        //Clearing global scope file array to be ready for next process 
-        redLedMeasurements[i] = 0;
-    }
+}
 
-    // Copy Yellow Led readings to condition class arrays
-    for (int i = 0; i < MAX_NUMBER_OF_SAMPLES; i++)
+void sensingClass::as7341TakeReads(void)
+{
+    // Initialize sensors
+    if (!as7341.begin(AS7341_I2CADDR_DEFAULT, &Wire))
     {
-        conditioningSensing.yellowLedMeasurements[i] = yellowLedMeasurements[i];
-        //Clearing global scope file array to be ready for next process 
-        yellowLedMeasurements[i] = 0;
+        Serial.println("Could not find AS7341");
+        while (1) 
+        {
+            delay(3); 
+        }
     }
-
-    // Copy Blue readings to condition class arrays
-    for (int i = 0; i < MAX_NUMBER_OF_SAMPLES; i++)
+    else
     {
-        conditioningSensing.blueLedMeasurements[i] = blueLedMeasurements[i];
-        //Clearing global scope file array to be ready for next process 
-        blueLedMeasurements[i] = 0;
-    }
-
-    // Copy Green readings to condition class arrays
-    for (int i = 0; i < MAX_NUMBER_OF_SAMPLES; i++)
-    {
-        conditioningSensing.greenLedMeasurements[i] = greenLedMeasurements[i];
-        //Clearing global scope file array to be ready for next process 
-        greenLedMeasurements[i] = 0;
+        Serial.println("AS7341 initialized successfully");
+        as7341.setATIME(100);
+        as7341.setASTEP(999);
+        as7341.setGain(AS7341_GAIN_256X);
     }
     
-    //Starting signal conditioning process
-    conditioningSensing.macronutrientsMapping();
+    //Loop to keep taking readings until the STOP button is pressed
+    for (int totalReadings = ZeroValue; totalReadings < MaxNumberOfSamples; totalReadings++)
+    {
+        uint16_t as7341Readings[MaxNumberOfReadingsAS7341] = {ZeroValue}; // Array to hold readings from the AS7341 sensor
+
+        if (buttonsSensing.buttonPressed() == BACK_BUTTON)
+        {
+            Serial.println("Sensing process aborted by user.");
+            break;
+        }
+        // Read all channels from the AS7341 sensor
+        if (!as7341.readAllChannels(as7341Readings))
+        {
+            Serial.println("Error reading all channels!");
+            break;
+        }
+
+        As7341Wavelenght415nm += as7341Readings[0];
+        As7341Wavelenght445nm += as7341Readings[1];
+        As7341Wavelenght480nm += as7341Readings[2];
+        As7341Wavelenght515nm += as7341Readings[3];
+        As7341WavelenghtClear += as7341Readings[4];
+        As7341WavelenghtNIR += as7341Readings[5];
+        As7341Wavelenght555nm += as7341Readings[6];
+        As7341Wavelenght590nm += as7341Readings[7];
+        As7341Wavelenght630nm += as7341Readings[8];
+        As7341Wavelenght680nm += as7341Readings[9];
+        As7341WavelenghtClear += as7341Readings[10];
+        As7341WavelenghtNIR += as7341Readings[11];
+
+        delay(100); 
+        buttonsSensing.navigationButtons(); 
+    }
+
+    As7341Wavelenght415nm /= MaxNumberOfSamples;
+    As7341Wavelenght445nm /= MaxNumberOfSamples;
+    As7341Wavelenght480nm /= MaxNumberOfSamples;
+    As7341Wavelenght515nm /= MaxNumberOfSamples;
+    As7341WavelenghtClear /= MaxNumberOfSamples;
+    As7341WavelenghtNIR /= MaxNumberOfSamples;
+    As7341Wavelenght555nm /= MaxNumberOfSamples;
+    As7341Wavelenght590nm /= MaxNumberOfSamples;
+    As7341Wavelenght630nm /= MaxNumberOfSamples;
+    As7341Wavelenght680nm /= MaxNumberOfSamples;
+
+}
+
+void sensingClass::as726xTakeReads(void)
+{
+    if (!as726x.begin(&Wire))
+    {
+        Serial.println("Could not find AS726x");
+        while (!as726x.begin()) { delay(3); }
+    }
+    else
+    {
+        Serial.println("AS726x initialized successfully");
+        as726x.setGain(GAIN_1X);
+    }
+    /*
+
+    do {
+        as726x.startMeasurement();
+        Serial.print("Violet: ");
+        Serial.println(as726x.readViolet());
+        Serial.print("Blue: ");
+        Serial.println(as726x.readBlue());      
+        Serial.print("Green: ");
+        Serial.println(as726x.readGreen());
+        Serial.print("Yellow: ");
+        Serial.println(as726x.readYellow());
+        Serial.print("Orange: ");
+        Serial.println(as726x.readOrange());
+        Serial.print("Red: ");
+        Serial.println(as726x.readRed());
+        
+        delay(500); 
+        buttonsSensing.navigationButtons(); 
+        delay(500);
+    } while (buttonsSensing.buttonPressed() != BACK_BUTTON);*/ 
 }

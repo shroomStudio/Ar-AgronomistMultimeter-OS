@@ -58,21 +58,19 @@ PinA5   Green LED
 #define NUM_IR_LED         3
 #define MAX_NUMBER_OF_LED  5
 
-const int photodiodeInput  = A0; 
-const int whiteLedPin      = A1;
-const int redLedPin        = A2;
-const int yellowLedPin     = A3;
-const int blueLedPin       = A4;
-const int greenLedPin      = A5;
+const int pinDownButton = A0;
+const int pinBackButton = A1;
+const int pinUpButton   = A2;
+const int pinOkButton   = A3;
 
 //Enumerations 
 typedef enum 
 {
-    UP_BUTTON = 56,
+    UP_BUTTON   = 56,
     DOWN_BUTTON = 50,
     BACK_BUTTON = 55,
-    OK_BUTTON = 53,
-    NO_BUTTON = 255,
+    OK_BUTTON   = 53,
+    NO_BUTTON   = 255,
 }BUTTON_PRESSED;
 typedef enum 
 {
