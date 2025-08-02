@@ -11,10 +11,6 @@ lcdDisplayClass lcdButtons;
 
 buttonsClass::buttonsClass(){
     //Constructor class buttonsClass
-    pinMode(pinOkButton,OUTPUT);
-    pinMode(pinUpButton,OUTPUT);
-    pinMode(pinBackButton,OUTPUT);
-    pinMode(pinDownButton,OUTPUT);
 }
 
 buttonsClass:: ~buttonsClass(){
