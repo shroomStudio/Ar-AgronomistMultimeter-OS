@@ -52,10 +52,14 @@ PinA5   Green LED
 #define MAX_NUMBER_OF_ELEMENTS 3
 #define NITROGEN_MEASURE 0
 #define ELEMENT_TO_MEASURE 3
-#define NUM_RED_LED        0
-#define NUM_YELLOW_LED     1
-#define NUM_BLUE_LED       2
-#define NUM_IR_LED         3
+// Common annode leds 
+#define PIN_RED_LED        4
+#define PIN_GREEN_LED      3
+#define PIN_BLUE_LED       5
+// Common cathode leds
+#define PIN_YELLOW_LED     6
+#define PIN_WHITE_LED      7
+
 #define MAX_NUMBER_OF_LED  5
 
 const int pinDownButton = A0;

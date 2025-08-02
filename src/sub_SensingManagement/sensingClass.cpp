@@ -8,7 +8,7 @@ lcdDisplayClass lcdSensing;
 buttonsClass buttonsSensing;
 signalConditioningClass conditioningSensing;
 
-const uint8_t MaxNumberOfSamples = 30; 
+const uint8_t MaxNumberOfSamples = 15; 
 const uint8_t ZeroValue = 0; 
 const uint8_t MaxNumberOfReadingsAS7341 = 12; // Number of readings for AS7341 sensor
 static uint16_t As7341Wavelenght415nm;
@@ -21,6 +21,7 @@ static uint16_t As7341Wavelenght555nm;
 static uint16_t As7341Wavelenght590nm;
 static uint16_t As7341Wavelenght630nm;
 static uint16_t As7341Wavelenght680nm;
+
 
 // SoftwareWire instances for I2C communication
 
@@ -38,7 +39,18 @@ sensingClass::~sensingClass()
 
 void sensingClass::initialSensingClassSetup()
 {
-    
+    //pinMode(3, OUTPUT); 
+    pinMode(PIN_RED_LED, OUTPUT);
+    pinMode(PIN_GREEN_LED, OUTPUT);
+    pinMode(PIN_BLUE_LED, OUTPUT);
+    pinMode(PIN_YELLOW_LED, OUTPUT);
+    pinMode(PIN_WHITE_LED, OUTPUT);
+
+    digitalWrite(PIN_RED_LED, HIGH);
+    digitalWrite(PIN_GREEN_LED, HIGH);
+    digitalWrite(PIN_BLUE_LED, HIGH);
+    digitalWrite(PIN_YELLOW_LED, LOW);
+    digitalWrite(PIN_WHITE_LED, LOW);
 }
 
 
@@ -69,8 +81,8 @@ void sensingClass::macronutrientSensingProcess()
     lcdSensing.metadataTodisplayFreeCursor("Sensing process finished \n",LEFT_ALIGNED_X,TOP_Y,false);
     delay(2000);
 
-     //Sendind readings to conditioning class
-    //sensingProcessSendingReadingsToConditioning();
+    //Sendind readings to conditioning class
+    sendingReadingsToConditioning();
     }
 
 }
@@ -89,7 +101,7 @@ void sensingClass::temperatureSensingProcess()
         Serial.println("No temperature data available.");
     }*/
 }
-void sensingClass::humiditySensingProcess()
+void sensingClass::humiditySensingProces()
 {
 
 }
@@ -104,12 +116,32 @@ void sensingClass::serialMiltiplexor(SENSOR_SERIAL sensor)
 
 void sensingClass::turnOnAllElements(void)
 {
-
+    // Sequence of turn each element on
+    digitalWrite(PIN_RED_LED, LOW);
+    delay(500);
+    digitalWrite(PIN_GREEN_LED, LOW);
+    delay(500);
+    digitalWrite(PIN_BLUE_LED, LOW);
+    delay(500);
+    digitalWrite(PIN_YELLOW_LED, HIGH);
+    delay(500);
+    digitalWrite(PIN_WHITE_LED, HIGH);
+    delay(500);
+    
 }
 
 void sensingClass::turnOffAllElements(void)
 {
-
+    digitalWrite(PIN_RED_LED, HIGH);
+    delay(500);
+    digitalWrite(PIN_GREEN_LED, HIGH);
+    delay(500);
+    digitalWrite(PIN_BLUE_LED, HIGH);
+    delay(500);
+    digitalWrite(PIN_YELLOW_LED, LOW);
+    delay(500);
+    digitalWrite(PIN_WHITE_LED, LOW);
+    delay(500);
 }
 
 void sensingClass::sensingProcessTakeReadings(void)
@@ -127,7 +159,7 @@ void sensingClass::sensingProcessTakeReadings(void)
     temperatureSensingProcess();
 }
 
-void sensingClass::sensingProcessSendingReadingsToConditioning(void)
+void sensingClass::sendingReadingsToConditioning(void)
 {
 
 }
@@ -161,6 +193,34 @@ void sensingClass::as7341TakeReads(void)
             Serial.println("Sensing process aborted by user.");
             break;
         }
+
+        if (totalReadings < 3)
+        {
+            digitalWrite(PIN_RED_LED, LOW);
+            delay(500);
+        }
+        if (totalReadings >= 3 && totalReadings < 6)
+        {
+            digitalWrite(PIN_GREEN_LED, LOW);
+            delay(500);
+        }
+        if (totalReadings >= 6 && totalReadings < 9)
+        {
+            digitalWrite(PIN_BLUE_LED, LOW);
+            delay(500);
+        }
+        if (totalReadings >= 9 && totalReadings < 12)
+        {
+            digitalWrite(PIN_YELLOW_LED, HIGH);
+            delay(500);
+        }
+        if (totalReadings >= 12)
+        {
+            digitalWrite(PIN_WHITE_LED, HIGH);
+            delay(500);
+        }
+
+        
         // Read all channels from the AS7341 sensor
         if (!as7341.readAllChannels(as7341Readings))
         {
@@ -168,39 +228,19 @@ void sensingClass::as7341TakeReads(void)
             break;
         }
 
-        As7341Wavelenght415nm += as7341Readings[0];
-        As7341Wavelenght445nm += as7341Readings[1];
-        As7341Wavelenght480nm += as7341Readings[2];
-        As7341Wavelenght515nm += as7341Readings[3];
-        As7341WavelenghtClear += as7341Readings[4];
-        As7341WavelenghtNIR += as7341Readings[5];
-        As7341Wavelenght555nm += as7341Readings[6];
-        As7341Wavelenght590nm += as7341Readings[7];
-        As7341Wavelenght630nm += as7341Readings[8];
-        As7341Wavelenght680nm += as7341Readings[9];
-        As7341WavelenghtClear += as7341Readings[10];
-        As7341WavelenghtNIR += as7341Readings[11];
+        turnOffAllElements();
+        sumAs7341Readings(as7341Readings);
 
         delay(100); 
         buttonsSensing.navigationButtons(); 
     }
 
-    As7341Wavelenght415nm /= MaxNumberOfSamples;
-    As7341Wavelenght445nm /= MaxNumberOfSamples;
-    As7341Wavelenght480nm /= MaxNumberOfSamples;
-    As7341Wavelenght515nm /= MaxNumberOfSamples;
-    As7341WavelenghtClear /= MaxNumberOfSamples;
-    As7341WavelenghtNIR /= MaxNumberOfSamples;
-    As7341Wavelenght555nm /= MaxNumberOfSamples;
-    As7341Wavelenght590nm /= MaxNumberOfSamples;
-    As7341Wavelenght630nm /= MaxNumberOfSamples;
-    As7341Wavelenght680nm /= MaxNumberOfSamples;
-
+    calculateAverageAs7341Readings();
 }
 
 void sensingClass::as726xTakeReads(void)
 {
-    if (!as726x.begin(&Wire))
+   /* if (!as726x.begin(&Wire))
     {
         Serial.println("Could not find AS726x");
         while (!as726x.begin()) { delay(3); }
@@ -210,7 +250,7 @@ void sensingClass::as726xTakeReads(void)
         Serial.println("AS726x initialized successfully");
         as726x.setGain(GAIN_1X);
     }
-    /*
+    
 
     do {
         as726x.startMeasurement();
@@ -231,4 +271,36 @@ void sensingClass::as726xTakeReads(void)
         buttonsSensing.navigationButtons(); 
         delay(500);
     } while (buttonsSensing.buttonPressed() != BACK_BUTTON);*/ 
+}
+
+void sensingClass::sumAs7341Readings(uint16_t *as7341Readings)
+{
+    // Sum the readings for each wavelength
+    As7341Wavelenght415nm += as7341Readings[0];
+    As7341Wavelenght445nm += as7341Readings[1];
+    As7341Wavelenght480nm += as7341Readings[2];
+    As7341Wavelenght515nm += as7341Readings[3];
+    As7341WavelenghtClear += as7341Readings[4];
+    As7341WavelenghtNIR += as7341Readings[5];
+    As7341Wavelenght555nm += as7341Readings[6];
+    As7341Wavelenght590nm += as7341Readings[7];
+    As7341Wavelenght630nm += as7341Readings[8];
+    As7341Wavelenght680nm += as7341Readings[9];
+    As7341WavelenghtClear += as7341Readings[10];
+    As7341WavelenghtNIR += as7341Readings[11];
+}
+
+void sensingClass::calculateAverageAs7341Readings()
+{
+    // Average the readings
+    As7341Wavelenght415nm /= MaxNumberOfSamples;
+    As7341Wavelenght445nm /= MaxNumberOfSamples;
+    As7341Wavelenght480nm /= MaxNumberOfSamples;
+    As7341Wavelenght515nm /= MaxNumberOfSamples;
+    As7341WavelenghtClear /= MaxNumberOfSamples;
+    As7341WavelenghtNIR /= MaxNumberOfSamples;
+    As7341Wavelenght555nm /= MaxNumberOfSamples;
+    As7341Wavelenght590nm /= MaxNumberOfSamples;
+    As7341Wavelenght630nm /= MaxNumberOfSamples;
+    As7341Wavelenght680nm /= MaxNumberOfSamples;
 }

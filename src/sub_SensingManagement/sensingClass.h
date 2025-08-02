@@ -68,9 +68,11 @@ class sensingClass{
     void turnOffAllElements(void);
     void turnOnAllElements(void);
     void sensingProcessTakeReadings(void);
-    void sensingProcessSendingReadingsToConditioning(void);
+    void sendingReadingsToConditioning(void);
     void as7341TakeReads(void);
     void as726xTakeReads(void);
+    void calculateAverageAs7341Readings(void);
+    void sumAs7341Readings(uint16_t *as7341Readings);
     Adafruit_AS7341 as7341;
     Adafruit_AS726x as726x;
 };
