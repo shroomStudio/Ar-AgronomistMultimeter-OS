@@ -7,16 +7,16 @@
 lcdDisplayClass lcdSensing;
 buttonsClass buttonsSensing;
 signalConditioningClass conditioningSensing;
+uint16_t f2_nitrogen;
+uint16_t f3_nitrogen;
+uint16_t f4_phosphorus;
+uint16_t f5_phosphorus;
+uint16_t f7_potassium;
+uint16_t f8_potassium;
+uint32_t timestamp; 
 
 sensingClass::sensingClass(): as7341(), 
-                             as726x(),
-                             f2_nitrogen(0),
-                             f3_nitrogen(0),
-                             f4_phosphorus(0),
-                             f5_phosphorus(0),
-                             f7_potassium(0),
-                             f8_potassium(0),
-                             timestamp(0)
+                             as726x()
 {
   initialSensingClassSetup();
 }   
@@ -94,10 +94,6 @@ void sensingClass::atmosphericPressureSensingProcess()
 {
 
 }
-void sensingClass::serialMiltiplexor(SENSOR_SERIAL sensor)
-{
-
-}
 
 void sensingClass::turnOnAllElements(void)
 {
@@ -144,12 +140,6 @@ void sensingClass::sensingProcessTakeReadings(void)
     temperatureSensingProcess();
 }
 
-void sensingClass::sendingReadingsToConditioning(void)
-{
-
-
-}
-
 void sensingClass::as7341TakeReads(void)
 {
     // Initialize sensors
@@ -170,18 +160,25 @@ void sensingClass::as7341TakeReads(void)
         // Example: ATIME = 17, ASTEP = 1057  => (17+1)*(1057+1) = 19044 (close to 17986)
         as7341.setATIME(17);
         as7341.setASTEP(1057);
-        as7341.setGain(AS7341_GAIN_64X);
+        as7341.setGain(AS7341_GAIN_128X);
         Serial.println("AS7341 initialized successfully");
     }
 
+    delay(1000); // Wait for sensor to stabilize
     takeReadingForSpecificChannelAs7341(AS7341_CHANNEL_445nm_F2);
+    delay(1000); // Wait for sensor to stabilize
     takeReadingForSpecificChannelAs7341(AS7341_CHANNEL_480nm_F3);
+    delay(1000); // Wait for sensor to stabilize
     takeReadingForSpecificChannelAs7341(AS7341_CHANNEL_515nm_F4);
+    delay(1000); // Wait for sensor to stabilize
     takeReadingForSpecificChannelAs7341(AS7341_CHANNEL_555nm_F5);
+    delay(1000); // Wait for sensor to stabilize
     takeReadingForSpecificChannelAs7341(AS7341_CHANNEL_630nm_F7);
+    delay(1000); // Wait for sensor to stabilize
     takeReadingForSpecificChannelAs7341(AS7341_CHANNEL_680nm_F8);
-    
+    // Wait for sensor to stabilize
     delay(100); 
+
     buttonsSensing.navigationButtons(); 
     turnOffAllElements();
 }
@@ -222,7 +219,7 @@ void sensingClass::as726xTakeReads(void)
 }
 
 void sensingClass::takeReadingForSpecificChannelAs7341(as7341_color_channel_t channel)
-{
+{    
     switch (channel)
     {
     case AS7341_CHANNEL_415nm_F1:
@@ -232,10 +229,12 @@ void sensingClass::takeReadingForSpecificChannelAs7341(as7341_color_channel_t ch
     case AS7341_CHANNEL_445nm_F2:
 
         digitalWrite(PIN_BLUE_LED, LOW);
-        delay(500);
+        
+        as7341.readAllChannels();
+        delay(1000);
 
         f2_nitrogen = as7341.getChannel(AS7341_CHANNEL_445nm_F2);
-        
+
         digitalWrite(PIN_BLUE_LED, HIGH);
         delay(500);
 
@@ -244,7 +243,9 @@ void sensingClass::takeReadingForSpecificChannelAs7341(as7341_color_channel_t ch
     case AS7341_CHANNEL_480nm_F3:
 
         digitalWrite(PIN_BLUE_LED, LOW);
-        delay(500);
+        
+        as7341.readAllChannels();
+        delay(1000);
 
         f3_nitrogen = as7341.getChannel(AS7341_CHANNEL_480nm_F3);
 
@@ -256,7 +257,9 @@ void sensingClass::takeReadingForSpecificChannelAs7341(as7341_color_channel_t ch
     case AS7341_CHANNEL_515nm_F4:
         
         digitalWrite(PIN_GREEN_LED, LOW);
-        delay(500);
+ 
+        as7341.readAllChannels();
+               delay(1000);
 
         f4_phosphorus = as7341.getChannel(AS7341_CHANNEL_515nm_F4);
 
@@ -275,7 +278,9 @@ void sensingClass::takeReadingForSpecificChannelAs7341(as7341_color_channel_t ch
     case AS7341_CHANNEL_555nm_F5:
 
         digitalWrite(PIN_GREEN_LED, LOW);
-        delay(500);
+   
+        as7341.readAllChannels();        
+        delay(1000);
 
         f5_phosphorus = as7341.getChannel(AS7341_CHANNEL_555nm_F5);
 
@@ -291,19 +296,23 @@ void sensingClass::takeReadingForSpecificChannelAs7341(as7341_color_channel_t ch
     case AS7341_CHANNEL_630nm_F7:
 
         digitalWrite(PIN_RED_LED, LOW);
+ 
+        as7341.readAllChannels();
         delay(500);
 
         f7_potassium = as7341.getChannel(AS7341_CHANNEL_630nm_F7);
 
         digitalWrite(PIN_RED_LED, HIGH);
-        delay(500);
+        delay(1000);
 
         break;
 
     case AS7341_CHANNEL_680nm_F8:
 
         digitalWrite(PIN_RED_LED, LOW);
-        delay(500);
+
+        as7341.readAllChannels();
+                delay(1000);
 
         f8_potassium = as7341.getChannel(AS7341_CHANNEL_680nm_F8);
 
@@ -323,5 +332,25 @@ void sensingClass::takeReadingForSpecificChannelAs7341(as7341_color_channel_t ch
         turnOffAllElements();
         break;
     }   
+}
+
+void sensingClass::sendingReadingsToConditioning(void)
+{
+    // Send readings to signal conditioning class
+    conditioningSensing.raw_f2_nitrogen = f2_nitrogen;
+    conditioningSensing.raw_f3_nitrogen = f3_nitrogen;
+    conditioningSensing.raw_f4_phosphorus = f4_phosphorus;
+    conditioningSensing.raw_f5_phosphorus = f5_phosphorus;
+    conditioningSensing.raw_f7_potassium = f7_potassium;
+    conditioningSensing.raw_f8_potassium = f8_potassium;
+    //conditioningSensing.raw_timestamp = millis(); // Use current time as timestamp
+    f2_nitrogen = 0; // Reset readings after sending
+    f3_nitrogen = 0;
+    f4_phosphorus = 0;
+    f5_phosphorus = 0;
+    f7_potassium = 0;
+    f8_potassium = 0;
+    //timestamp = millis(); // Use current time as timestamp
+    conditioningSensing.macronutrientsMapping();
 }
 

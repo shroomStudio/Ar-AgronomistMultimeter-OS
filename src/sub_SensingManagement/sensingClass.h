@@ -74,13 +74,6 @@ class sensingClass{
     void takeReadingForSpecificChannelAs7341(as7341_color_channel_t channel);
     Adafruit_AS7341 as7341;
     Adafruit_AS726x as726x;
-    uint16_t f2_nitrogen;
-    uint16_t f3_nitrogen;
-    uint16_t f4_phosphorus;
-    uint16_t f5_phosphorus;
-    uint16_t f7_potassium;
-    uint16_t f8_potassium;
-    uint32_t timestamp; 
 };
 
 #endif

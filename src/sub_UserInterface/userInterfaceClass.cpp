@@ -22,7 +22,6 @@ lcdDisplayClass lcdUser;
 buttonsClass buttonsUser;
 usbConecttionClass usbUser;
 sensingClass sensingUser;
-signalConditioningClass conditioningSignalsUser;
 
 /*
 SUB_MENU(macronutrientsSensing, mainMenu,

@@ -22,6 +22,21 @@ signalConditioningClass::~signalConditioningClass(){
 //Private Methods
 void signalConditioningClass::macronutrientsMapping(void)
 {
+    lcdConditioning.metadataTodisplayFreeCursor("Mapping macronutrients",LEFT_ALIGNED_X,TOP_Y,true);
+    Serial.println("Data from sensing class");
+    Serial.print("F2 Nitrogen: ");
+    Serial.println(raw_f2_nitrogen);
+    Serial.print("F3 Nitrogen: ");
+    Serial.println(raw_f3_nitrogen);
+    Serial.print("F4 Phosphorus: ");
+    Serial.println(raw_f4_phosphorus);
+    Serial.print("F5 Phosphorus: ");
+    Serial.println(raw_f5_phosphorus);
+    Serial.print("F7 Potassium: ");
+    Serial.println(raw_f7_potassium);
+    Serial.print("F8 Potassium: ");
+    Serial.println(raw_f8_potassium);
+
     /*long int sum = 0;
 
     whiteLedAverage = 0;
