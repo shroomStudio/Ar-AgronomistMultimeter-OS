@@ -71,7 +71,7 @@ class sensingClass{
     void sendingReadingsToConditioning(void);
     void as7341TakeReads(void);
     void as726xTakeReads(void);
-    void takeReadingForSpecificChannel(as7341_color_channel_t channel);
+    void takeReadingForSpecificChannelAs7341(as7341_color_channel_t channel);
     Adafruit_AS7341 as7341;
     Adafruit_AS726x as726x;
     uint16_t f2_nitrogen;

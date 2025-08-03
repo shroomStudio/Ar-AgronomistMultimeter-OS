@@ -174,12 +174,12 @@ void sensingClass::as7341TakeReads(void)
         Serial.println("AS7341 initialized successfully");
     }
 
-    takeReadingForSpecificChannel(AS7341_CHANNEL_445nm_F2);
-    takeReadingForSpecificChannel(AS7341_CHANNEL_480nm_F3);
-    takeReadingForSpecificChannel(AS7341_CHANNEL_515nm_F4);
-    takeReadingForSpecificChannel(AS7341_CHANNEL_555nm_F5);
-    takeReadingForSpecificChannel(AS7341_CHANNEL_630nm_F7);
-    takeReadingForSpecificChannel(AS7341_CHANNEL_680nm_F8);
+    takeReadingForSpecificChannelAs7341(AS7341_CHANNEL_445nm_F2);
+    takeReadingForSpecificChannelAs7341(AS7341_CHANNEL_480nm_F3);
+    takeReadingForSpecificChannelAs7341(AS7341_CHANNEL_515nm_F4);
+    takeReadingForSpecificChannelAs7341(AS7341_CHANNEL_555nm_F5);
+    takeReadingForSpecificChannelAs7341(AS7341_CHANNEL_630nm_F7);
+    takeReadingForSpecificChannelAs7341(AS7341_CHANNEL_680nm_F8);
     
     delay(100); 
     buttonsSensing.navigationButtons(); 
@@ -221,7 +221,7 @@ void sensingClass::as726xTakeReads(void)
     } while (buttonsSensing.buttonPressed() != BACK_BUTTON);*/ 
 }
 
-void sensingClass::takeReadingForSpecificChannel(as7341_color_channel_t channel)
+void sensingClass::takeReadingForSpecificChannelAs7341(as7341_color_channel_t channel)
 {
     switch (channel)
     {
