@@ -53,9 +53,9 @@ PinA5   Green LED
 #define NITROGEN_MEASURE 0
 #define ELEMENT_TO_MEASURE 3
 // Common annode leds 
-#define PIN_RED_LED        4
+#define PIN_RED_LED        5
 #define PIN_GREEN_LED      3
-#define PIN_BLUE_LED       5
+#define PIN_BLUE_LED       4
 // Common cathode leds
 #define PIN_YELLOW_LED     6
 #define PIN_WHITE_LED      7

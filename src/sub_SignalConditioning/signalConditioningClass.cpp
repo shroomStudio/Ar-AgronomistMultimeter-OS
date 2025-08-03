@@ -22,7 +22,7 @@ signalConditioningClass::~signalConditioningClass(){
 //Private Methods
 void signalConditioningClass::macronutrientsMapping(void)
 {
-    long int sum = 0;
+    /*long int sum = 0;
 
     whiteLedAverage = 0;
     redLedAverage = 0;
@@ -173,7 +173,7 @@ void signalConditioningClass::macronutrientsMapping(void)
     lcdConditioning.metadataTodisplayFreeCursor("green average: \t",LEFT_ALIGNED_X,TOP_Y,true);
     delay(1000);
     lcdConditioning.intNumberTodisplayInLCD(greenLedAverage,LEFT_ALIGNED_X,MIDDLE_Y,false);
-    delay(1000);  
+    delay(1000);*/  
 }
 
 

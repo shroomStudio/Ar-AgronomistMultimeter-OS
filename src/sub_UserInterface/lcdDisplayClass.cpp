@@ -34,9 +34,9 @@ void lcdDisplayClass::initialDisplaySetup(void)
     lcdNokia.setDefaultFont();
     
     metadataTodisplayInLCD("ShroomCorp\n",LEFT_ALIGNED_X,MIDDLE_Y,true);
-    delay(2000);
+    delay(1000);
     metadataTodisplayInLCD("loading",LEFT_ALIGNED_X,BOTTOM_Y,false);
-    delay(2000);
+    delay(1000);
 }
 
 //Public methods

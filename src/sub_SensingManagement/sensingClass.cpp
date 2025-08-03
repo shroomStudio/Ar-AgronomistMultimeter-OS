@@ -8,26 +8,15 @@ lcdDisplayClass lcdSensing;
 buttonsClass buttonsSensing;
 signalConditioningClass conditioningSensing;
 
-const uint8_t MaxNumberOfSamples = 15; 
-const uint8_t ZeroValue = 0; 
-const uint8_t MaxNumberOfReadingsAS7341 = 12; // Number of readings for AS7341 sensor
-static uint16_t As7341Wavelenght415nm;
-static uint16_t As7341Wavelenght445nm;
-static uint16_t As7341Wavelenght480nm;
-static uint16_t As7341Wavelenght515nm;
-static uint16_t As7341WavelenghtClear;
-static uint16_t As7341WavelenghtNIR;
-static uint16_t As7341Wavelenght555nm;
-static uint16_t As7341Wavelenght590nm;
-static uint16_t As7341Wavelenght630nm;
-static uint16_t As7341Wavelenght680nm;
-
-
-// SoftwareWire instances for I2C communication
-
-   
 sensingClass::sensingClass(): as7341(), 
-                              as726x()
+                             as726x(),
+                             f2_nitrogen(0),
+                             f3_nitrogen(0),
+                             f4_phosphorus(0),
+                             f5_phosphorus(0),
+                             f7_potassium(0),
+                             f8_potassium(0),
+                             timestamp(0)
 {
   initialSensingClassSetup();
 }   
@@ -61,30 +50,26 @@ void sensingClass::macronutrientSensingProcess()
     while (buttonsSensing.buttonPressed() != OK_BUTTON)
     {
         lcdSensing.metadataTodisplayInLCD("please get ready the sample, press OK to continue", LEFT_ALIGNED_X, MIDDLE_Y,true);
-        delay(2000);
+        delay(1000);
         buttonsSensing.navigationButtons();
     }
     //TODO: get and Save date and time
     if (!sensingProcessFinished)
     {
         lcdSensing.metadataTodisplayInLCD("sensing in process, press back to abort... \n", LEFT_ALIGNED_X, MIDDLE_Y,true);
-        delay(3000);
+        delay(1500);
         sensingProcessTakeReadings();
         //Process of sensing finished values 
         sensingProcessFinished = true;  
     }
-
     if (true == sensingProcessFinished)
     {
-    lcdSensing.metadataTodisplayFreeCursor("Readings Saved",LEFT_ALIGNED_X,TOP_Y,true);
-    delay(2000);
-    lcdSensing.metadataTodisplayFreeCursor("Sensing process finished \n",LEFT_ALIGNED_X,TOP_Y,false);
-    delay(2000);
-
-    //Sendind readings to conditioning class
-    sendingReadingsToConditioning();
+        //Sendind readings to conditioning class
+        sendingReadingsToConditioning();
     }
 
+    lcdSensing.metadataTodisplayFreeCursor("Sensing process finished \n",LEFT_ALIGNED_X,TOP_Y,false);
+    delay(1000);
 }
 
 void sensingClass::temperatureSensingProcess()
@@ -162,6 +147,7 @@ void sensingClass::sensingProcessTakeReadings(void)
 void sensingClass::sendingReadingsToConditioning(void)
 {
 
+
 }
 
 void sensingClass::as7341TakeReads(void)
@@ -177,65 +163,27 @@ void sensingClass::as7341TakeReads(void)
     }
     else
     {
-        Serial.println("AS7341 initialized successfully");
-        as7341.setATIME(100);
-        as7341.setASTEP(999);
-        as7341.setGain(AS7341_GAIN_256X);
-    }
-    
-    //Loop to keep taking readings until the STOP button is pressed
-    for (int totalReadings = ZeroValue; totalReadings < MaxNumberOfSamples; totalReadings++)
-    {
-        uint16_t as7341Readings[MaxNumberOfReadingsAS7341] = {ZeroValue}; // Array to hold readings from the AS7341 sensor
-
-        if (buttonsSensing.buttonPressed() == BACK_BUTTON)
-        {
-            Serial.println("Sensing process aborted by user.");
-            break;
-        }
-
-        if (totalReadings < 3)
-        {
-            digitalWrite(PIN_RED_LED, LOW);
-            delay(500);
-        }
-        if (totalReadings >= 3 && totalReadings < 6)
-        {
-            digitalWrite(PIN_GREEN_LED, LOW);
-            delay(500);
-        }
-        if (totalReadings >= 6 && totalReadings < 9)
-        {
-            digitalWrite(PIN_BLUE_LED, LOW);
-            delay(500);
-        }
-        if (totalReadings >= 9 && totalReadings < 12)
-        {
-            digitalWrite(PIN_YELLOW_LED, HIGH);
-            delay(500);
-        }
-        if (totalReadings >= 12)
-        {
-            digitalWrite(PIN_WHITE_LED, HIGH);
-            delay(500);
-        }
-
-        
         // Read all channels from the AS7341 sensor
-        if (!as7341.readAllChannels(as7341Readings))
-        {
-            Serial.println("Error reading all channels!");
-            break;
-        }
-
-        turnOffAllElements();
-        sumAs7341Readings(as7341Readings);
-
-        delay(100); 
-        buttonsSensing.navigationButtons(); 
+        // Set integration time to 50 ms (ATIME and ASTEP calculation)
+        // AS7341 integration time = (ATIME + 1) * (ASTEP + 1) * 2.78us
+        // For 50ms: (ATIME + 1) * (ASTEP + 1) = 50,000 / 2.78 ≈ 17986
+        // Example: ATIME = 17, ASTEP = 1057  => (17+1)*(1057+1) = 19044 (close to 17986)
+        as7341.setATIME(17);
+        as7341.setASTEP(1057);
+        as7341.setGain(AS7341_GAIN_64X);
+        Serial.println("AS7341 initialized successfully");
     }
 
-    calculateAverageAs7341Readings();
+    takeReadingForSpecificChannel(AS7341_CHANNEL_445nm_F2);
+    takeReadingForSpecificChannel(AS7341_CHANNEL_480nm_F3);
+    takeReadingForSpecificChannel(AS7341_CHANNEL_515nm_F4);
+    takeReadingForSpecificChannel(AS7341_CHANNEL_555nm_F5);
+    takeReadingForSpecificChannel(AS7341_CHANNEL_630nm_F7);
+    takeReadingForSpecificChannel(AS7341_CHANNEL_680nm_F8);
+    
+    delay(100); 
+    buttonsSensing.navigationButtons(); 
+    turnOffAllElements();
 }
 
 void sensingClass::as726xTakeReads(void)
@@ -273,34 +221,107 @@ void sensingClass::as726xTakeReads(void)
     } while (buttonsSensing.buttonPressed() != BACK_BUTTON);*/ 
 }
 
-void sensingClass::sumAs7341Readings(uint16_t *as7341Readings)
+void sensingClass::takeReadingForSpecificChannel(as7341_color_channel_t channel)
 {
-    // Sum the readings for each wavelength
-    As7341Wavelenght415nm += as7341Readings[0];
-    As7341Wavelenght445nm += as7341Readings[1];
-    As7341Wavelenght480nm += as7341Readings[2];
-    As7341Wavelenght515nm += as7341Readings[3];
-    As7341WavelenghtClear += as7341Readings[4];
-    As7341WavelenghtNIR += as7341Readings[5];
-    As7341Wavelenght555nm += as7341Readings[6];
-    As7341Wavelenght590nm += as7341Readings[7];
-    As7341Wavelenght630nm += as7341Readings[8];
-    As7341Wavelenght680nm += as7341Readings[9];
-    As7341WavelenghtClear += as7341Readings[10];
-    As7341WavelenghtNIR += as7341Readings[11];
+    switch (channel)
+    {
+    case AS7341_CHANNEL_415nm_F1:
+
+        break;
+
+    case AS7341_CHANNEL_445nm_F2:
+
+        digitalWrite(PIN_BLUE_LED, LOW);
+        delay(500);
+
+        f2_nitrogen = as7341.getChannel(AS7341_CHANNEL_445nm_F2);
+        
+        digitalWrite(PIN_BLUE_LED, HIGH);
+        delay(500);
+
+        break;
+
+    case AS7341_CHANNEL_480nm_F3:
+
+        digitalWrite(PIN_BLUE_LED, LOW);
+        delay(500);
+
+        f3_nitrogen = as7341.getChannel(AS7341_CHANNEL_480nm_F3);
+
+        digitalWrite(PIN_BLUE_LED, HIGH);
+        delay(500);
+
+        break;
+
+    case AS7341_CHANNEL_515nm_F4:
+        
+        digitalWrite(PIN_GREEN_LED, LOW);
+        delay(500);
+
+        f4_phosphorus = as7341.getChannel(AS7341_CHANNEL_515nm_F4);
+
+        digitalWrite(PIN_GREEN_LED, HIGH);
+        delay(500);
+
+        break;
+
+    case AS7341_CHANNEL_CLEAR_0:
+        /* code */
+        break;
+    case AS7341_CHANNEL_NIR_0:
+        /* code */
+        break;
+
+    case AS7341_CHANNEL_555nm_F5:
+
+        digitalWrite(PIN_GREEN_LED, LOW);
+        delay(500);
+
+        f5_phosphorus = as7341.getChannel(AS7341_CHANNEL_555nm_F5);
+
+        digitalWrite(PIN_GREEN_LED, HIGH);
+        delay(500);
+
+        break;
+
+    case AS7341_CHANNEL_590nm_F6:
+        /* code */
+        break;
+
+    case AS7341_CHANNEL_630nm_F7:
+
+        digitalWrite(PIN_RED_LED, LOW);
+        delay(500);
+
+        f7_potassium = as7341.getChannel(AS7341_CHANNEL_630nm_F7);
+
+        digitalWrite(PIN_RED_LED, HIGH);
+        delay(500);
+
+        break;
+
+    case AS7341_CHANNEL_680nm_F8:
+
+        digitalWrite(PIN_RED_LED, LOW);
+        delay(500);
+
+        f8_potassium = as7341.getChannel(AS7341_CHANNEL_680nm_F8);
+
+        digitalWrite(PIN_RED_LED, HIGH);
+        delay(500);
+
+        break;
+
+    case AS7341_CHANNEL_CLEAR:
+        /* code */
+        break;
+    case AS7341_CHANNEL_NIR:
+        /* code */
+        break;
+    
+    default:
+        turnOffAllElements();
+        break;
+    }   
 }
 
-void sensingClass::calculateAverageAs7341Readings()
-{
-    // Average the readings
-    As7341Wavelenght415nm /= MaxNumberOfSamples;
-    As7341Wavelenght445nm /= MaxNumberOfSamples;
-    As7341Wavelenght480nm /= MaxNumberOfSamples;
-    As7341Wavelenght515nm /= MaxNumberOfSamples;
-    As7341WavelenghtClear /= MaxNumberOfSamples;
-    As7341WavelenghtNIR /= MaxNumberOfSamples;
-    As7341Wavelenght555nm /= MaxNumberOfSamples;
-    As7341Wavelenght590nm /= MaxNumberOfSamples;
-    As7341Wavelenght630nm /= MaxNumberOfSamples;
-    As7341Wavelenght680nm /= MaxNumberOfSamples;
-}

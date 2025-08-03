@@ -71,10 +71,16 @@ class sensingClass{
     void sendingReadingsToConditioning(void);
     void as7341TakeReads(void);
     void as726xTakeReads(void);
-    void calculateAverageAs7341Readings(void);
-    void sumAs7341Readings(uint16_t *as7341Readings);
+    void takeReadingForSpecificChannel(as7341_color_channel_t channel);
     Adafruit_AS7341 as7341;
     Adafruit_AS726x as726x;
+    uint16_t f2_nitrogen;
+    uint16_t f3_nitrogen;
+    uint16_t f4_phosphorus;
+    uint16_t f5_phosphorus;
+    uint16_t f7_potassium;
+    uint16_t f8_potassium;
+    uint32_t timestamp; 
 };
 
 #endif
