@@ -33,22 +33,22 @@ void energyManagementClass::initialSetUpEnergyManagament(void)
 {
 
     lcdEnergy.metadataTodisplayInLCD("Verifying Battery charge\n",LEFT_ALIGNED_X,MIDDLE_Y,true);
-    delay(2000);
+    delay(500);
     // Disable restart Pin
     digitalWrite(activationPinRelayOff, LOW);
     //Waits for a second
-    delay(1000); 
+    delay(100); 
     //Keep device alive
     digitalWrite(activationPinRelayOff, HIGH);
     //Waits for a second
-    delay(1000);    
+    delay(100);    
    //Verify battery is above minimum valid value
    if(batteryChargePercentage <= MINIMUM_BATTERY_PERCENTAJE)
    {
     // Inform te user the system will be shut down
     lcdEnergy.metadataTodisplayInLCD("ystem Discharged, please connect device to power source\n",LEFT_ALIGNED_X,MIDDLE_Y,true);
     //Wait 2 seconds before to shut down the device
-    delay(2000);  
+    delay(500);  
     //shutdown device
     turnOffDevice();
    }
@@ -61,23 +61,23 @@ void energyManagementClass::turnOffDevice(void)
 {
    // lcdEnergy.metadataTodisplayInLCD("Shutting down device - See you");
     //Wait 2 seconds before to shut down the device
-    delay(2000);  
+    delay(500);  
     //shutdown device
     digitalWrite(activationPinRelayOff, LOW);
-    delay(1000);  
+    delay(500);  
 }
 void energyManagementClass::resetDevice(void)
 {
     //lcdEnergy.metadataTodisplayInLCD("Restarting device - Please wait");
-    delay(2000);  
+    delay(200);  
     //restartng device
     digitalWrite(activationPinRelayOff, HIGH);
     //Waits for a second
-    delay(1000); 
+    delay(500); 
     //shutdown device
     digitalWrite(activationPinRelayOff, LOW);
     //Waits for a second
-    delay(1000); 
+    delay(500); 
 }
 
 

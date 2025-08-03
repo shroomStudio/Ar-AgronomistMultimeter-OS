@@ -22,7 +22,6 @@ lcdDisplayClass lcdUser;
 buttonsClass buttonsUser;
 usbConecttionClass usbUser;
 sensingClass sensingUser;
-signalConditioningClass conditioningSignalsUser;
 
 /*
 SUB_MENU(macronutrientsSensing, mainMenu,
@@ -92,7 +91,7 @@ void userInterfaceClass::userInitialConfiguration(void)
         if (energyUser.batteryChargePercentage < MINIMUM_BATTERY_PERCENTAGE)
         {
             lcdUser.metadataTodisplayInLCD("System discharged please plug in to source power", LEFT_ALIGNED_X, MIDDLE_Y,true);
-            delay(2000);
+            delay(1000);
             energyUser.turnOffDevice();
         }
         else
@@ -108,7 +107,7 @@ void userInterfaceClass::userInitialConfiguration(void)
             {
             lcdUser.metadataTodisplayInLCD("Press Ok to start Sensing Process  \n", LEFT_ALIGNED_X, MIDDLE_Y, true);
             buttonsUser.navigationButtons();
-            delay(3000);
+            delay(1500);
             }
             //Starting sensing process
             startSensingProcess();
@@ -174,7 +173,7 @@ void userInterfaceClass::displayMenu(const char* menu[], int startIndex)
 {
     String menuItem = "\0";
 
-    delay(2000);
+    delay(1000);
     lcdUser.metadataTodisplayInLCD("Main Menu: \n", LEFT_ALIGNED_X, TOP_Y, true);
 
     for (int i = startIndex; i < startIndex + 3; i++) 
@@ -189,7 +188,7 @@ void userInterfaceClass::displayMenu(const char* menu[], int startIndex)
             lcdUser.metadataTodisplayFreeCursor(menu[i], LEFT_ALIGNED_X, TOP_Y + (i - startIndex + 1), false);
         }
     }
-   delay(5000);
+   delay(1500);
 }
 
 void userInterfaceClass::displaySensingInstruction(void)
@@ -233,6 +232,6 @@ void userInterfaceClass::startSensingProcess(void)
     else 
     {
         lcdUser.metadataTodisplayInLCD("the battery must has at least 10 percent of charge \n", LEFT_ALIGNED_X, MIDDLE_Y, true);
-        delay(2000);
+        delay(1000);
     }
 }
