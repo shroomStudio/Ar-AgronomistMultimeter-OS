@@ -17,7 +17,7 @@
 using namespace std;
 
 lcdDisplayClass lcdMain;
-energyManagementClass energyMain;
+energyManagementClass energyMain(lcdMain);
 buttonsClass buttonsMain;
 userInterfaceClass userInterfaceMain (lcdMain, buttonsMain, energyMain);
 
