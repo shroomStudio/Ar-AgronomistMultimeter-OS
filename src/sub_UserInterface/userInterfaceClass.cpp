@@ -1,8 +1,6 @@
 #include "userInterfaceClass.h"
 #include <EEPROM.h>
 #include <string.h>
-#include <sub_SensingManagement/sensingClass.h>
-#include <sub_SignalConditioning/signalConditioningClass.h>
 #include "usbConecttionClass.h"
 #define RS_PIN dinLcdPin
 #define EN_PIN dcLcdPin
@@ -13,7 +11,6 @@
 
 // Class instances.
 usbConecttionClass usbUser;
-sensingClass sensingUser;
 
 /*
 SUB_MENU(macronutrientsSensing, mainMenu,
@@ -37,10 +34,15 @@ SUB_MENU(configurations, mainMenu,
     ITEM_BASIC("Save and continue")
 );  */
 
-userInterfaceClass::userInterfaceClass(lcdDisplayClass& lcd, buttonsClass& buttons, energyManagementClass& energy): 
-                                          lcdUser(lcd), 
-                                          buttonsUser(buttons), 
-                                          energyUser(energy)
+userInterfaceClass::userInterfaceClass(lcdDisplayClass& lcd, buttonsClass& buttons, 
+                                        energyManagementClass& energy,
+                                        sensingClass& sensing, 
+                                        signalConditioningClass& conditioning): 
+                                        lcdUser(lcd), 
+                                        buttonsUser(buttons), 
+                                        energyUser(energy), 
+                                        sensingUser(sensing),
+                                        conditioningUser(conditioning)
                                         {
     VariableToEEPROM_Set(0,false);
     initialConfigurationDone = VariableFromEEPROM_Get(0);

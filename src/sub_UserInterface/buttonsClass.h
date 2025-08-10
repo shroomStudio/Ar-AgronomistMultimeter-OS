@@ -3,12 +3,13 @@
 
 #include <Arduino.h>
 #include "commonDataTypes.h"
+#include "lcdDisplayClass.h"
 
 using namespace std;
 
 class buttonsClass{
     public:
-    buttonsClass();
+    buttonsClass(lcdDisplayClass &lcd);  //Constructor with parameter
     ~buttonsClass();    
     //Public Attributtes
     //Public Methods
@@ -19,6 +20,7 @@ class buttonsClass{
     
     private:
     //Private Attributes
+    lcdDisplayClass &lcdButtons; 
     //Private Methods
 };
 

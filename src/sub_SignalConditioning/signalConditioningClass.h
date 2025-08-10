@@ -4,6 +4,8 @@
 
 #include <Arduino.h>
 #include "sub_UserInterface/commonDataTypes.h"
+#include "sub_UserInterface/lcdDisplayClass.h"
+#include "sub_UserInterface/buttonsClass.h"
 
 enum LED_COLOR
 {
@@ -15,7 +17,7 @@ enum LED_COLOR
 
 class signalConditioningClass{
     public:
-    signalConditioningClass();
+    signalConditioningClass(lcdDisplayClass &lcd, buttonsClass &buttons);  //Constructor with parameters
     ~signalConditioningClass();
     
     //Public attributes
@@ -45,6 +47,8 @@ class signalConditioningClass{
     void temperatureMapping(void);
     void humidityMapping(void);
     void atmosphericHighMapping(void);
+    lcdDisplayClass &lcdConditioning;
+    buttonsClass &buttonsConditioning;
 };
 
 #endif

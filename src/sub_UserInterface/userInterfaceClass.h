@@ -3,17 +3,20 @@
 
 #include <Arduino.h>
 #include <sub_EnergyManagement/energyManagementClass.h>
+#include <sub_SensingManagement/sensingClass.h>
+#include <sub_SignalConditioning/signalConditioningClass.h>
 #include "commonDataTypes.h"
 #include "lcdDisplayClass.h"
 #include "buttonsClass.h"
-
 
 class userInterfaceClass{
 
     public:
     userInterfaceClass(lcdDisplayClass& lcd, 
                        buttonsClass& buttons, 
-                       energyManagementClass& energy 
+                       energyManagementClass& energy,
+                       sensingClass& sensing, 
+                       signalConditioningClass& conditioning 
                        );
     ~userInterfaceClass();
 
@@ -45,6 +48,8 @@ class userInterfaceClass{
     lcdDisplayClass lcdUser;
     buttonsClass buttonsUser;
     energyManagementClass energyUser;
+    sensingClass sensingUser;
+    signalConditioningClass conditioningUser;
 };
 
 #endif

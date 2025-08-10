@@ -12,14 +12,17 @@
 #include "sub_UserInterface/buttonsClass.h"
 #include "sub_UserInterface/userInterfaceClass.h"
 #include "sub_SensingManagement/sensingClass.h"
+#include "sub_SignalConditioning/signalConditioningClass.h"
 
 //Namespaces 
 using namespace std;
 
 lcdDisplayClass lcdMain;
+buttonsClass buttonsMain (lcdMain);
 energyManagementClass energyMain(lcdMain);
-buttonsClass buttonsMain;
-userInterfaceClass userInterfaceMain (lcdMain, buttonsMain, energyMain);
+signalConditioningClass conditioningMain (lcdMain, buttonsMain);
+sensingClass sensingMain (lcdMain, buttonsMain, conditioningMain);
+userInterfaceClass userInterfaceMain (lcdMain, buttonsMain, energyMain, sensingMain, conditioningMain);
 
 void setup() 
 {
