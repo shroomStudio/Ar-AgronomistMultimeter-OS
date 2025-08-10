@@ -2,11 +2,13 @@
 #define ENERGYMANAGEMENT_H
 
 #include <Arduino.h>
+#include "sub_UserInterface/lcdDisplayClass.h"
 
 using namespace std;
+
 class energyManagementClass{
     public:
-    energyManagementClass();
+    energyManagementClass(lcdDisplayClass& lcd);
     ~energyManagementClass();
     
     //Public attributes
@@ -25,6 +27,7 @@ class energyManagementClass{
     double voltageMeasuredBattery;
     // Private Methods
     void chargeBattery(void);
+    lcdDisplayClass &lcdEnergy; // Reference to the LCD display class for displaying messages
 };
 
 #endif

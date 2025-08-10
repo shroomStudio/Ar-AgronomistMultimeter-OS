@@ -1,12 +1,7 @@
 #include "sensingClass.h"
-#include "sub_UserInterface/lcdDisplayClass.h"
-#include "sub_UserInterface/buttonsClass.h"
-#include "sub_SignalConditioning/signalConditioningClass.h"
+
 
 //Clases instances 
-lcdDisplayClass lcdSensing;
-buttonsClass buttonsSensing;
-signalConditioningClass conditioningSensing;
 uint16_t f2_nitrogen;
 uint16_t f3_nitrogen;
 uint16_t f4_phosphorus;
@@ -15,8 +10,14 @@ uint16_t f7_potassium;
 uint16_t f8_potassium;
 uint32_t timestamp; 
 
-sensingClass::sensingClass(): as7341(), 
-                             as726x()
+sensingClass::sensingClass(lcdDisplayClass &lcd, 
+                            buttonsClass &buttons, 
+                            signalConditioningClass &conditioning): 
+                            lcdSensing(lcd),
+                            buttonsSensing(buttons),
+                            conditioningSensing(conditioning),
+                            as7341(), 
+                            as726x()
 {
   initialSensingClassSetup();
 }   
@@ -86,7 +87,7 @@ void sensingClass::temperatureSensingProcess()
         Serial.println("No temperature data available.");
     }*/
 }
-void sensingClass::humiditySensingProces()
+void sensingClass::humiditySensingProcess()
 {
 
 }

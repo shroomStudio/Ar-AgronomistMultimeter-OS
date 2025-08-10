@@ -24,6 +24,9 @@ Other colors: Purple LEDs typically have wavelengths between 370-410 nm, and ult
 #include "sub_UserInterface/commonDataTypes.h"
 #include "ExternalLibraries/Adafruit_AS7341.h"
 #include "ExternalLibraries/Adafruit_AS726x.h"
+#include "sub_UserInterface/lcdDisplayClass.h"
+#include "sub_UserInterface/buttonsClass.h"
+#include "sub_SignalConditioning/signalConditioningClass.h"
 
 typedef enum 
 {
@@ -42,7 +45,9 @@ typedef enum
 
 class sensingClass{
     public:
-    sensingClass();
+    sensingClass(lcdDisplayClass &lcd, 
+                buttonsClass &buttons, 
+                signalConditioningClass &conditioning);
     ~sensingClass();
     //Public attributes
     String temperatureSensor;
@@ -72,6 +77,9 @@ class sensingClass{
     void as7341TakeReads(void);
     void as726xTakeReads(void);
     void takeReadingForSpecificChannelAs7341(as7341_color_channel_t channel);
+    lcdDisplayClass &lcdSensing;
+    buttonsClass &buttonsSensing;
+    signalConditioningClass &conditioningSensing;
     Adafruit_AS7341 as7341;
     Adafruit_AS726x as726x;
 };

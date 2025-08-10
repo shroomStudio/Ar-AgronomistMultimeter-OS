@@ -1,13 +1,13 @@
 #include "energyManagementClass.h"
-#include "sub_UserInterface/lcdDisplayClass.h"
+
 
 //definition
 #define MINIMUM_BATTERY_PERCENTAJE 2
 
 //Class Instances 
-lcdDisplayClass lcdEnergy;
 
-energyManagementClass::energyManagementClass()
+energyManagementClass::energyManagementClass(lcdDisplayClass& lcd):
+    lcdEnergy(lcd) // Initialize the reference to the LCD display class
 {
     //Constructor energyManagementClass
     //Pin to keep the system On it works in conjuntion with
