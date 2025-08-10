@@ -19,7 +19,7 @@ using namespace std;
 lcdDisplayClass lcdMain;
 energyManagementClass energyMain;
 buttonsClass buttonsMain;
-userInterfaceClass userInterfaceMain;
+userInterfaceClass userInterfaceMain (lcdMain, buttonsMain, energyMain);
 
 void setup() 
 {

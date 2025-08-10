@@ -2,11 +2,19 @@
 #define USERINTERFACECLASS_H
 
 #include <Arduino.h>
+#include <sub_EnergyManagement/energyManagementClass.h>
 #include "commonDataTypes.h"
+#include "lcdDisplayClass.h"
+#include "buttonsClass.h"
+
+
 class userInterfaceClass{
 
     public:
-    userInterfaceClass();
+    userInterfaceClass(lcdDisplayClass& lcd, 
+                       buttonsClass& buttons, 
+                       energyManagementClass& energy 
+                       );
     ~userInterfaceClass();
 
     //Public Attributtes 
@@ -34,6 +42,9 @@ class userInterfaceClass{
     void displayMenu(const char* menu[], int startIndex);
     void displaySensingInstruction(void);
     void startSensingProcess(void);
+    lcdDisplayClass lcdUser;
+    buttonsClass buttonsUser;
+    energyManagementClass energyUser;
 };
 
 #endif

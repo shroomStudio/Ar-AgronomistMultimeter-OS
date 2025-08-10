@@ -1,14 +1,9 @@
+#include "userInterfaceClass.h"
 #include <EEPROM.h>
 #include <string.h>
 #include <sub_SensingManagement/sensingClass.h>
-#include <sub_EnergyManagement/energyManagementClass.h>
 #include <sub_SignalConditioning/signalConditioningClass.h>
-#include "userInterfaceClass.h"
-#include "lcdDisplayClass.h"
-#include "buttonsClass.h"
 #include "usbConecttionClass.h"
-
-
 #define RS_PIN dinLcdPin
 #define EN_PIN dcLcdPin
 #define D4_PIN clockLcdPin
@@ -17,9 +12,6 @@
 #define D7_PIN lightLcdPin
 
 // Class instances.
-energyManagementClass energyUser;
-lcdDisplayClass lcdUser;
-buttonsClass buttonsUser;
 usbConecttionClass usbUser;
 sensingClass sensingUser;
 
@@ -45,7 +37,11 @@ SUB_MENU(configurations, mainMenu,
     ITEM_BASIC("Save and continue")
 );  */
 
-userInterfaceClass::userInterfaceClass(){
+userInterfaceClass::userInterfaceClass(lcdDisplayClass& lcd, buttonsClass& buttons, energyManagementClass& energy): 
+                                          lcdUser(lcd), 
+                                          buttonsUser(buttons), 
+                                          energyUser(energy)
+                                        {
     VariableToEEPROM_Set(0,false);
     initialConfigurationDone = VariableFromEEPROM_Get(0);
     //energy.voltageBatteryMonitor();

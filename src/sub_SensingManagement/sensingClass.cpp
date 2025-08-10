@@ -86,7 +86,7 @@ void sensingClass::temperatureSensingProcess()
         Serial.println("No temperature data available.");
     }*/
 }
-void sensingClass::humiditySensingProces()
+void sensingClass::humiditySensingProcess()
 {
 
 }
