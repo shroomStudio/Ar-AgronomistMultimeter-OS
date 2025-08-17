@@ -60,8 +60,12 @@ class signalConditioningClass{
     void temperatureMapping(void);
     void humidityMapping(void);
     void atmosphericHighMapping(void);
+    void displayAverageValuesAs7341(void);
+    void displayAverageValuesAs726x(void);
     lcdDisplayClass &lcdConditioning;
     buttonsClass &buttonsConditioning;
+    uint8_t NumberOfReadings;
+
 };
 
 #endif
