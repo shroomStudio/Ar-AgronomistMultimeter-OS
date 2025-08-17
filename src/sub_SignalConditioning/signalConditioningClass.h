@@ -21,14 +21,19 @@ class signalConditioningClass{
     ~signalConditioningClass();
     
     //Public attributes
-    uint16_t raw_f2_nitrogen;
-    uint16_t raw_f3_nitrogen;
-    uint16_t raw_f4_phosphorus;
-    uint16_t raw_f5_phosphorus;
-    uint16_t raw_f7_potassium;
-    uint16_t raw_f8_potassium;
-    uint32_t raw_timestamp; 
-
+    uint16_t raw_f1_415nm;
+    uint16_t raw_f2_445nm;
+    uint16_t raw_f3_480nm;
+    uint16_t raw_f4_515nm;
+    uint16_t clear_0;
+    uint16_t nir_0;
+    uint16_t raw_f5_555nm;
+    uint16_t raw_f6_590nm;
+    uint16_t raw_f7_630nm;
+    uint16_t raw_f8_680nm;
+    uint16_t clear;
+    uint16_t nir;
+  
     //TODO next SW version
     int temperatureMeasured;
     int humidityMeasured;

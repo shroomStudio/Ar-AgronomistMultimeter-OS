@@ -21,18 +21,31 @@ void signalConditioningClass::macronutrientsMapping(void)
 {
     lcdConditioning.metadataTodisplayFreeCursor("Mapping macronutrients",LEFT_ALIGNED_X,TOP_Y,true);
     Serial.println("Data from sensing class");
-    Serial.print("F2 Nitrogen: ");
-    Serial.println(raw_f2_nitrogen);
-    Serial.print("F3 Nitrogen: ");
-    Serial.println(raw_f3_nitrogen);
-    Serial.print("F4 Phosphorus: ");
-    Serial.println(raw_f4_phosphorus);
-    Serial.print("F5 Phosphorus: ");
-    Serial.println(raw_f5_phosphorus);
-    Serial.print("F7 Potassium: ");
-    Serial.println(raw_f7_potassium);
-    Serial.print("F8 Potassium: ");
-    Serial.println(raw_f8_potassium);
+    Serial.print("F1  415nm: ");
+    Serial.println(raw_f1_415nm);
+    Serial.print("F2  445nm: ");
+    Serial.println(raw_f2_445nm);
+    Serial.print("F3  480nm: ");
+    Serial.println(raw_f3_480nm);
+    Serial.print("F4  515nm: ");
+    Serial.println(raw_f4_515nm);
+    Serial.print("Clear 0: ");
+    Serial.println(clear_0);
+    Serial.print("NIR 0: ");
+    Serial.println(nir_0);
+    Serial.print("F5  555nm: ");
+    Serial.println(raw_f5_555nm);
+    Serial.print("F6  590nm: ");
+    Serial.println(raw_f6_590nm);
+    Serial.print("F7  630nm: ");
+    Serial.println(raw_f7_630nm);
+    Serial.print("F8  680nm: ");
+    Serial.println(raw_f8_680nm);
+    Serial.print("Clear: ");
+    Serial.println(clear);
+    Serial.print("NIR: ");
+    Serial.println(nir);
+    delay(1000);
 
     /*long int sum = 0;
 

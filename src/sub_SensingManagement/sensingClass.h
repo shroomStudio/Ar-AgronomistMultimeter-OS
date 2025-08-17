@@ -28,20 +28,24 @@ Other colors: Purple LEDs typically have wavelengths between 370-410 nm, and ult
 #include "sub_UserInterface/buttonsClass.h"
 #include "sub_SignalConditioning/signalConditioningClass.h"
 
-typedef enum 
-{
-    MACRONUTRIENT,
-    TEMPERATURE,
-    HUMIDITY,
-    ATMOSPHERIC_PRESSURE
-}SENSING_PROCESS;
+namespace SensingNamespace {
+    typedef enum 
+    {
+        MACRONUTRIENT,
+        TEMPERATURE,
+        HUMIDITY,
+        ATMOSPHERIC_PRESSURE
+    }SENSING_PROCESS;
 
-typedef enum 
-{
-    TEMPERATURE_SERIAL,
-    HUMIDITY_SERIAL,
-    ATMOSPHERIC_PRESSURE_SERIAL
-}SENSOR_SERIAL;
+    typedef enum 
+    {
+        TEMPERATURE_SERIAL,
+        HUMIDITY_SERIAL,
+        ATMOSPHERIC_PRESSURE_SERIAL
+    }SENSOR_SERIAL;
+}
+
+
 
 class sensingClass{
     public:
@@ -68,7 +72,6 @@ class sensingClass{
    
     // Private Methods
     void initialSensingClassSetup();
-    void serialMiltiplexor(SENSOR_SERIAL sensor);
     //Global File scope methods
     void turnOffAllElements(void);
     void turnOnAllElements(void);
