@@ -208,6 +208,7 @@ void sensingClass::as726xTakeReads(void)
 
 void sensingClass::takeReadingForSpecificChannelAs7341(as7341_color_channel_t channel)
 { 
+    as7341.enableLED(true);
     delay(500); 
     as7341.readAllChannels();   
     as7341.delayForData(1500); 
@@ -267,6 +268,7 @@ void sensingClass::takeReadingForSpecificChannelAs7341(as7341_color_channel_t ch
     
     //delay(500);
     //as726x.drvOff();
+    as7341.enableLED(false);
     delay(500); 
 }
 
