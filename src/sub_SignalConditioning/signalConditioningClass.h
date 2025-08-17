@@ -33,6 +33,14 @@ class signalConditioningClass{
     uint16_t raw_f8_680nm;
     uint16_t clear;
     uint16_t nir;
+
+    uint16_t as726x_violet;
+    uint16_t as726x_blue;
+    uint16_t as726x_green;
+    uint16_t as726x_yellow;
+    uint16_t as726x_orange;
+    uint16_t as726x_red;
+
   
     //TODO next SW version
     int temperatureMeasured;

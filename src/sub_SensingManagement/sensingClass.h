@@ -80,6 +80,7 @@ class sensingClass{
     void as7341TakeReads(void);
     void as726xTakeReads(void);
     void takeReadingForSpecificChannelAs7341(as7341_color_channel_t channel);
+    void takeReadingForSpecificChannelAs726x(uint8_t channel);
     lcdDisplayClass &lcdSensing;
     buttonsClass &buttonsSensing;
     signalConditioningClass &conditioningSensing;

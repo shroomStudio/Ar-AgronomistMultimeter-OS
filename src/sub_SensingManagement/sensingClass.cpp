@@ -57,45 +57,41 @@ void sensingClass::macronutrientSensingProcess()
         buttonsSensing.navigationButtons();
     }
     //TODO: get and Save date and time
-    if (!sensingProcessFinished)
+    while (buttonsSensing.buttonPressed() != BACK_BUTTON)
     {
-        lcdSensing.metadataTodisplayInLCD("sensing in process, press back to abort... \n", LEFT_ALIGNED_X, MIDDLE_Y,true);
+        if (!sensingProcessFinished)
+        {
+            lcdSensing.metadataTodisplayInLCD("sensing in process, press back to abort... \n", LEFT_ALIGNED_X, MIDDLE_Y,true);
+            delay(1500);
+            sensingProcessTakeReadings();
+            //Process of sensing finished values 
+            sensingProcessFinished = true;
+        }
+        if (true == sensingProcessFinished)
+        {
+            //Sendind readings to conditioning class
+            sendingReadingsToConditioning();
+        }
+        
+        Serial.println("sensing in process in loop press back to stop");
         delay(1500);
-        sensingProcessTakeReadings();
-        //Process of sensing finished values 
-        sensingProcessFinished = true;  
+        sensingProcessFinished = false;
+        buttonsSensing.navigationButtons();
+        delay(1000);
     }
-    if (true == sensingProcessFinished)
-    {
-        //Sendind readings to conditioning class
-        sendingReadingsToConditioning();
-    }
-
+    
     lcdSensing.metadataTodisplayFreeCursor("Sensing process finished \n",LEFT_ALIGNED_X,TOP_Y,false);
     delay(1000);
 }
 
 void sensingClass::temperatureSensingProcess()
 {
-    /*if (1)
-    {
-        auto temperatureAmbient = 0;
-
-        Serial.print("Temperature Ambient: ");
-        Serial.println(temperatureAmbient);
-    }
-    else
-    {
-        Serial.println("No temperature data available.");
-    }*/
 }
 void sensingClass::humiditySensingProcess()
 {
-
 }
 void sensingClass::atmosphericPressureSensingProcess()
 {
-
 }
 
 void sensingClass::turnOnAllElements(void)
@@ -165,6 +161,8 @@ void sensingClass::as7341TakeReads(void)
         as7341.setASTEP(1057);
         as7341.setGain(AS7341_GAIN_128X);
         Serial.println("AS7341 initialized successfully");
+        as7341.enableLED(false);
+
     }
 
     takeReadingForSpecificChannelAs7341(AS7341_CHANNEL_415nm_F1);
@@ -195,93 +193,117 @@ void sensingClass::as726xTakeReads(void)
     {
         Serial.println("AS726x initialized successfully");
         as726x.setGain(GAIN_64X);
-        as726x.setIntegrationTime(50); // Set integration time to 100 ms
+        as726x.setIntegrationTime(200);   
     }
 
-    do {
-        as726x.drvOn(); 
-        as726x.startMeasurement();
-        delay(1000);
+    takeReadingForSpecificChannelAs726x(AS7262_VIOLET);
+    takeReadingForSpecificChannelAs726x(AS7262_BLUE);
+    takeReadingForSpecificChannelAs726x(AS7262_GREEN);
+    takeReadingForSpecificChannelAs726x(AS7262_YELLOW);
+    takeReadingForSpecificChannelAs726x(AS7262_ORANGE);
+    takeReadingForSpecificChannelAs726x(AS7262_RED);
 
-        if (!as726x.dataReady()) 
-        {
-            Serial.println("Data not ready, waiting...");
-            delay(100); // Wait a bit before checking again
-            continue; // Skip the rest of the loop and check again
-        }
-
-        as726x.drvOff();
-        delay(500); 
-        buttonsSensing.navigationButtons(); 
-        delay(500);
-    } while (buttonsSensing.buttonPressed() != BACK_BUTTON); 
-
-    as726x.drvOff(); 
-    delay(500); 
+    delay(1000);
 }
 
 void sensingClass::takeReadingForSpecificChannelAs7341(as7341_color_channel_t channel)
 { 
-    as726x.drvOn(); 
     delay(500); 
     as7341.readAllChannels();   
-    as7341.delayForData(1000); 
+    as7341.delayForData(1500); 
 
     switch (channel)
     {
-    case AS7341_CHANNEL_415nm_F1:
-        f1_415nm = as7341.getChannel(AS7341_CHANNEL_415nm_F1);
-        break;
+        case AS7341_CHANNEL_415nm_F1:
+            f1_415nm = as7341.getChannel(AS7341_CHANNEL_415nm_F1);
+            break;
 
-    case AS7341_CHANNEL_445nm_F2:
-        f2_445nm = as7341.getChannel(AS7341_CHANNEL_445nm_F2);
-        break;
+        case AS7341_CHANNEL_445nm_F2:
+            f2_445nm = as7341.getChannel(AS7341_CHANNEL_445nm_F2);
+            break;
 
-    case AS7341_CHANNEL_480nm_F3:
-        f3_480nm = as7341.getChannel(AS7341_CHANNEL_480nm_F3);
-        break;
+        case AS7341_CHANNEL_480nm_F3:
+            f3_480nm = as7341.getChannel(AS7341_CHANNEL_480nm_F3);
+            break;
 
-    case AS7341_CHANNEL_515nm_F4:
-        f4_515nm = as7341.getChannel(AS7341_CHANNEL_515nm_F4);
-        break;
+        case AS7341_CHANNEL_515nm_F4:
+            f4_515nm = as7341.getChannel(AS7341_CHANNEL_515nm_F4);
+            break;
 
-    case AS7341_CHANNEL_CLEAR_0:
-        clear_0 = as7341.getChannel(AS7341_CHANNEL_CLEAR_0);
-        break;
+        case AS7341_CHANNEL_CLEAR_0:
+            clear_0 = as7341.getChannel(AS7341_CHANNEL_CLEAR_0);
+            break;
+            
+        case AS7341_CHANNEL_NIR_0:
+            nir_0 = as7341.getChannel(AS7341_CHANNEL_NIR_0);
+            break;
+
+        case AS7341_CHANNEL_555nm_F5:
+            f5_555nm = as7341.getChannel(AS7341_CHANNEL_555nm_F5);
+            break;
+
+        case AS7341_CHANNEL_590nm_F6:
+            f6_590nm = as7341.getChannel(AS7341_CHANNEL_590nm_F6);
+            break;
+
+        case AS7341_CHANNEL_630nm_F7:
+            f7_630nm = as7341.getChannel(AS7341_CHANNEL_630nm_F7);
+            break;
+
+        case AS7341_CHANNEL_680nm_F8:
+            f8_680nm = as7341.getChannel(AS7341_CHANNEL_680nm_F8);
+            break;
+
+        case AS7341_CHANNEL_CLEAR:
+            clear = as7341.getChannel(AS7341_CHANNEL_CLEAR);
+            break;
+        case AS7341_CHANNEL_NIR:
+            nir = as7341.getChannel(AS7341_CHANNEL_NIR);
+            break;
         
-    case AS7341_CHANNEL_NIR_0:
-        nir_0 = as7341.getChannel(AS7341_CHANNEL_NIR_0);
-        break;
-
-    case AS7341_CHANNEL_555nm_F5:
-        f5_555nm = as7341.getChannel(AS7341_CHANNEL_555nm_F5);
-        break;
-
-    case AS7341_CHANNEL_590nm_F6:
-        f6_590nm = as7341.getChannel(AS7341_CHANNEL_590nm_F6);
-        break;
-
-    case AS7341_CHANNEL_630nm_F7:
-        f7_630nm = as7341.getChannel(AS7341_CHANNEL_630nm_F7);
-        break;
-
-    case AS7341_CHANNEL_680nm_F8:
-        f8_680nm = as7341.getChannel(AS7341_CHANNEL_680nm_F8);
-        break;
-
-    case AS7341_CHANNEL_CLEAR:
-        clear = as7341.getChannel(AS7341_CHANNEL_CLEAR);
-        break;
-    case AS7341_CHANNEL_NIR:
-        nir = as7341.getChannel(AS7341_CHANNEL_NIR);
-        break;
-    
-    default:
-        break;
+        default:
+            break;
     }
     
-    as726x.drvOff();
+    //delay(500);
+    //as726x.drvOff();
     delay(500); 
+}
+
+void sensingClass::takeReadingForSpecificChannelAs726x(uint8_t channel)
+{
+    as726x.drvOn(); 
+    delay(500);
+    as726x.startMeasurement();
+    delay(1500);
+    
+    switch (channel)
+    {
+        case AS7262_VIOLET:
+            as726x_violet = as726x.readViolet();
+            break;
+        case AS7262_BLUE:
+            as726x_blue = as726x.readBlue();
+            break;
+        case AS7262_GREEN:
+            as726x_green = as726x.readGreen();
+            break;
+        case AS7262_YELLOW:
+            as726x_yellow = as726x.readYellow();
+            break;
+        case AS7262_ORANGE:
+            as726x_orange = as726x.readOrange();
+            break;
+        case AS7262_RED:
+            as726x_red = as726x.readRed();
+            break;
+        default:
+            Serial.println("Invalid channel");
+            break;
+    }
+
+    as726x.drvOff(); 
+    delay(500);
 }
 
 void sensingClass::sendingReadingsToConditioning(void)
@@ -313,6 +335,21 @@ void sensingClass::sendingReadingsToConditioning(void)
     f8_680nm = 0;
     clear = 0;
     nir = 0;
+
+    conditioningSensing.as726x_violet = as726x_violet;
+    conditioningSensing.as726x_blue = as726x_blue;
+    conditioningSensing.as726x_green = as726x_green;
+    conditioningSensing.as726x_yellow = as726x_yellow;
+    conditioningSensing.as726x_orange = as726x_orange;
+    conditioningSensing.as726x_red = as726x_red;
+
+    // Reset AS726x readings after sending
+    as726x_violet = 0;
+    as726x_blue = 0;
+    as726x_green = 0;
+    as726x_yellow = 0;
+    as726x_orange = 0;
+    as726x_red = 0;
 
     //timestamp = millis(); // Use current time as timestamp
     conditioningSensing.macronutrientsMapping();
