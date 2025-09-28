@@ -73,8 +73,6 @@ class sensingClass{
     // Private Methods
     void initialSensingClassSetup();
     //Global File scope methods
-    void turnOffAllElements(void);
-    void turnOnAllElements(void);
     void sensingProcessTakeReadings(void);
     void sendingReadingsToConditioning(void);
     void as7341TakeReads(void);

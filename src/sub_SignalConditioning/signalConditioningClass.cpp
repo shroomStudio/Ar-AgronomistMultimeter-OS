@@ -19,10 +19,10 @@ signalConditioningClass::~signalConditioningClass(){
 void signalConditioningClass::macronutrientsMapping(void)
 {
     lcdConditioning.metadataTodisplayFreeCursor("Mapping macronutrients",LEFT_ALIGNED_X,TOP_Y,true);
-    Serial.println("Data from sensing class");
+    //Serial.println("Data from sensing class");
 
-    displayAverageValuesAs7341();
-    displayAverageValuesAs726x();
+    //displayAverageValuesAs7341();
+    //displayAverageValuesAs726x();
     delay(1000);          
 }
 

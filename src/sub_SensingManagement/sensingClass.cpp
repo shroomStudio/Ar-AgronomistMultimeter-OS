@@ -73,7 +73,7 @@ void sensingClass::macronutrientSensingProcess()
             sendingReadingsToConditioning();
         }
         
-        Serial.println("sensing in process in loop press back to stop");
+       // Serial.println("sensing in process in loop press back to stop");
         delay(1500);
         sensingProcessFinished = false;
         buttonsSensing.navigationButtons();
@@ -94,45 +94,17 @@ void sensingClass::atmosphericPressureSensingProcess()
 {
 }
 
-void sensingClass::turnOnAllElements(void)
-{
-    // Sequence of turn each element on
-    digitalWrite(PIN_RED_LED, LOW);
-    delay(500);
-    digitalWrite(PIN_GREEN_LED, LOW);
-    delay(500);
-    digitalWrite(PIN_BLUE_LED, LOW);
-    delay(500);
-    digitalWrite(PIN_YELLOW_LED, HIGH);
-    delay(500);
-    digitalWrite(PIN_WHITE_LED, HIGH);
-    delay(500);
-    
-}
-
-void sensingClass::turnOffAllElements(void)
-{
-    digitalWrite(PIN_RED_LED, HIGH);
-    delay(500);
-    digitalWrite(PIN_GREEN_LED, HIGH);
-    delay(500);
-    digitalWrite(PIN_BLUE_LED, HIGH);
-    delay(500);
-    digitalWrite(PIN_YELLOW_LED, LOW);
-    delay(500);
-    digitalWrite(PIN_WHITE_LED, LOW);
-    delay(500);
-}
-
 void sensingClass::sensingProcessTakeReadings(void)
 {    
-   Serial.println("sensingProcessTakeReadings");
+   //Serial.println("sensingProcessTakeReadings");
 
    // Initial setup for sensing class
     while (!Serial) 
     {
         delay(3); // Wait for serial port to connect. Needed for native USB
     }
+
+    delay(500);
 
     as7341TakeReads();
     as726xTakeReads();
@@ -159,12 +131,13 @@ void sensingClass::as7341TakeReads(void)
         // Example: ATIME = 17, ASTEP = 1057  => (17+1)*(1057+1) = 19044 (close to 17986)
         as7341.setATIME(17);
         as7341.setASTEP(1057);
-        as7341.setGain(AS7341_GAIN_128X);
+        as7341.setGain(AS7341_GAIN_256X);
         Serial.println("AS7341 initialized successfully");
         as7341.enableLED(false);
-
+        delay(500);
     }
 
+    Serial.println("&");
     takeReadingForSpecificChannelAs7341(AS7341_CHANNEL_415nm_F1);
     takeReadingForSpecificChannelAs7341(AS7341_CHANNEL_445nm_F2);
     takeReadingForSpecificChannelAs7341(AS7341_CHANNEL_480nm_F3);
@@ -176,7 +149,8 @@ void sensingClass::as7341TakeReads(void)
     takeReadingForSpecificChannelAs7341(AS7341_CHANNEL_680nm_F8);
     takeReadingForSpecificChannelAs7341(AS7341_CHANNEL_CLEAR);
     takeReadingForSpecificChannelAs7341(AS7341_CHANNEL_NIR);
-    
+    Serial.println("&");
+   
     buttonsSensing.navigationButtons(); 
     delay(500); // Allow some time for button processing
     as7341.disableAll(); 
@@ -192,18 +166,21 @@ void sensingClass::as726xTakeReads(void)
     else
     {
         Serial.println("AS726x initialized successfully");
-        as726x.setGain(GAIN_64X);
+        delay(500);
+        as726x.setGain(GAIN_3X7);
         as726x.setIntegrationTime(200);   
     }
 
+    Serial.println("$");
     takeReadingForSpecificChannelAs726x(AS7262_VIOLET);
     takeReadingForSpecificChannelAs726x(AS7262_BLUE);
     takeReadingForSpecificChannelAs726x(AS7262_GREEN);
     takeReadingForSpecificChannelAs726x(AS7262_YELLOW);
     takeReadingForSpecificChannelAs726x(AS7262_ORANGE);
     takeReadingForSpecificChannelAs726x(AS7262_RED);
+    Serial.println("$");
 
-    delay(1000);
+    delay(500);
 }
 
 void sensingClass::takeReadingForSpecificChannelAs7341(as7341_color_channel_t channel)
@@ -217,49 +194,85 @@ void sensingClass::takeReadingForSpecificChannelAs7341(as7341_color_channel_t ch
     {
         case AS7341_CHANNEL_415nm_F1:
             f1_415nm = as7341.getChannel(AS7341_CHANNEL_415nm_F1);
+            if (f1_415nm < 0) f1_415nm = 0;
+            Serial.print(f1_415nm);
+            Serial.print(",");
             break;
 
         case AS7341_CHANNEL_445nm_F2:
             f2_445nm = as7341.getChannel(AS7341_CHANNEL_445nm_F2);
+            if (f2_445nm < 0) f1_415nm = 0;
+            Serial.print(f2_445nm);
+            Serial.print(",");
             break;
 
         case AS7341_CHANNEL_480nm_F3:
             f3_480nm = as7341.getChannel(AS7341_CHANNEL_480nm_F3);
+            if (f3_480nm < 0) f1_415nm = 0;
+            Serial.print(f3_480nm);
+            Serial.print(",");
             break;
 
         case AS7341_CHANNEL_515nm_F4:
             f4_515nm = as7341.getChannel(AS7341_CHANNEL_515nm_F4);
+            if (f4_515nm < 0) f1_415nm = 0;
+            Serial.print(f4_515nm);
+            Serial.print(",");
             break;
 
         case AS7341_CHANNEL_CLEAR_0:
             clear_0 = as7341.getChannel(AS7341_CHANNEL_CLEAR_0);
+            if (clear_0 < 0) f1_415nm = 0;
+            Serial.print(clear_0);
+            Serial.print(",");
             break;
             
         case AS7341_CHANNEL_NIR_0:
             nir_0 = as7341.getChannel(AS7341_CHANNEL_NIR_0);
+            if (nir_0 < 0) f1_415nm = 0;
+            Serial.print(nir_0);
+            Serial.print(",");
             break;
 
         case AS7341_CHANNEL_555nm_F5:
             f5_555nm = as7341.getChannel(AS7341_CHANNEL_555nm_F5);
+            if (f5_555nm < 0) f1_415nm = 0;
+            Serial.print(f5_555nm);
+            Serial.print(",");
             break;
 
         case AS7341_CHANNEL_590nm_F6:
             f6_590nm = as7341.getChannel(AS7341_CHANNEL_590nm_F6);
+            if (f6_590nm < 0) f1_415nm = 0;
+            Serial.print(f6_590nm);
+            Serial.print(",");
             break;
 
         case AS7341_CHANNEL_630nm_F7:
             f7_630nm = as7341.getChannel(AS7341_CHANNEL_630nm_F7);
+            if (f7_630nm < 0) f1_415nm = 0;
+            Serial.print(f7_630nm);
+            Serial.print(",");
             break;
 
         case AS7341_CHANNEL_680nm_F8:
             f8_680nm = as7341.getChannel(AS7341_CHANNEL_680nm_F8);
+            if (f8_680nm < 0) f1_415nm = 0;
+            Serial.print(f8_680nm);
+            Serial.print(",");
             break;
 
         case AS7341_CHANNEL_CLEAR:
             clear = as7341.getChannel(AS7341_CHANNEL_CLEAR);
+            if (clear < 0) f1_415nm = 0;
+            Serial.print(clear);
+            Serial.print(",");
             break;
         case AS7341_CHANNEL_NIR:
             nir = as7341.getChannel(AS7341_CHANNEL_NIR);
+            if (nir < 0) f1_415nm = 0;
+            Serial.print(nir);
+            Serial.print(",");
             break;
         
         default:
@@ -275,7 +288,7 @@ void sensingClass::takeReadingForSpecificChannelAs7341(as7341_color_channel_t ch
 void sensingClass::takeReadingForSpecificChannelAs726x(uint8_t channel)
 {
     as726x.drvOn(); 
-    delay(500);
+    delay(300);
     as726x.startMeasurement();
     delay(1500);
     
@@ -283,21 +296,33 @@ void sensingClass::takeReadingForSpecificChannelAs726x(uint8_t channel)
     {
         case AS7262_VIOLET:
             as726x_violet = as726x.readViolet();
+            Serial.print(as726x_violet);
+            Serial.print(",");
             break;
         case AS7262_BLUE:
             as726x_blue = as726x.readBlue();
+            Serial.print(as726x_blue);
+            Serial.print(",");
             break;
         case AS7262_GREEN:
             as726x_green = as726x.readGreen();
+            Serial.print(as726x_green);
+            Serial.print(",");
             break;
         case AS7262_YELLOW:
             as726x_yellow = as726x.readYellow();
+            Serial.print(as726x_yellow);
+            Serial.print(",");
             break;
         case AS7262_ORANGE:
             as726x_orange = as726x.readOrange();
+            Serial.print(as726x_orange);
+            Serial.print(",");
             break;
         case AS7262_RED:
             as726x_red = as726x.readRed();
+            Serial.print(as726x_red);
+            Serial.print(",");
             break;
         default:
             Serial.println("Invalid channel");
