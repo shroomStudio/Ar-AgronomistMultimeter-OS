@@ -70,7 +70,7 @@ void sensingClass::macronutrientSensingProcess()
         if (true == sensingProcessFinished)
         {
             //Sendind readings to conditioning class
-            sendingReadingsToConditioning();
+            //sendingReadingsToConditioning();
         }
         
        // Serial.println("sensing in process in loop press back to stop");
