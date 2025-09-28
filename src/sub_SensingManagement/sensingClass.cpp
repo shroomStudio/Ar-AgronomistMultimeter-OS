@@ -131,7 +131,7 @@ void sensingClass::as7341TakeReads(void)
         // Example: ATIME = 17, ASTEP = 1057  => (17+1)*(1057+1) = 19044 (close to 17986)
         as7341.setATIME(17);
         as7341.setASTEP(1057);
-        as7341.setGain(AS7341_GAIN_256X);
+        as7341.setGain(AS7341_GAIN_32X);
         Serial.println("AS7341 initialized successfully");
         as7341.enableLED(false);
         delay(500);
@@ -167,7 +167,7 @@ void sensingClass::as726xTakeReads(void)
     {
         Serial.println("AS726x initialized successfully");
         delay(500);
-        as726x.setGain(GAIN_3X7);
+        as726x.setGain(GAIN_1X);
         as726x.setIntegrationTime(200);   
     }
 
