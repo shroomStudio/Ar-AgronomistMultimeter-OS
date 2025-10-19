@@ -10,12 +10,9 @@ bool Adafruit_AS7265x::begin(TwoWire *theWire) {
 
   delay(500);
   uint8_t version = virtualRead(AS726X_HW_VERSION);
-  Serial.print("AS7265x HW Version: 0x");
-  Serial.println(version, HEX);
 
   // Detect master/slave sensors (should be 0x40 if master initialized)
   if (version != 0x40 && version != 0x4F) {
-    Serial.println("⚠️ Unknown AS726x device");
     return false;
   }
 
@@ -77,7 +74,6 @@ void Adafruit_AS7265x::setDrvCurrent(uint8_t current) {
 
 void Adafruit_AS7265x::readRawValues(uint16_t *buf) {
     // Need to read from all three sensors
-    Serial.println(F("[AS7265x] Reading all sensors..."));
 
     // Select first sensor (AS72651)
     virtualWrite(0x01, 0x01);
@@ -89,11 +85,7 @@ void Adafruit_AS7265x::readRawValues(uint16_t *buf) {
         uint8_t high = virtualRead(regHigh);
         uint8_t low = virtualRead(regHigh + 1);
         buf[i] = (high << 8) | low;
-        Serial.print(F("[AS7265x] AS72651 Channel ")); 
-        Serial.print(i);
-        Serial.print(F(": 0x"));
-        Serial.println(buf[i], HEX);
-    }
+          }
 
     // Select second sensor (AS72652)
     virtualWrite(0x01, 0x02);
@@ -105,10 +97,6 @@ void Adafruit_AS7265x::readRawValues(uint16_t *buf) {
         uint8_t high = virtualRead(regHigh);
         uint8_t low = virtualRead(regHigh + 1);
         buf[i + 6] = (high << 8) | low;
-        Serial.print(F("[AS7265x] AS72652 Channel ")); 
-        Serial.print(i + 6);
-        Serial.print(F(": 0x"));
-        Serial.println(buf[i + 6], HEX);
     }
 
     // Select third sensor (AS72653)
@@ -121,10 +109,6 @@ void Adafruit_AS7265x::readRawValues(uint16_t *buf) {
         uint8_t high = virtualRead(regHigh);
         uint8_t low = virtualRead(regHigh + 1);
         buf[i + 12] = (high << 8) | low;
-        Serial.print(F("[AS7265x] AS72653 Channel ")); 
-        Serial.print(i + 12);
-        Serial.print(F(": 0x"));
-        Serial.println(buf[i + 12], HEX);
     }
 
     // Reset to first sensor
@@ -162,10 +146,6 @@ bool Adafruit_AS7265x::dataReady() {
     for (uint8_t sensor = 1; sensor <= 3; sensor++) {
         virtualWrite(0x01, sensor);
         uint8_t status = virtualRead(AS726X_CONTROL_SETUP);
-        Serial.print(F("[AS7265x] Sensor "));
-        Serial.print(sensor);
-        Serial.print(F(" status: 0x"));
-        Serial.println(status, HEX);
         
         if (!(status & 0x02)) {
             ready = false;
