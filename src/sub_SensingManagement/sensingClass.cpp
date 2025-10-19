@@ -129,9 +129,11 @@ void sensingClass::as7341TakeReads(void)
         // AS7341 integration time = (ATIME + 1) * (ASTEP + 1) * 2.78us
         // For 50ms: (ATIME + 1) * (ASTEP + 1) = 50,000 / 2.78 ≈ 17986
         // Example: ATIME = 17, ASTEP = 1057  => (17+1)*(1057+1) = 19044 (close to 17986)
-        as7341.setATIME(17);
-        as7341.setASTEP(1057);
-        as7341.setGain(AS7341_GAIN_32X);
+        as7341.setATIME(120); // Larger = more sensitivity, slower
+        as7341.setASTEP(2500); // Larger = longer exposure, more light captured
+        //as7341.setATIME(17);
+        //as7341.setASTEP(1057);
+        as7341.setGain(AS7341_GAIN_64X);
         Serial.println("AS7341 initialized successfully");
         as7341.enableLED(false);
         delay(500);
@@ -150,9 +152,7 @@ void sensingClass::as7341TakeReads(void)
     takeReadingForSpecificChannelAs7341(AS7341_CHANNEL_CLEAR);
     takeReadingForSpecificChannelAs7341(AS7341_CHANNEL_NIR);
     Serial.println("&");
-   
-    buttonsSensing.navigationButtons(); 
-    delay(500); // Allow some time for button processing
+ 
     as7341.disableAll(); 
 }
 
@@ -179,16 +179,14 @@ void sensingClass::as726xTakeReads(void)
     takeReadingForSpecificChannelAs726x(AS7262_ORANGE);
     takeReadingForSpecificChannelAs726x(AS7262_RED);
     Serial.println("$");
-
-    delay(500);
 }
 
 void sensingClass::takeReadingForSpecificChannelAs7341(as7341_color_channel_t channel)
 { 
     as7341.enableLED(true);
-    delay(500); 
+    delay(200); 
     as7341.readAllChannels();   
-    as7341.delayForData(1500); 
+    as7341.delayForData(2000); 
 
     switch (channel)
     {
@@ -279,18 +277,16 @@ void sensingClass::takeReadingForSpecificChannelAs7341(as7341_color_channel_t ch
             break;
     }
     
-    //delay(500);
-    //as726x.drvOff();
     as7341.enableLED(false);
-    delay(500); 
+    delay(300);
 }
 
 void sensingClass::takeReadingForSpecificChannelAs726x(uint8_t channel)
 {
     as726x.drvOn(); 
-    delay(300);
+    delay(100);
     as726x.startMeasurement();
-    delay(1500);
+    delay(2000);
     
     switch (channel)
     {
@@ -329,8 +325,8 @@ void sensingClass::takeReadingForSpecificChannelAs726x(uint8_t channel)
             break;
     }
 
-    as726x.drvOff(); 
-    delay(500);
+    as726x.drvOff();
+    delay(300);
 }
 
 void sensingClass::sendingReadingsToConditioning(void)
