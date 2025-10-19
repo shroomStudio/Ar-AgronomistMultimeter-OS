@@ -107,12 +107,17 @@ void sensingClass::sensingProcessTakeReadings(void)
     delay(500);
 
     as7341TakeReads();
+    as7341.disableAll();
+    delay(500);
     as726xTakeReads();
+    as726x.drvOff();
+    delay(500);
     //temperatureSensingProcess();
 }
 
 void sensingClass::as7341TakeReads(void)
 {
+    
     // Initialize sensors
     if (!as7341.begin(AS7341_I2CADDR_DEFAULT, &Wire))
     {
@@ -124,15 +129,8 @@ void sensingClass::as7341TakeReads(void)
     }
     else
     {
-        // Read all channels from the AS7341 sensor
-        // Set integration time to 50 ms (ATIME and ASTEP calculation)
-        // AS7341 integration time = (ATIME + 1) * (ASTEP + 1) * 2.78us
-        // For 50ms: (ATIME + 1) * (ASTEP + 1) = 50,000 / 2.78 ≈ 17986
-        // Example: ATIME = 17, ASTEP = 1057  => (17+1)*(1057+1) = 19044 (close to 17986)
         as7341.setATIME(120); // Larger = more sensitivity, slower
         as7341.setASTEP(2500); // Larger = longer exposure, more light captured
-        //as7341.setATIME(17);
-        //as7341.setASTEP(1057);
         as7341.setGain(AS7341_GAIN_64X);
         Serial.println("AS7341 initialized successfully");
         as7341.enableLED(false);
@@ -157,7 +155,7 @@ void sensingClass::as7341TakeReads(void)
 }
 
 void sensingClass::as726xTakeReads(void)
-{
+{   
     if (!as726x.begin(&Wire))
     {
         Serial.println("Could not find AS726x");
@@ -165,10 +163,12 @@ void sensingClass::as726xTakeReads(void)
     }
     else
     {
+       
         Serial.println("AS726x initialized successfully");
         delay(500);
-        as726x.setGain(GAIN_1X);
-        as726x.setIntegrationTime(200);   
+        as726x.setIntegrationTime(99); 
+        as726x.setConversionType(ONE_SHOT); 
+        as726x.setGain(GAIN_64X); 
     }
 
     Serial.println("$");
