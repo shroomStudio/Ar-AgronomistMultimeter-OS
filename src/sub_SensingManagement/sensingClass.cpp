@@ -15,14 +15,25 @@ uint16_t f8_680nm;
 uint16_t clear;
 uint16_t nir;
 
-    // AS726x readings
-uint16_t as726x_violet;
-uint16_t as726x_blue;
-uint16_t as726x_green;
-uint16_t as726x_yellow;
-uint16_t as726x_orange;
-uint16_t as726x_red;
-uint8_t as726x_temperature;
+    // as7265x readings
+uint16_t as7265x_410nm;
+uint16_t as7265x_435nm;
+uint16_t as7265x_460nm;
+uint16_t as7265x_485nm;
+uint16_t as7265x_510nm;
+uint16_t as7265x_535nm;
+uint16_t as7265x_560nm;
+uint16_t as7265x_585nm;
+uint16_t as7265x_610nm;
+uint16_t as7265x_645nm;
+uint16_t as7265x_680nm;
+uint16_t as7265x_705nm;
+uint16_t as7265x_730nm;
+uint16_t as7265x_760nm;
+uint16_t as7265x_810nm;
+uint16_t as7265x_860nm;
+uint16_t as7265x_900nm;
+uint16_t as7265x_940nm;
 
 sensingClass::sensingClass(lcdDisplayClass &lcd, 
                             buttonsClass &buttons, 
@@ -31,7 +42,7 @@ sensingClass::sensingClass(lcdDisplayClass &lcd,
                             buttonsSensing(buttons),
                             conditioningSensing(conditioning),
                             as7341(), 
-                            as726x()
+                            as7265x()
 {
   initialSensingClassSetup();
 }   
@@ -106,13 +117,11 @@ void sensingClass::sensingProcessTakeReadings(void)
 
     delay(500);
 
+    // Take readings from both sensors
     as7341TakeReads();
-    as7341.disableAll();
-    delay(500);
-    as726xTakeReads();
-    as726x.drvOff();
-    delay(500);
-    //temperatureSensingProcess();
+    delay(50);  // Give I2C bus time to settle
+    as7265xTakeReads();  // Changed from as726xTakeReads
+    delay(50);
 }
 
 void sensingClass::as7341TakeReads(void)
@@ -154,31 +163,64 @@ void sensingClass::as7341TakeReads(void)
     as7341.disableAll(); 
 }
 
-void sensingClass::as726xTakeReads(void)
+void sensingClass::as7265xTakeReads(void)
 {   
-    if (!as726x.begin(&Wire))
-    {
-        Serial.println("Could not find AS726x");
-        while (!as726x.begin()) { delay(3); }
-    }
-    else
-    {
-       
-        Serial.println("AS726x initialized successfully");
-        delay(500);
-        as726x.setIntegrationTime(99); 
-        as726x.setConversionType(ONE_SHOT); 
-        as726x.setGain(GAIN_64X); 
+    if (!isAS7265xReady) {
+        if (!as7265x.begin()) {
+            Serial.println(F("[AS7265x] Failed to initialize"));
+            return;
+        }
+        Serial.println(F("[AS7265x] Initialized successfully"));
+        isAS7265xReady = true;
     }
 
-    Serial.println("$");
-    takeReadingForSpecificChannelAs726x(AS7262_VIOLET);
-    takeReadingForSpecificChannelAs726x(AS7262_BLUE);
-    takeReadingForSpecificChannelAs726x(AS7262_GREEN);
-    takeReadingForSpecificChannelAs726x(AS7262_YELLOW);
-    takeReadingForSpecificChannelAs726x(AS7262_ORANGE);
-    takeReadingForSpecificChannelAs726x(AS7262_RED);
-    Serial.println("$");
+    // Configure sensor
+    as7265x.setIntegrationTime(20);
+    as7265x.setGain(GAIN_64X);
+    as7265x.setConversionType(ONE_SHOT);
+    delay(100);
+
+    // Start measurement
+    as7265x.drvOn();
+    delay(300);
+    
+    Serial.println(F("[AS7265x] Starting conversion..."));
+    as7265x.startMeasurement();
+    
+    // Wait with timeout
+    unsigned long startTime = millis();
+    bool success = false;
+    
+    while ((millis() - startTime) < 1000) {
+        if (as7265x.dataReady()) {
+            success = true;
+            break;
+        }
+        delay(10);
+    }
+
+    if (!success) {
+        Serial.println(F("[AS7265x] Timeout waiting for data"));
+        as7265x.drvOff();
+        return;
+    }
+
+    // Read values immediately after data ready
+    uint16_t readings[AS7265X_NUM_CHANNELS];
+    as7265x.readRawValues(readings);
+    
+    // Turn off LED
+    as7265x.drvOff();
+    
+    // Store and print readings
+    Serial.println(F("$"));
+    for (int i = 0; i < AS7265X_NUM_CHANNELS; i++) {
+        Serial.print(F("[AS7265x] Channel "));
+        Serial.print(i);
+        Serial.print(F(": "));
+        Serial.println(readings[i]);
+    }
+    Serial.println(F("$"));
 }
 
 void sensingClass::takeReadingForSpecificChannelAs7341(as7341_color_channel_t channel)
@@ -281,52 +323,15 @@ void sensingClass::takeReadingForSpecificChannelAs7341(as7341_color_channel_t ch
     delay(300);
 }
 
-void sensingClass::takeReadingForSpecificChannelAs726x(uint8_t channel)
+void sensingClass::takeReadingForSpecificChannelAS7265x(uint8_t channel)
 {
-    as726x.drvOn(); 
-    delay(100);
-    as726x.startMeasurement();
-    delay(2000);
-    
-    switch (channel)
-    {
-        case AS7262_VIOLET:
-            as726x_violet = as726x.readViolet();
-            Serial.print(as726x_violet);
-            Serial.print(",");
-            break;
-        case AS7262_BLUE:
-            as726x_blue = as726x.readBlue();
-            Serial.print(as726x_blue);
-            Serial.print(",");
-            break;
-        case AS7262_GREEN:
-            as726x_green = as726x.readGreen();
-            Serial.print(as726x_green);
-            Serial.print(",");
-            break;
-        case AS7262_YELLOW:
-            as726x_yellow = as726x.readYellow();
-            Serial.print(as726x_yellow);
-            Serial.print(",");
-            break;
-        case AS7262_ORANGE:
-            as726x_orange = as726x.readOrange();
-            Serial.print(as726x_orange);
-            Serial.print(",");
-            break;
-        case AS7262_RED:
-            as726x_red = as726x.readRed();
-            Serial.print(as726x_red);
-            Serial.print(",");
-            break;
-        default:
-            Serial.println("Invalid channel");
-            break;
+    if (channel >= AS7265X_NUM_CHANNELS) {
+        Serial.println(F("[AS7265x] Invalid channel"));
+        return;
     }
-
-    as726x.drvOff();
-    delay(300);
+    
+    Serial.print(as7265xReadings[channel]);
+    Serial.print(F(","));
 }
 
 void sensingClass::sendingReadingsToConditioning(void)
@@ -359,20 +364,45 @@ void sensingClass::sendingReadingsToConditioning(void)
     clear = 0;
     nir = 0;
 
-    conditioningSensing.as726x_violet = as726x_violet;
-    conditioningSensing.as726x_blue = as726x_blue;
-    conditioningSensing.as726x_green = as726x_green;
-    conditioningSensing.as726x_yellow = as726x_yellow;
-    conditioningSensing.as726x_orange = as726x_orange;
-    conditioningSensing.as726x_red = as726x_red;
+    // Update AS7265x readings
+    conditioningSensing.as7265x_410nm = as7265x_410nm;
+    conditioningSensing.as7265x_435nm = as7265x_435nm;
+    conditioningSensing.as7265x_460nm = as7265x_460nm;
+    conditioningSensing.as7265x_485nm = as7265x_485nm;
+    conditioningSensing.as7265x_510nm = as7265x_510nm;
+    conditioningSensing.as7265x_535nm = as7265x_535nm;
+    conditioningSensing.as7265x_560nm = as7265x_560nm;
+    conditioningSensing.as7265x_585nm = as7265x_585nm;
+    conditioningSensing.as7265x_610nm = as7265x_610nm;
+    conditioningSensing.as7265x_645nm = as7265x_645nm;
+    conditioningSensing.as7265x_680nm = as7265x_680nm;
+    conditioningSensing.as7265x_705nm = as7265x_705nm;
+    conditioningSensing.as7265x_730nm = as7265x_730nm;
+    conditioningSensing.as7265x_760nm = as7265x_760nm;
+    conditioningSensing.as7265x_810nm = as7265x_810nm;
+    conditioningSensing.as7265x_860nm = as7265x_860nm;
+    conditioningSensing.as7265x_900nm = as7265x_900nm;
+    conditioningSensing.as7265x_940nm = as7265x_940nm;
 
-    // Reset AS726x readings after sending
-    as726x_violet = 0;
-    as726x_blue = 0;
-    as726x_green = 0;
-    as726x_yellow = 0;
-    as726x_orange = 0;
-    as726x_red = 0;
+    // Reset AS7265x readings
+    as7265x_410nm = 0;
+    as7265x_435nm = 0;
+    as7265x_460nm = 0;
+    as7265x_485nm = 0;
+    as7265x_510nm = 0;
+    as7265x_535nm = 0;
+    as7265x_560nm = 0;
+    as7265x_585nm = 0;
+    as7265x_610nm = 0;
+    as7265x_645nm = 0;
+    as7265x_680nm = 0;
+    as7265x_705nm = 0;
+    as7265x_730nm = 0;
+    as7265x_760nm = 0;
+    as7265x_810nm = 0;
+    as7265x_860nm = 0;
+    as7265x_900nm = 0;
+    as7265x_940nm = 0;
 
     //timestamp = millis(); // Use current time as timestamp
     conditioningSensing.macronutrientsMapping();

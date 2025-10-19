@@ -41,6 +41,25 @@ class signalConditioningClass{
     uint16_t as726x_orange;
     uint16_t as726x_red;
 
+    // Add AS7265x members
+    uint16_t as7265x_410nm;
+    uint16_t as7265x_435nm;
+    uint16_t as7265x_460nm;
+    uint16_t as7265x_485nm;
+    uint16_t as7265x_510nm;
+    uint16_t as7265x_535nm;
+    uint16_t as7265x_560nm;
+    uint16_t as7265x_585nm;
+    uint16_t as7265x_610nm;
+    uint16_t as7265x_645nm;
+    uint16_t as7265x_680nm;
+    uint16_t as7265x_705nm;
+    uint16_t as7265x_730nm;
+    uint16_t as7265x_760nm;
+    uint16_t as7265x_810nm;
+    uint16_t as7265x_860nm;
+    uint16_t as7265x_900nm;
+    uint16_t as7265x_940nm;
   
     //TODO next SW version
     int temperatureMeasured;

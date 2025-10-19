@@ -23,7 +23,7 @@ Other colors: Purple LEDs typically have wavelengths between 370-410 nm, and ult
 #include <Arduino.h>
 #include "sub_UserInterface/commonDataTypes.h"
 #include "ExternalLibraries/Adafruit_AS7341.h"
-#include "ExternalLibraries/Adafruit_AS726x.h"
+#include "ExternalLibraries/Adafruit_AS7265x.h"
 #include "sub_UserInterface/lcdDisplayClass.h"
 #include "sub_UserInterface/buttonsClass.h"
 #include "sub_SignalConditioning/signalConditioningClass.h"
@@ -69,21 +69,25 @@ class sensingClass{
     int serialTx;
     int serialRx;
     double serialSelector;
-   
+    bool isAS7265xReady;  // Add status flag
+
     // Private Methods
     void initialSensingClassSetup();
     //Global File scope methods
     void sensingProcessTakeReadings(void);
     void sendingReadingsToConditioning(void);
     void as7341TakeReads(void);
-    void as726xTakeReads(void);
+    void as7265xTakeReads(void);
     void takeReadingForSpecificChannelAs7341(as7341_color_channel_t channel);
-    void takeReadingForSpecificChannelAs726x(uint8_t channel);
+    void takeReadingForSpecificChannelAS7265x(uint8_t channel);
+
+    uint16_t as7265xReadings[AS7265X_NUM_CHANNELS]; // Add buffer for AS7265x readings
+
     lcdDisplayClass &lcdSensing;
     buttonsClass &buttonsSensing;
     signalConditioningClass &conditioningSensing;
     Adafruit_AS7341 as7341;
-    Adafruit_AS726x as726x;
+    Adafruit_AS7265x as7265x;
 };
 
 #endif
