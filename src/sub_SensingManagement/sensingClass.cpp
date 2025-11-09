@@ -137,34 +137,34 @@ void sensingClass::as7341TakeReads(void) {
     Serial.print(F("[AS7341] read start @")); 
     Serial.println(millis());
 
-    // Force clean state
+    // Force clean state and power up
     as7341.disableAll();
+    as7341.enableLED(false);  // Ensure LED starts off
     as7341.powerEnable(true);
-    delay(50); // Increased initial delay
+    delay(50);
 
-    // Configure optimal settings for Arduino speed
-    as7341.setATIME(200);       // 29 + 1 = 30 steps
-    as7341.setASTEP(2500);      // (599 + 1) * 2.78µs = 1.67ms per step
-    as7341.setGain(AS7341_GAIN_128X);  // Reduced from 256X to prevent saturation
+    // Configure timing
+    as7341.setATIME(50);
+    as7341.setASTEP(999);
+    as7341.setGain(AS7341_GAIN_128X);
     delay(10);
 
     uint16_t readings[12] = {0};
     bool success = false;
 
+    // Turn LED on before measurements
+    as7341.enableLED(true);
+    delay(50);  // Let LED stabilize
+
     // Read F1-F4 (low channels)
     as7341.setup_F1F4_Clear_NIR();
-    delay(50); // Added delay after SMUX configuration
+    delay(50);
     as7341.enableSpectralMeasurement(true);
     
-    // Wait for data ready with timeout and progress indicator
+    // Read low channels with timeout
     unsigned long startTime = millis();
-    as7341.enableLED(true); // Turn on LED for measurement
-    delay(10); // Short delay to allow LED to stabilize
-    Serial.println(F("[AS7341] Waiting for low channels..."));
-    
-    while ((millis() - startTime) < 1000) {
+    while ((millis() - startTime) < 1000 && !success) {
         if (as7341.getIsDataReady()) {
-            // Read first 6 channels (F1-F4 + Clear + NIR)
             for (int i = 0; i < 6; i++) {
                 readings[i] = as7341.readChannel((as7341_adc_channel_t)i);
                 Serial.print(F("[AS7341] Low channel "));
@@ -180,25 +180,24 @@ void sensingClass::as7341TakeReads(void) {
 
     if (!success) {
         Serial.println(F("[AS7341] Timeout reading low channels"));
+        as7341.enableLED(false);  // Ensure LED off on error
         as7341.disableAll();
         return;
     }
 
-    // Add delay between channel groups
+    // Reset for high channels
+    success = false;
+    as7341.enableSpectralMeasurement(false);
     delay(50);
 
     // Read F5-F8 (high channels)
-    success = false;
     as7341.setup_F5F8_Clear_NIR();
-    delay(50); // Added delay after SMUX configuration
+    delay(50);
     as7341.enableSpectralMeasurement(true);
     
     startTime = millis();
-    Serial.println(F("[AS7341] Waiting for high channels..."));
-    
-    while ((millis() - startTime) < 1000) {
+    while ((millis() - startTime) < 1000 && !success) {
         if (as7341.getIsDataReady()) {
-            // Read next 6 channels (F5-F8 + Clear + NIR)
             for (int i = 0; i < 6; i++) {
                 readings[i + 6] = as7341.readChannel((as7341_adc_channel_t)i);
                 Serial.print(F("[AS7341] High channel "));
@@ -212,23 +211,23 @@ void sensingClass::as7341TakeReads(void) {
         delay(10);
     }
 
-    // Ensure clean shutdown
+    // Always turn LED off before cleanup
+    as7341.enableLED(false);
     as7341.disableAll();
-
+    
     if (!success) {
         Serial.println(F("[AS7341] Timeout reading high channels"));
         return;
     }
 
-    as7341.enableLED(false); // Turn off LED after measurement
-    // Copy to internal buffer
+    // Store results once only
     memcpy(as7341Readings, readings, sizeof(readings));
     
-    // Print data block
+    // Print final data block once
     Serial.println("&");
     for (int i = 0; i < 12; i++) {
         Serial.print(as7341Readings[i]);
-        Serial.print(F(",\n"));
+        Serial.println(F(","));
     }
     Serial.println("&");
     
