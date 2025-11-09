@@ -69,7 +69,11 @@ class sensingClass{
     int serialTx;
     int serialRx;
     double serialSelector;
+    bool isAS7341Ready = false;  // Add status flag
     bool isAS7265xReady;  // Add status flag
+
+    uint16_t as7341Readings[12] = {0};  // AS7341 has 12 channels
+    uint16_t as7265xReadings[AS7265X_NUM_CHANNELS] = {0}; // Add buffer for AS7265x readings
 
     // Private Methods
     void initialSensingClassSetup();
@@ -80,8 +84,6 @@ class sensingClass{
     void as7265xTakeReads(void);
     void takeReadingForSpecificChannelAs7341(as7341_color_channel_t channel);
     void takeReadingForSpecificChannelAS7265x(uint8_t channel);
-
-    uint16_t as7265xReadings[AS7265X_NUM_CHANNELS]; // Add buffer for AS7265x readings
 
     lcdDisplayClass &lcdSensing;
     buttonsClass &buttonsSensing;
