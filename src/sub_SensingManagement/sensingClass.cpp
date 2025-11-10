@@ -167,10 +167,6 @@ void sensingClass::as7341TakeReads(void) {
         if (as7341.getIsDataReady()) {
             for (int i = 0; i < 6; i++) {
                 readings[i] = as7341.readChannel((as7341_adc_channel_t)i);
-                Serial.print(F("[AS7341] Low channel "));
-                Serial.print(i);
-                Serial.print(F(": "));
-                Serial.println(readings[i]);
             }
             success = true;
             break;
@@ -200,10 +196,6 @@ void sensingClass::as7341TakeReads(void) {
         if (as7341.getIsDataReady()) {
             for (int i = 0; i < 6; i++) {
                 readings[i + 6] = as7341.readChannel((as7341_adc_channel_t)i);
-                Serial.print(F("[AS7341] High channel "));
-                Serial.print(i + 6);
-                Serial.print(F(": "));
-                Serial.println(readings[i + 6]);
             }
             success = true;
             break;
@@ -268,7 +260,7 @@ void sensingClass::as7265xTakeReads(void)
             success = true;
             break;
         }
-        delay(10);
+        delay(100);
     }
 
     if (!success) {
@@ -287,33 +279,13 @@ void sensingClass::as7265xTakeReads(void)
     // Store and print readings
     Serial.println(F("$"));
     for (int i = 0; i < AS7265X_NUM_CHANNELS; i++) {
-        Serial.print(F("[AS7265x] Channel "));
-        Serial.print(i);
-        Serial.print(F(": "));
         Serial.println(readings[i]);
+        Serial.println(F(","));
     }
     Serial.println(F("$"));
-}
 
-void sensingClass::takeReadingForSpecificChannelAs7341(as7341_color_channel_t channel) {
-    if (channel >= 12) {
-        Serial.println(F("[AS7341] Invalid channel"));
-        return;
-    }
-    
-    Serial.print(as7341Readings[channel]);
-    Serial.print(F(","));
-}
-
-void sensingClass::takeReadingForSpecificChannelAS7265x(uint8_t channel)
-{
-    if (channel >= AS7265X_NUM_CHANNELS) {
-        Serial.println(F("[AS7265x] Invalid channel"));
-        return;
-    }
-    
-    Serial.print(as7265xReadings[channel]);
-    Serial.print(F(","));
+    Serial.print(F("[AS7265] read complete @")); 
+    Serial.println(millis());
 }
 
 void sensingClass::sendingReadingsToConditioning(void)
