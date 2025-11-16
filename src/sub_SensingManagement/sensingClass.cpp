@@ -114,17 +114,16 @@ void sensingClass::sensingProcessTakeReadings(void)
     {
         delay(3); // Wait for serial port to connect. Needed for native USB
     }
-
-    delay(500);
-
+    
     // Take readings from both sensors
     as7341TakeReads();
-    delay(50);  // Give I2C bus time to settle
-    as7265xTakeReads();  // Changed from as726xTakeReads
     delay(50);
+    as7265xTakeReads(); 
+    delay(50); 
 }
 
-void sensingClass::as7341TakeReads(void) {
+void sensingClass::as7341TakeReads(void) 
+{    
     if (!isAS7341Ready) {
         if (!as7341.begin()) {
             Serial.println(F("[AS7341] Failed to initialize"));
@@ -146,7 +145,7 @@ void sensingClass::as7341TakeReads(void) {
     // Configure timing
     as7341.setATIME(50);
     as7341.setASTEP(999);
-    as7341.setGain(AS7341_GAIN_128X);
+    as7341.setGain(AS7341_GAIN_16X);
     delay(10);
 
     uint16_t readings[12] = {0};
@@ -181,15 +180,13 @@ void sensingClass::as7341TakeReads(void) {
         return;
     }
 
-    // Reset for high channels
+    // Read F5-F8 (high channels)
     success = false;
     as7341.enableSpectralMeasurement(false);
     delay(50);
-
-    // Read F5-F8 (high channels)
     as7341.setup_F5F8_Clear_NIR();
-    delay(50);
     as7341.enableSpectralMeasurement(true);
+    delay(50);
     
     startTime = millis();
     while ((millis() - startTime) < 1000 && !success) {
@@ -206,8 +203,10 @@ void sensingClass::as7341TakeReads(void) {
     // Always turn LED off before cleanup
     as7341.enableLED(false);
     as7341.disableAll();
+    delay(50);
     
-    if (!success) {
+    if (!success) 
+    {
         Serial.println(F("[AS7341] Timeout reading high channels"));
         return;
     }
@@ -216,12 +215,13 @@ void sensingClass::as7341TakeReads(void) {
     memcpy(as7341Readings, readings, sizeof(readings));
     
     // Print final data block once
-    Serial.println("&");
+    Serial.print("&,");
     for (int i = 0; i < 12; i++) {
         Serial.print(as7341Readings[i]);
-        Serial.println(F(","));
+        Serial.print(F(","));
     }
     Serial.println("&");
+    delay(150);
     
     Serial.print(F("[AS7341] read complete @")); 
     Serial.println(millis());
@@ -229,60 +229,69 @@ void sensingClass::as7341TakeReads(void) {
 
 void sensingClass::as7265xTakeReads(void)
 {   
-    if (!isAS7265xReady) {
-        if (!as7265x.begin()) {
+    if (!isAS7265xReady) 
+    {
+        if (!as7265x.begin()) 
+        {
             Serial.println(F("[AS7265x] Failed to initialize"));
             return;
         }
+
         Serial.println(F("[AS7265x] Initialized successfully"));
         isAS7265xReady = true;
     }
 
     // Configure sensor
-    as7265x.setIntegrationTime(20);
-    as7265x.setGain(GAIN_64X);
+    as7265x.setIntegrationTime(47);
+    as7265x.setGain(GAIN_3X7);
     as7265x.setConversionType(ONE_SHOT);
-    delay(100);
+    delay(150);
 
     // Start measurement
+    Serial.println(F("[AS7265x] Starting Reading"));
     as7265x.drvOn();
-    delay(300);
-    
-    Serial.println(F("[AS7265x] Starting conversion..."));
+    delay(50);
     as7265x.startMeasurement();
+    delay(50);
     
-    // Wait with timeout
+    // Wait for data
     unsigned long startTime = millis();
     bool success = false;
     
-    while ((millis() - startTime) < 1000) {
-        if (as7265x.dataReady()) {
+    while ((millis() - startTime) < 1000) 
+    {
+        if (as7265x.dataReady()) 
+        {
             success = true;
             break;
         }
-        delay(100);
+        delay(150);
     }
 
-    if (!success) {
+    if (!success) 
+    {
         Serial.println(F("[AS7265x] Timeout waiting for data"));
         as7265x.drvOff();
+        delay(50);
         return;
     }
 
-    // Read values immediately after data ready
+     // Turn off LED
+    as7265x.drvOff();
+    delay(150);
+
+    // Store Readings 
     uint16_t readings[AS7265X_NUM_CHANNELS];
     as7265x.readRawValues(readings);
     
-    // Turn off LED
-    as7265x.drvOff();
-    
-    // Store and print readings
-    Serial.println(F("$"));
+    // Sending Readings
+    Serial.print(F("$,"));
     for (int i = 0; i < AS7265X_NUM_CHANNELS; i++) {
-        Serial.println(readings[i]);
-        Serial.println(F(","));
+        Serial.print(readings[i]);
+        Serial.print(F(","));
     }
     Serial.println(F("$"));
+    delay(150);
 
     Serial.print(F("[AS7265] read complete @")); 
     Serial.println(millis());
