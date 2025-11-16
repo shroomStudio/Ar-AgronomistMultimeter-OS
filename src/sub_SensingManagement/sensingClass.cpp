@@ -108,11 +108,13 @@ void sensingClass::atmosphericPressureSensingProcess()
 void sensingClass::sensingProcessTakeReadings(void)
 {    
    //Serial.println("sensingProcessTakeReadings");
+   uint8_t waitForSerial = 0;
 
    // Initial setup for sensing class
-    if (!Serial) 
+    if (!Serial || waitForSerial > 3) 
     {
-        delay(100); // Wait for serial port to connect. Needed for native USB
+        delay(150); // Wait for serial port to connect. Needed for native USB
+        waitForSerial++;
     }
     
     // Take readings from both sensors
