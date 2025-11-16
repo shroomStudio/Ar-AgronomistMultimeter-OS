@@ -110,16 +110,16 @@ void sensingClass::sensingProcessTakeReadings(void)
    //Serial.println("sensingProcessTakeReadings");
 
    // Initial setup for sensing class
-    while (!Serial) 
+    if (!Serial) 
     {
-        delay(3); // Wait for serial port to connect. Needed for native USB
+        delay(100); // Wait for serial port to connect. Needed for native USB
     }
     
     // Take readings from both sensors
     as7341TakeReads();
-    delay(50);
+    delay(250);
     as7265xTakeReads(); 
-    delay(50); 
+    delay(250); 
 }
 
 void sensingClass::as7341TakeReads(void) 
@@ -242,7 +242,7 @@ void sensingClass::as7265xTakeReads(void)
     }
 
     // Configure sensor
-    as7265x.setIntegrationTime(47);
+    as7265x.setIntegrationTime(49);
     as7265x.setGain(GAIN_3X7);
     as7265x.setConversionType(ONE_SHOT);
     delay(150);
@@ -252,7 +252,7 @@ void sensingClass::as7265xTakeReads(void)
     as7265x.drvOn();
     delay(50);
     as7265x.startMeasurement();
-    delay(50);
+    delay(150);
     
     // Wait for data
     unsigned long startTime = millis();
@@ -276,14 +276,14 @@ void sensingClass::as7265xTakeReads(void)
         return;
     }
 
-     // Turn off LED
-    as7265x.drvOff();
-    delay(150);
-
     // Store Readings 
     uint16_t readings[AS7265X_NUM_CHANNELS];
     as7265x.readRawValues(readings);
-    
+
+    // Turn off LED
+    as7265x.drvOff();
+    delay(150);
+
     // Sending Readings
     Serial.print(F("$,"));
     for (int i = 0; i < AS7265X_NUM_CHANNELS; i++) {
