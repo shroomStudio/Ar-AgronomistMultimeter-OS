@@ -3,7 +3,8 @@
 //Clases instances 
 signalConditioningClass::signalConditioningClass(lcdDisplayClass &lcd, buttonsClass &buttons): 
                                                 lcdConditioning(lcd),
-                                                buttonsConditioning(buttons)
+                                                buttonsConditioning(buttons),
+                                                NumberOfReadings(1)
 {
     //Constructor signalConditioningClass
 
@@ -14,178 +15,15 @@ signalConditioningClass::~signalConditioningClass(){
 
 }
 
-//Public Methods
-
 //Private Methods
 void signalConditioningClass::macronutrientsMapping(void)
 {
     lcdConditioning.metadataTodisplayFreeCursor("Mapping macronutrients",LEFT_ALIGNED_X,TOP_Y,true);
-    Serial.println("Data from sensing class");
-    Serial.print("F2 Nitrogen: ");
-    Serial.println(raw_f2_nitrogen);
-    Serial.print("F3 Nitrogen: ");
-    Serial.println(raw_f3_nitrogen);
-    Serial.print("F4 Phosphorus: ");
-    Serial.println(raw_f4_phosphorus);
-    Serial.print("F5 Phosphorus: ");
-    Serial.println(raw_f5_phosphorus);
-    Serial.print("F7 Potassium: ");
-    Serial.println(raw_f7_potassium);
-    Serial.print("F8 Potassium: ");
-    Serial.println(raw_f8_potassium);
+    //Serial.println("Data from sensing class");
 
-    /*long int sum = 0;
-
-    whiteLedAverage = 0;
-    redLedAverage = 0;
-    yellowLedAverage = 0;
-    blueLedAverage = 0;
-    greenLedAverage = 0;
-
-
-    lcdConditioning.metadataTodisplayFreeCursor("Processing readings",LEFT_ALIGNED_X,TOP_Y,true);
-    delay(1000);
-
-    for (int i = 0; i < MAX_NUMBER_OF_SAMPLES; i++)
-    {
-        sum += whiteLedMeasurements[i];
-
-        //Printing the sensor read to grapth it before to clear the array 
-        //Serial.println(whiteLedMeasurements[i]);
-        //delay(100);
-        //Cleaning the array to leave it ready beore the next sensing
-        whiteLedMeasurements[i] = 0;
-    }
-    // Calculate the average
-    //Serial.println("N sum: ");
-    //Serial.println(sum);
-    //delay(100);
-    whiteLedAverage = static_cast<int>(sum / MAX_NUMBER_OF_SAMPLES);
-    Serial.println("\n White average: ");
-    Serial.print(whiteLedAverage);
-    delay(100);
-    //whiteLedAverage = 0;
-    //Serial.println("N average: ");
-    //Serial.print(whiteLedAverage);
-    //delay(100);
-
-    //Printing the information to user
-    lcdConditioning.metadataTodisplayFreeCursor("White average: \t",LEFT_ALIGNED_X,TOP_Y,true);
-    delay(1000);
-    lcdConditioning.intNumberTodisplayInLCD(whiteLedAverage,LEFT_ALIGNED_X,MIDDLE_Y,false);
-    delay(1000);
-
-    //Clearing the temp variable sum to start the calculation of another element
-    sum = 0;
-
-    for (int i = 0; i < MAX_NUMBER_OF_SAMPLES; i++)
-    {
-        sum += redLedMeasurements[i];
-
-        //Printing the sensor read to grapth it before to clear the array 
-        //Serial.println(redLedMeasurements[i]);
-        //delay(100);
-        //Cleaning the array to leave it ready beore the next sensing
-        redLedMeasurements[i] = 0;
-    }
-    //Serial.println("K sum: ");
-    //Serial.println(sum);
-    //delay(100);
-    // Calculate the average
-    redLedAverage = static_cast<int>(sum / MAX_NUMBER_OF_SAMPLES);
-    Serial.println("\n Red average: ");
-    Serial.print(redLedAverage);
-    delay(100);
-
-    //Printing the information to user
-    lcdConditioning.metadataTodisplayFreeCursor("Red average: \t",LEFT_ALIGNED_X,TOP_Y,true);
-    delay(1000);
-    lcdConditioning.intNumberTodisplayInLCD(redLedAverage,LEFT_ALIGNED_X,MIDDLE_Y,false);
-    delay(1000);
-    
-    //Clearing the temp variable sum to start the calculation of another element
-    sum = 0;
-
-    for (int i = 0; i < MAX_NUMBER_OF_SAMPLES; i++)
-    {
-        sum += yellowLedMeasurements[i];
-
-        //Printing the sensor read to grapth it before to clear the array 
-        //Serial.println(yellowLedMeasurements[i]);
-        //delay(100);
-        //Cleaning the array to leave it ready beore the next sensing
-        yellowLedMeasurements[i] = 0;
-    }
-   // Serial.println("P sum: ");
-   // Serial.println(sum);
-   // delay(100);
-    // Calculate the average
-    yellowLedAverage = static_cast<int>(sum / MAX_NUMBER_OF_SAMPLES);
-    Serial.println("\n Yellow average: ");
-    Serial.print(yellowLedAverage);
-    delay(100);
-
-    //Printing the information to user
-    lcdConditioning.metadataTodisplayFreeCursor("yellow average: \t",LEFT_ALIGNED_X,TOP_Y,true);
-    delay(1000);
-    lcdConditioning.intNumberTodisplayInLCD(yellowLedAverage,LEFT_ALIGNED_X,MIDDLE_Y,false);
-    delay(1000);
-
-    //Clearing the temp variable sum to start the calculation of another element
-    sum = 0;
-
-    for (int i = 0; i < MAX_NUMBER_OF_SAMPLES; i++)
-    {
-        sum += blueLedMeasurements[i];
-
-        //Printing the sensor read to grapth it before to clear the array 
-        //Serial.println(yellowLedMeasurements[i]);
-        //delay(100);
-        //Cleaning the array to leave it ready beore the next sensing
-        blueLedMeasurements[i] = 0;
-    }
-   // Serial.println("P sum: ");
-   // Serial.println(sum);
-   // delay(100);
-    // Calculate the average
-    blueLedAverage = static_cast<int>(sum / MAX_NUMBER_OF_SAMPLES);
-    Serial.println("\n Blue average: ");
-    Serial.print(blueLedAverage);
-    delay(100);
-
-    //Printing the information to user
-    lcdConditioning.metadataTodisplayFreeCursor("blue average: \t",LEFT_ALIGNED_X,TOP_Y,true);
-    delay(1000);
-    lcdConditioning.intNumberTodisplayInLCD(blueLedAverage,LEFT_ALIGNED_X,MIDDLE_Y,false);
-    delay(1000);
-
-    //Clearing the temp variable sum to start the calculation of another element
-    sum = 0;
-
-    for (int i = 0; i < MAX_NUMBER_OF_SAMPLES; i++)
-    {
-        sum += greenLedMeasurements[i];
-
-        //Printing the sensor read to grapth it before to clear the array 
-        //Serial.println(yellowLedMeasurements[i]);
-        //delay(100);
-        //Cleaning the array to leave it ready beore the next sensing
-        greenLedMeasurements[i] = 0;
-    }
-   // Serial.println("P sum: ");
-   // Serial.println(sum);
-   // delay(100);
-    // Calculate the average
-    greenLedAverage = static_cast<int>(sum / MAX_NUMBER_OF_SAMPLES);
-    Serial.println("\n Green average: ");
-    Serial.print(greenLedAverage);
-    delay(100);
-
-    //Printing the information to user
-    lcdConditioning.metadataTodisplayFreeCursor("green average: \t",LEFT_ALIGNED_X,TOP_Y,true);
-    delay(1000);
-    lcdConditioning.intNumberTodisplayInLCD(greenLedAverage,LEFT_ALIGNED_X,MIDDLE_Y,false);
-    delay(1000);*/  
+    //displayAverageValuesAs7341();
+    //displayAverageValuesAs726x();
+    delay(1000);          
 }
 
 
@@ -203,4 +41,104 @@ void signalConditioningClass::humidityMapping(void)
 void signalConditioningClass::atmosphericHighMapping(void)
 {
     
+}
+
+void signalConditioningClass::displayAverageValuesAs7341()
+{
+    Serial.print("F1  415nm: ");
+    raw_f1_415nm += raw_f1_415nm;
+    raw_f1_415nm /= NumberOfReadings;
+    Serial.println(raw_f1_415nm);
+    
+    Serial.print("F2  445nm: ");
+    raw_f2_445nm += raw_f2_445nm;
+    raw_f2_445nm /= NumberOfReadings;
+    Serial.println(raw_f2_445nm);
+    
+    Serial.print("F3  480nm: ");
+    raw_f3_480nm += raw_f3_480nm;
+    raw_f3_480nm /= NumberOfReadings;
+    Serial.println(raw_f3_480nm);
+
+    Serial.print("F4  515nm: ");
+    raw_f4_515nm += raw_f4_515nm;
+    raw_f4_515nm /= NumberOfReadings;
+    Serial.println(raw_f4_515nm);
+    
+    Serial.print("Clear 0: ");
+    clear_0 += clear_0;
+    clear_0 /= NumberOfReadings;
+    Serial.println(clear_0);
+
+    Serial.print("NIR 0: ");
+    nir_0 += nir_0;
+    nir_0 /= NumberOfReadings;
+    Serial.println(nir_0);
+
+    Serial.print("F5  555nm: ");
+    raw_f5_555nm += raw_f5_555nm;
+    raw_f5_555nm /= NumberOfReadings;
+    Serial.println(raw_f5_555nm);
+
+    Serial.print("F6  590nm: ");
+    raw_f6_590nm += raw_f6_590nm;
+    raw_f6_590nm /= NumberOfReadings;
+    Serial.println(raw_f6_590nm);
+
+    Serial.print("F7  630nm: ");
+    raw_f7_630nm += raw_f7_630nm;
+    raw_f7_630nm /= NumberOfReadings;
+    Serial.println(raw_f7_630nm);
+
+    Serial.print("F8  680nm: ");
+    raw_f8_680nm += raw_f8_680nm;
+    raw_f8_680nm /= NumberOfReadings;
+    Serial.println(raw_f8_680nm);
+
+    Serial.print("Clear: ");
+    clear += clear;
+    clear /= NumberOfReadings;
+    Serial.println(clear);
+
+    Serial.print("NIR: ");
+    nir += nir;
+    nir /= NumberOfReadings;
+    Serial.println(nir);
+    delay(1000); 
+}
+
+void signalConditioningClass::displayAverageValuesAs726x()
+{
+    Serial.println("Data from AS726x");
+    Serial.print("Violet: ");
+    as726x_violet += as726x_violet;
+    as726x_violet /= NumberOfReadings;
+    Serial.println(as726x_violet);
+
+    Serial.print("Blue: ");
+    as726x_blue += as726x_blue;
+    as726x_blue /= NumberOfReadings;
+    Serial.println(as726x_blue);
+    
+    Serial.print("Green: "); 
+    as726x_green += as726x_green;
+    as726x_green /= NumberOfReadings; 
+    Serial.println(as726x_green);
+
+    Serial.print("Yellow: ");
+    as726x_yellow += as726x_yellow;
+    as726x_yellow /= NumberOfReadings;
+    Serial.println(as726x_yellow);
+
+    Serial.print("Orange: ");
+    as726x_orange += as726x_orange;
+    as726x_orange /= NumberOfReadings;
+    Serial.println(as726x_orange);
+
+    Serial.print("Red: ");
+    as726x_red += as726x_red;
+    as726x_red /= NumberOfReadings;
+    Serial.println(as726x_red);
+
+    NumberOfReadings++;
 }

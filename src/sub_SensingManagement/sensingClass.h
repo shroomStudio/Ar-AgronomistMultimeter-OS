@@ -23,25 +23,29 @@ Other colors: Purple LEDs typically have wavelengths between 370-410 nm, and ult
 #include <Arduino.h>
 #include "sub_UserInterface/commonDataTypes.h"
 #include "ExternalLibraries/Adafruit_AS7341.h"
-#include "ExternalLibraries/Adafruit_AS726x.h"
+#include "ExternalLibraries/Adafruit_AS7265x.h"
 #include "sub_UserInterface/lcdDisplayClass.h"
 #include "sub_UserInterface/buttonsClass.h"
 #include "sub_SignalConditioning/signalConditioningClass.h"
 
-typedef enum 
-{
-    MACRONUTRIENT,
-    TEMPERATURE,
-    HUMIDITY,
-    ATMOSPHERIC_PRESSURE
-}SENSING_PROCESS;
+namespace SensingNamespace {
+    typedef enum 
+    {
+        MACRONUTRIENT,
+        TEMPERATURE,
+        HUMIDITY,
+        ATMOSPHERIC_PRESSURE
+    }SENSING_PROCESS;
 
-typedef enum 
-{
-    TEMPERATURE_SERIAL,
-    HUMIDITY_SERIAL,
-    ATMOSPHERIC_PRESSURE_SERIAL
-}SENSOR_SERIAL;
+    typedef enum 
+    {
+        TEMPERATURE_SERIAL,
+        HUMIDITY_SERIAL,
+        ATMOSPHERIC_PRESSURE_SERIAL
+    }SENSOR_SERIAL;
+}
+
+
 
 class sensingClass{
     public:
@@ -65,23 +69,25 @@ class sensingClass{
     int serialTx;
     int serialRx;
     double serialSelector;
-   
+    bool isAS7341Ready = false;  // Add status flag
+    bool isAS7265xReady;  // Add status flag
+
+    uint16_t as7341Readings[12] = {0};  // AS7341 has 12 channels
+    uint16_t as7265xReadings[AS7265X_NUM_CHANNELS] = {0}; // Add buffer for AS7265x readings
+
     // Private Methods
     void initialSensingClassSetup();
-    void serialMiltiplexor(SENSOR_SERIAL sensor);
     //Global File scope methods
-    void turnOffAllElements(void);
-    void turnOnAllElements(void);
     void sensingProcessTakeReadings(void);
     void sendingReadingsToConditioning(void);
     void as7341TakeReads(void);
-    void as726xTakeReads(void);
-    void takeReadingForSpecificChannelAs7341(as7341_color_channel_t channel);
+    void as7265xTakeReads(void);
+
     lcdDisplayClass &lcdSensing;
     buttonsClass &buttonsSensing;
     signalConditioningClass &conditioningSensing;
     Adafruit_AS7341 as7341;
-    Adafruit_AS726x as726x;
+    Adafruit_AS7265x as7265x;
 };
 
 #endif
