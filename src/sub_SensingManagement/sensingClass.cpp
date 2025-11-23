@@ -125,7 +125,8 @@ void sensingClass::sensingProcessTakeReadings(void)
 }
 
 void sensingClass::as7341TakeReads(void) 
-{    
+{
+    /*    
     if (!isAS7341Ready) {
         if (!as7341.begin()) {
             Serial.println(F("[AS7341] Failed to initialize"));
@@ -227,6 +228,7 @@ void sensingClass::as7341TakeReads(void)
     
     Serial.print(F("[AS7341] read complete @")); 
     Serial.println(millis());
+    */
 }
 
 void sensingClass::as7265xTakeReads(void)

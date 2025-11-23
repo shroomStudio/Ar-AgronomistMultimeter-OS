@@ -23,7 +23,7 @@ Other colors: Purple LEDs typically have wavelengths between 370-410 nm, and ult
 #include <Arduino.h>
 #include "sub_UserInterface/commonDataTypes.h"
 #include "ExternalLibraries/Adafruit_AS7341.h"
-#include "ExternalLibraries/Adafruit_AS7265x.h"
+#include "ExternalLibraries/ShroomCorp_AS7265x.h"
 #include "sub_UserInterface/lcdDisplayClass.h"
 #include "sub_UserInterface/buttonsClass.h"
 #include "sub_SignalConditioning/signalConditioningClass.h"
