@@ -87,7 +87,7 @@ class sensingClass{
     buttonsClass &buttonsSensing;
     signalConditioningClass &conditioningSensing;
     Adafruit_AS7341 as7341;
-    Adafruit_AS7265x as7265x;
+    ShroomCorp_AS7265x as7265x;
 };
 
 #endif

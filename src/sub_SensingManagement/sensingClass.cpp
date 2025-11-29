@@ -1,5 +1,4 @@
 #include "sensingClass.h"
-
    
 // AS7341 readings
 uint16_t f1_415nm; 
@@ -233,74 +232,97 @@ void sensingClass::as7341TakeReads(void)
 
 void sensingClass::as7265xTakeReads(void)
 {   
+    Serial.println(F("[AS7265x] as7265xTakeReads"));
+
     if (!isAS7265xReady) 
     {
-        if (!as7265x.begin()) 
-        {
-            Serial.println(F("[AS7265x] Failed to initialize"));
-            return;
-        }
-
-        Serial.println(F("[AS7265x] Initialized successfully"));
+        if (!as7265x.begin()) return;
         isAS7265xReady = true;
+    } 
+    else 
+    {
+        Serial.println(F("[AS7265x] sensor already initialized"));
     }
 
-    // Configure sensor
-    as7265x.setIntegrationTime(49);
-    as7265x.setGain(GAIN_3X7);
+    as7265x.setIntegrationTime(166);
+    as7265x.setGain(GAIN_16X);
     as7265x.setConversionType(ONE_SHOT);
     delay(150);
-
-    // Start measurement
-    Serial.println(F("[AS7265x] Starting Reading"));
+    // Turn on LED driver and wait
     as7265x.drvOn();
-    delay(50);
+    delay(100);
+
+    // Start measurement and log exact timestamp
+    unsigned long tStart = millis();
     as7265x.startMeasurement();
-    delay(150);
-    
-    // Wait for data
-    unsigned long startTime = millis();
-    bool success = false;
-    
-    while ((millis() - startTime) < 1000) 
+
+    // Poll for dataReady with verbose logging each iteration
+    unsigned long timeoutMs = 5000; // extended timeout for debugging
+    unsigned long pollInterval = 100;
+    bool ready = false;
+    uint16_t attempt = 0;
+
+    while ((millis() - tStart) < timeoutMs) 
     {
-        if (as7265x.dataReady()) 
+        attempt++;
+        bool dr = as7265x.dataReady();
+
+        if (dr) 
         {
-            success = true;
+            ready = true;
             break;
         }
-        delay(150);
+        delay(pollInterval);
     }
 
-    if (!success) 
+    if (!ready) 
     {
-        Serial.println(F("[AS7265x] Timeout waiting for data"));
+        // extra diagnostics: try a soft re-init attempt
         as7265x.drvOff();
-        delay(50);
-        return;
+        delay(200);
+        as7265x.drvOn();
+        delay(200);
+        as7265x.startMeasurement();
+        
+        bool ready2 = false;
+
+        for (int i = 0; i < 10; i++) 
+        {
+            bool dr = as7265x.dataReady();
+            if (dr) { ready2 = true; break; }
+            delay(200);
+        }
+        if (!ready2) 
+        {
+            as7265x.drvOff();
+            return;
+        }
     }
 
-    // Store Readings 
-    uint16_t readings[AS7265X_NUM_CHANNELS];
-    as7265x.readRawValues(readings);
-
-    // Turn off LED
+    // Read raw values
+    uint16_t readings[AS7265X_NUM_CHANNELS] = {0};
+    as7265x.readRawValuesSequential(readings, 2500);
     as7265x.drvOff();
     delay(150);
 
-    // Sending Readings
     Serial.print(F("$,"));
-    for (int i = 0; i < AS7265X_NUM_CHANNELS; i++) {
+    for (int i = 0; i < AS7265X_NUM_CHANNELS; i++) 
+    {
         Serial.print(readings[i]);
         Serial.print(F(","));
     }
     Serial.println(F("$"));
     delay(150);
 
-    Serial.print(F("[AS7265] read complete @")); 
-    Serial.println(millis());
+    // Additional health/debug info
+    Serial.println(F("[AS7265x]temperature read:"));
+    Serial.print(F(" (dec="));
+    Serial.print(as7265x.readTemperature());
+    Serial.println(F(")"));
+    Serial.print(F("[AS7265] read complete")); 
 }
 
+/// @brief ////////////////////////
 void sensingClass::sendingReadingsToConditioning(void)
 {
     // Send readings to signal conditioning class
