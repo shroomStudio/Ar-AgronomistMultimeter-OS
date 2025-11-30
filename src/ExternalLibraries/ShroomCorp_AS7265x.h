@@ -1,14 +1,30 @@
 /*!
  * @file ShroomCorp_AS7265x.h
- * @briefThe maximum sensitivity value depends on the integration
-time. For every 2.78ms of integration time, the maximum
-sensitivity value increases by 1024 counts. This means that to
-be able to reach the full sensitivity scale, the sensitivity has to
-be at least 64*2.78ms.
- */
-
-#ifndef LIB_ADAFRUIT_AS7265X
-#define LIB_ADAFRUIT_AS7265X
+ * @brief Property of ShroomCompany 
+ * The maximum sensitivity value depends on the integration
+ * time. For every 2.78ms of integration time, the maximum
+ * sensitivity value increases by 1024 counts. This means that to
+ * be able to reach the full sensitivity scale, the sensitivity has to
+ * be at least 64*2.78ms.
+ * The sensor has 6 photodiodes, but it cannot output all 6 readings at the same time in one bank.
+ * So it splits them into two “banks” (groups).
+Bank 1
+Contains real measurement data from 4 photodiodes.
+The remaining 2 registers (out of 6 total) are just zeros (not used in this bank).
+Bank 2
+Contains real measurement data from the other 4 photodiodes.
+Again, the remaining 2 registers are filled with zeros.
+Why do this?
+Because the chip architecture only allows reading 4 real channels per bank, so the chip outputs the data in two sets.
+To get all 6 photodiode readings, you must:
+Tell the sensor to switch to Bank 1, read the 6 registers (4 real + 2 zero).
+Tell it to switch to Bank 2, read the 6 registers (4 different real + 2 zero).
+Example (imaginary numbers)
+Bank 1: [Ch0, Ch1, Ch2, Ch3, 0, 0]
+Bank 2: [Ch4, Ch5, Ch6, Ch7, 0, 0]
+Even though the sensor has 6 channels, the registers are arranged as 6 slots, and some get zeroed depending on which bank is active.*/
+#ifndef LIB_SHROOMCORP_AS7265X
+#define LIB_SHROOMCORP_AS7265X
 
 #include "Arduino.h"
 #include "ExternalLibraries/Adafruit_I2CDevice.h"
@@ -16,57 +32,13 @@ be at least 64*2.78ms.
 // Default I2C address
 #define AS7265X_ADDRESS (0x49)
 #define AS7265X_DEV_SELECTOR_REG 0x4F
+#define AS7265X_NUM_CHANNELS 18
 
-
-enum{
+enum {
   AS7265X_MASTER_DATA = 0x00,
   AS7265X_FIRST_SLAVE_DATA = 0x01,
   AS7265X_SECOND_SLAVE_DATA = 0x02
 };
-
-// AS7265x Virtual Registers
-enum {
-  AS726X_RAW_VALUE_RGA_H = 0x08,
-  AS726X_RAW_VALUE_RGA_L = 0x09,
-  AS726X_RAW_VALUE_SHB_H = 0x0A,
-  AS726X_RAW_VALUE_SHB_L = 0x0B,
-  AS726X_RAW_VALUE_TIC_H = 0x0C,
-  AS726X_RAW_VALUE_TIC_L = 0x0D,
-  AS726X_RAW_VALUE_UJB_H = 0x0E,
-  AS726X_RAW_VALUE_UJB_L = 0x0F,
-  AS726X_RAW_VALUE_VKE_H = 0x10,
-  AS726X_RAW_VALUE_VKE_L = 0x11,
-  AS726X_RAW_VALUE_WLF_H = 0x12,
-  AS726X_RAW_VALUE_WLF_L = 0x13
-};
-
-enum {
-  AS726X_CALIBRATE_VALUE_RGA_0 = 0x14,
-  AS726X_CALIBRATE_VALUE_RGA_1 = 0x15,
-  AS726X_CALIBRATE_VALUE_RGA_2 = 0x16,
-  AS726X_CALIBRATE_VALUE_RGA_3 = 0x17,
-  AS726X_CALIBRATE_VALUE_SHB_0 = 0x18,
-  AS726X_CALIBRATE_VALUE_SHB_1 = 0x19,
-  AS726X_CALIBRATE_VALUE_SHB_2 = 0x1A,
-  AS726X_CALIBRATE_VALUE_SHB_3 = 0x1B,
-  AS726X_CALIBRATE_VALUE_TIC_0 = 0x1C,
-  AS726X_CALIBRATE_VALUE_TIC_1 = 0x1D,
-  AS726X_CALIBRATE_VALUE_TIC_2 = 0x1E,
-  AS726X_CALIBRATE_VALUE_TIC_3 = 0x1F,
-  AS726X_CALIBRATE_VALUE_UJB_0 = 0x20,
-  AS726X_CALIBRATE_VALUE_UJB_1 = 0x21,
-  AS726X_CALIBRATE_VALUE_UJB_2 = 0x22,
-  AS726X_CALIBRATE_VALUE_UJB_3 = 0x23,
-  AS726X_CALIBRATE_VALUE_VKE_0 = 0x24,
-  AS726X_CALIBRATE_VALUE_VKE_1 = 0x25,
-  AS726X_CALIBRATE_VALUE_VKE_2 = 0x26,
-  AS726X_CALIBRATE_VALUE_VKE_3 = 0x27,
-  AS726X_CALIBRATE_VALUE_WLF_0 = 0x28,
-  AS726X_CALIBRATE_VALUE_WLF_1 = 0x29,
-  AS726X_CALIBRATE_VALUE_WLF_2 = 0x2A,
-  AS726X_CALIBRATE_VALUE_WLF_3 = 0x2B
-};
-
 
 enum {
   AS726X_HW_VERSION     = 0x00,
@@ -88,28 +60,11 @@ enum {
 
 // AS7265x Channel Wavelengths (18 channels)
 enum {
-  CH_410NM = 0,
-  CH_435NM,
-  CH_460NM,
-  CH_485NM,
-  CH_510NM,
-  CH_535NM,
-  CH_560NM,
-  CH_585NM,
-  CH_610NM,
-  CH_645NM,
-  CH_680NM,
-  CH_705NM,
-  CH_730NM,
-  CH_760NM,
-  CH_810NM,
-  CH_860NM,
-  CH_900NM,
+  CH_410NM = 0, CH_435NM, CH_460NM, CH_485NM, CH_510NM,
+  CH_535NM, CH_560NM, CH_585NM, CH_610NM, CH_645NM, CH_680NM,
+  CH_705NM, CH_730NM, CH_760NM, CH_810NM, CH_860NM, CH_900NM,
   CH_940NM
 };
-
-#define AS7265X_NUM_CHANNELS 18
-#define AS726X_INTEGRATION_TIME_MULT 2.8
 
 // Conversion modes
 enum conversion_types {
@@ -155,9 +110,27 @@ public:
   void startMeasurement();
   bool dataReady();
   uint8_t readTemperature();
-  void readRawValues(uint16_t *buf);
+
+  // Read all 18 mapped spectral channels (combines per-device banks)
+  // buf must be AS7265X_NUM_CHANNELS length
+  void readAllChannels(uint16_t *buf);
+
+  // Backwards-compatible name
+  void readRawValues(uint16_t *buf) { readAllChannels(buf); }
+
+  // Read calibrated float channel values (18 channels)
   void readCalibratedValues(float *buf);
+
+  // Sequential raw read that optionally waits per-selector (keeps legacy interface)
   void readRawValuesSequential(uint16_t *buf, unsigned long perSensorTimeoutMs);
+
+  // Helpers to access channel metadata / single-channel reads
+  // wavelength in nm (e.g. 410, 435, 460 ...)
+  uint16_t readChannelByWavelength(uint16_t wavelength);
+  // name is single char A..W as used in datasheet mapping (A..L, etc.)
+  uint16_t readChannelByName(char pdName);
+  uint16_t getChannelWavelength(uint8_t channelIndex);
+  const char* getChannelName(uint8_t channelIndex);
 
 private:
   Adafruit_I2CDevice *i2c_dev = NULL;

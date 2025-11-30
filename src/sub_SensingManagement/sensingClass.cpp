@@ -244,9 +244,9 @@ void sensingClass::as7265xTakeReads(void)
         Serial.println(F("[AS7265x] sensor already initialized"));
     }
 
-    as7265x.setIntegrationTime(166);
-    as7265x.setGain(GAIN_16X);
-    as7265x.setConversionType(ONE_SHOT);
+    as7265x.setIntegrationTime(157);
+    as7265x.setGain(GAIN_64X);
+    //as7265x.setConversionType(MODE_2);
     delay(150);
     // Turn on LED driver and wait
     as7265x.drvOn();
