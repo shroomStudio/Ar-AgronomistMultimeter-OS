@@ -5,13 +5,14 @@
 
 //Headers 
 #include <Arduino.h>
-#include "sub_UserInterface/commonDataTypes.h"
-#include "sub_UserInterface/lcdDisplayClass.h"
-#include "sub_EnergyManagement/energyManagementClass.h"
-#include "sub_UserInterface/buttonsClass.h"
-#include "sub_UserInterface/userInterfaceClass.h"
-#include "sub_SensingManagement/sensingClass.h"
-#include "sub_SignalConditioning/signalConditioningClass.h"
+#include <sub_UserInterface/commonDataTypes.h>
+#include <sub_EnergyManagement/energyManagementClass.h>
+#include <sub_UserInterface/lcdDisplayClass.h>
+#include <sub_EnergyManagement/energyManagementClass.h>
+#include <sub_UserInterface/buttonsClass.h>
+#include <sub_UserInterface/userInterfaceClass.h>
+#include <sub_SensingManagement/sensingClass.h>
+#include <sub_SignalConditioning/signalConditioningClass.h>
 
 //Namespaces 
 using namespace std;
