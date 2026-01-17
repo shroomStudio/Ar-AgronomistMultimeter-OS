@@ -1,8 +1,7 @@
 // ShroomCorp
 // main.cpp
 // Description
-// Copyright*
-// System PinOut
+// Copyright
 
 //Headers 
 #include <Arduino.h>
@@ -36,9 +35,9 @@ void setup()
 
 void loop()
 {
-    //int buttonPressed = ((int)buttonsMain.buttonPressed());
-    //Method that as to be running all the time to detect the user interation
-    //buttonsMain.navigationButtons();
-    //userInterfaceMain.menuSelectedOption(buttonPressed);
 }
 
+// ShroomCorp
+// main.cpp
+// Description
+// Copyright
