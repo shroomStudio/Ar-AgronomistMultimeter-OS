@@ -1,13 +1,13 @@
-#include "energyManagementClass.h"
+// ShroomCorp energyManagementClass.cpp all the code here is property of ShroomCorp and cannot be used
+// or distributed without written permission from ShroomCorp
 
+#include "energyManagementClass.h"
 
 //definition
 #define MINIMUM_BATTERY_PERCENTAJE 2
 
-//Class Instances 
-
 energyManagementClass::energyManagementClass(lcdDisplayClass& lcd):
-    lcdEnergy(lcd) // Initialize the reference to the LCD display class
+    lcdEnergy(lcd)
 {
     //Constructor energyManagementClass
     //Pin to keep the system On it works in conjuntion with
@@ -24,8 +24,9 @@ energyManagementClass::energyManagementClass(lcdDisplayClass& lcd):
     voltageBatteryMonitor();
 }
 
-energyManagementClass::~energyManagementClass(){
-
+energyManagementClass::~energyManagementClass()
+{
+    //Destructor energyManagementClass
 }
 
 //Iniial SetUp Method
@@ -33,23 +34,17 @@ void energyManagementClass::initialSetUpEnergyManagament(void)
 {
 
     lcdEnergy.metadataTodisplayInLCD("Verifying Battery charge\n",LEFT_ALIGNED_X,MIDDLE_Y,true);
-    delay(500);
-    // Disable restart Pin
+    delay(150);
     digitalWrite(activationPinRelayOff, LOW);
-    //Waits for a second
     delay(100); 
-    //Keep device alive
     digitalWrite(activationPinRelayOff, HIGH);
-    //Waits for a second
     delay(100);    
-   //Verify battery is above minimum valid value
-   if(batteryChargePercentage <= MINIMUM_BATTERY_PERCENTAJE)
+   
+    if(batteryChargePercentage <= MINIMUM_BATTERY_PERCENTAJE)
    {
     // Inform te user the system will be shut down
     lcdEnergy.metadataTodisplayInLCD("ystem Discharged, please connect device to power source\n",LEFT_ALIGNED_X,MIDDLE_Y,true);
-    //Wait 2 seconds before to shut down the device
     delay(500);  
-    //shutdown device
     turnOffDevice();
    }
    
@@ -59,34 +54,22 @@ void energyManagementClass::initialSetUpEnergyManagament(void)
 //Public Methods
 void energyManagementClass::turnOffDevice(void)
 {
-   // lcdEnergy.metadataTodisplayInLCD("Shutting down device - See you");
-    //Wait 2 seconds before to shut down the device
     delay(500);  
-    //shutdown device
     digitalWrite(activationPinRelayOff, LOW);
     delay(500);  
 }
+
 void energyManagementClass::resetDevice(void)
 {
-    //lcdEnergy.metadataTodisplayInLCD("Restarting device - Please wait");
     delay(200);  
-    //restartng device
     digitalWrite(activationPinRelayOff, HIGH);
-    //Waits for a second
     delay(500); 
-    //shutdown device
     digitalWrite(activationPinRelayOff, LOW);
-    //Waits for a second
     delay(500); 
 }
 
-
- // Private Methods
 void energyManagementClass::voltageBatteryMonitor(void)
 {
-    //The maximum value of the battery is 5v so based it 
-    //we can converted thi value to percentage using 
-    //percentage of battery = (voltage measured * 100) / 5 
     batteryChargePercentage = 80; //(voltageMeasuredBattery * 100) / 5;
 }
 
@@ -94,3 +77,6 @@ void energyManagementClass::chargeBattery(void)
 {
     
 }
+
+// ShroomCorp energyManagementClass.cpp all the code here is property of ShroomCorp and cannot be used
+// or distributed without written permission from ShroomCorp

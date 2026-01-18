@@ -26,8 +26,8 @@ Even though the sensor has 6 channels, the registers are arranged as 6 slots, an
 #ifndef LIB_SHROOMCORP_AS7265X
 #define LIB_SHROOMCORP_AS7265X
 
-#include "Arduino.h"
-#include "ExternalLibraries/Adafruit_I2CDevice.h"
+#include <Arduino.h>
+#include <ExternalLibraries/Adafruit_I2CDevice.h>
 
 // Default I2C address
 #define AS7265X_ADDRESS (0x49)

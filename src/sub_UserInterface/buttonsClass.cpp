@@ -1,3 +1,8 @@
+// ShroomCorp
+// buttonsClass.cpp
+// Description
+// Copyright
+
 #include "buttonsClass.h"
 
 // Global Variables for this file
@@ -12,7 +17,8 @@ buttonsClass::buttonsClass(lcdDisplayClass &lcd):
     //Constructor class buttonsClass
 }
 
-buttonsClass:: ~buttonsClass(){
+buttonsClass:: ~buttonsClass()
+{
     //destructor class buttonsClass
 }
 
@@ -86,3 +92,7 @@ void buttonsClass::navigationButtons(void)
     }
 }
 
+// ShroomCorp
+// buttonsClass.cpp
+// Description
+// Copyright

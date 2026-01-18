@@ -1,8 +1,12 @@
-#include <string.h>
+// ShroomCorp
+// LcdDisplayClass.cpp
+// Description
+// Copyright
+
+#include <ExternalLibraries/Nokia_LCD.h>
+#include <ExternalLibraries/LCD_Fonts.h>
+#include <ExternalLibraries/LCD_Fonts.h>
 #include "lcdDisplayClass.h"
-#include "ExternalLibraries/Nokia_LCD.h"
-#include "ExternalLibraries/LCD_Fonts.h"
-#include "ExternalLibraries/LCD_Fonts.h"
 
 //LCD Nokia instance declare inside this file to avoid any unauthorizated access
 Nokia_LCD lcdNokia(clockLcdPin/* CLK */, dinLcdPin /* DIN */, dcLcdPin /* DC */, ceLcdPin /* CE */, resetLcdPin /* RST */,lightLcdPin/* BL */);
@@ -13,7 +17,7 @@ lcdDisplayClass::lcdDisplayClass(){
     //Constructor lcdDisplayClass
 }
 
-lcdDisplayClass::~lcdDisplayClass(){
+lcdDisplayClass::~lcdDisplayClass(){ 
     //destructor lcdDisplayClass
 }
 
@@ -88,3 +92,8 @@ void lcdDisplayClass::restoreTextColor()
     // Restore text color to default
     lcdNokia.setInverted(false);
 }
+
+// ShroomCorp
+// LcdDisplayClass.cpp
+// Description
+// Copyright

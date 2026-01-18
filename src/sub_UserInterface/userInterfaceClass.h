@@ -5,6 +5,7 @@
 #include <sub_EnergyManagement/energyManagementClass.h>
 #include <sub_SensingManagement/sensingClass.h>
 #include <sub_SignalConditioning/signalConditioningClass.h>
+#include <string.h>
 #include "commonDataTypes.h"
 #include "lcdDisplayClass.h"
 #include "buttonsClass.h"

@@ -1,7 +1,6 @@
 #include "userInterfaceClass.h"
 #include <EEPROM.h>
-#include <string.h>
-#include "usbConecttionClass.h"
+
 #define RS_PIN dinLcdPin
 #define EN_PIN dcLcdPin
 #define D4_PIN clockLcdPin
@@ -10,29 +9,6 @@
 #define D7_PIN lightLcdPin
 
 // Class instances.
-usbConecttionClass usbUser;
-
-/*
-SUB_MENU(macronutrientsSensing, mainMenu,
-    ITEM_INPUT("Sensing instrucctions", displaySensingInstruction),
-    ITEM_INPUT("Sensing Process", startSensingProcess)
-);   
-SUB_MENU(temperatureSensing, mainMenu,
-    ITEM_BASIC("Date"),
-    ITEM_BASIC("Save and continue")
-);   
-SUB_MENU(atmosphericSensing, mainMenu,
-    ITEM_BASIC("Date"),
-    ITEM_BASIC("Save and continue")
-);   
-SUB_MENU(files, mainMenu,
-    ITEM_BASIC("Date"),
-    ITEM_BASIC("Save and continue")
-);   
-SUB_MENU(configurations, mainMenu,
-    ITEM_BASIC("Date"),
-    ITEM_BASIC("Save and continue")
-);  */
 
 userInterfaceClass::userInterfaceClass(lcdDisplayClass& lcd, buttonsClass& buttons, 
                                         energyManagementClass& energy,

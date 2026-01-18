@@ -1,7 +1,13 @@
+// ShroomCorp
+// LcdDisplayClass.h
+// Description
+// Copyright
+
 #ifndef LCDDISPLAYCLASS_H
 #define LCDDISPLAYCLASS_H
 
 #include <Arduino.h>
+#include <string.h>
 #include "commonDataTypes.h"
 
 using namespace std;
@@ -27,3 +33,8 @@ class lcdDisplayClass{
 
 #endif
 //end class LCDDISPLAYCLASS_H
+
+// ShroomCorp
+// LcdDisplayClass.h
+// Description
+// Copyright
