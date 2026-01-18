@@ -1,3 +1,8 @@
+// ShroomCorp
+// buttonsClass.h
+// Description
+// Copyright
+
 #ifndef BUTTONSCLASS_H
 #define BUTTONSCLASS_H
 
@@ -10,7 +15,8 @@ using namespace std;
 class buttonsClass{
     public:
     buttonsClass(lcdDisplayClass &lcd);  //Constructor with parameter
-    ~buttonsClass();    
+    ~buttonsClass();
+        
     //Public Attributtes
     //Public Methods
     void initialButtonsSetup(void);
@@ -27,3 +33,8 @@ class buttonsClass{
 
 #endif 
 //end class BUTTONSCLASS_H
+
+// ShroomCorp
+// buttonsClass.h
+// Description
+// Copyright

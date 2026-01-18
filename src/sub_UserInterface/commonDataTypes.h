@@ -1,12 +1,14 @@
+// ShroomCorp
+// commonDataTypes.h
+// Common denitinos used for all the files inside the USER interface 
+// Copyright
+
 #ifndef COMMONDATATYPES_H
 #define COMMONDATATYPES_H
 
 #include <Arduino.h>
 
-/*Common denitinos used for all the files inside the USER interface 
-*/
-
-/*
+/* PinOut is necesary to update it. 
 Pin13   clockLcdPin
 Pin12   dinLcdPin
 Pin11   dcLcdPin
@@ -27,7 +29,6 @@ PinA3   Yellow LED
 PinA4   Blue LED
 PinA5   Green LED
 */
-
 
 //Defines
 #define MINIMUM_BATTERY_PERCENTAGE 2
@@ -59,15 +60,15 @@ PinA5   Green LED
 // Common cathode leds
 #define PIN_YELLOW_LED     6
 #define PIN_WHITE_LED      7
-
 #define MAX_NUMBER_OF_LED  5
 
+// Constant definitions 
 const int pinDownButton = A0;
 const int pinBackButton = A1;
 const int pinUpButton   = A2;
 const int pinOkButton   = A3;
 
-//Enumerations 
+// Enumerations 
 typedef enum 
 {
     UP_BUTTON   = 56,
@@ -76,6 +77,7 @@ typedef enum
     OK_BUTTON   = 53,
     NO_BUTTON   = 255,
 }BUTTON_PRESSED;
+
 typedef enum 
 {
     //Coordinates on the x-axis, can be between 0 and 83
@@ -83,6 +85,7 @@ typedef enum
     CENTERED_X = 20, 
     RIGHT_ALIGNED_X = 60
 }COORDINATES_X_DISCPLAY_ENUM;
+
 typedef enum 
 {
     // Coordinates on the y-axis, can be between 0 and 5
@@ -98,6 +101,10 @@ enum TYPE_USB
     SHARE_FILES_CHARGER
 };
 
-
 #endif 
 //end class COMMONDATATYPES_H
+
+// ShroomCorp
+// commonDataTypes.h
+// Common denitinos used for all the files inside the USER interface 
+// Copyright
