@@ -1,8 +1,11 @@
+// ShroomCorp energyManagementClass.h all the code here is property of ShroomCorp and cannot be used
+// or distributed without written permission from ShroomCorp
+
 #ifndef ENERGYMANAGEMENT_H
 #define ENERGYMANAGEMENT_H
 
 #include <Arduino.h>
-#include "sub_UserInterface/lcdDisplayClass.h"
+#include <sub_UserInterface/lcdDisplayClass.h>
 
 using namespace std;
 
@@ -27,8 +30,10 @@ class energyManagementClass{
     double voltageMeasuredBattery;
     // Private Methods
     void chargeBattery(void);
-    lcdDisplayClass &lcdEnergy; // Reference to the LCD display class for displaying messages
+    lcdDisplayClass &lcdEnergy;
 };
 
-#endif
-//end energyManagementClass
+#endif//end energyManagementClass
+
+// ShroomCorp energyManagementClass.h all the code here is property of ShroomCorp and cannot be used
+// or distributed without written permission from ShroomCorp
