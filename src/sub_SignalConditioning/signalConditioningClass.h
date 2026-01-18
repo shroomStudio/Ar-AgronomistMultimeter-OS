@@ -1,11 +1,15 @@
-//here must be the method photodiode voltage
+// ShroomCorp
+// signalConditioningClass.h
+// Description
+// Copyright
+
 #ifndef SIGNALCONDITIONINGCLASS_H
 #define SIGNALCONDITIONINGCLASS_H
 
 #include <Arduino.h>
-#include "sub_UserInterface/commonDataTypes.h"
-#include "sub_UserInterface/lcdDisplayClass.h"
-#include "sub_UserInterface/buttonsClass.h"
+#include <sub_UserInterface/commonDataTypes.h>
+#include <sub_UserInterface/lcdDisplayClass.h>
+#include <sub_UserInterface/buttonsClass.h>
 
 enum LED_COLOR
 {
@@ -89,3 +93,8 @@ class signalConditioningClass{
 
 #endif
 // end SIGNALCONDITIONINGCLASS_H
+
+// ShroomCorp
+// signalConditioningClass.h
+// Description
+// Copyright

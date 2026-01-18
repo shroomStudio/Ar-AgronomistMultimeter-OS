@@ -1,3 +1,8 @@
+// ShroomCorp
+// signalConditioningClass.cpp
+// Description
+// Copyright
+
 #include "signalConditioningClass.h"
 
 //Clases instances 
@@ -142,3 +147,8 @@ void signalConditioningClass::displayAverageValuesAs726x()
 
     NumberOfReadings++;
 }
+
+// ShroomCorp
+// signalConditioningClass.cpp
+// Description
+// Copyright
