@@ -45,6 +45,7 @@ sensingClass::sensingClass(lcdDisplayClass &lcd,
                             conditioningSensing(conditioning),
                             as7265x()
 {
+    //Constructor sensing class
 }   
 
 sensingClass::~sensingClass()

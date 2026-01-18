@@ -5,7 +5,7 @@
 #define SENSINGCLASS_H
 
 
-/* GY-276x
+/* Technical Notes GY-276x
 VIN   - 3.3V or 5V input
 GND   - Ground
 SCL   - I2C Clock
@@ -24,11 +24,11 @@ White: While not a single wavelength, white LEDs are characterized by their colo
 Other colors: Purple LEDs typically have wavelengths between 370-410 nm, and ultraviolet (UV) LEDs have wavelengths less than 380 nm. 
 */
 #include <Arduino.h>
-#include "sub_UserInterface/commonDataTypes.h"
-#include "ExternalLibraries/ShroomCorp_AS7265x.h"
-#include "sub_UserInterface/lcdDisplayClass.h"
-#include "sub_UserInterface/buttonsClass.h"
-#include "sub_SignalConditioning/signalConditioningClass.h"
+#include <sub_UserInterface/commonDataTypes.h>
+#include <sub_UserInterface/lcdDisplayClass.h>
+#include <sub_UserInterface/buttonsClass.h>
+#include <sub_SignalConditioning/signalConditioningClass.h>
+#include "ShroomCorp_AS7265x.h"
 
 class sensingClass{
     public:
