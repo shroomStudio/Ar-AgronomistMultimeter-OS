@@ -124,11 +124,10 @@ void sensingClass::as7265xTakeReads(void)
 
     as7265x.setIntegrationTime(157);
     as7265x.setGain(GAIN_64X);
-    //as7265x.setConversionType(MODE_2);
     delay(150);
-    // Turn on LED driver and wait
-    as7265x.drvOn();
-    delay(100);
+    digitalWrite(PIN_YELLOW_LED, LOW);
+    digitalWrite(PIN_WHITE_LED, LOW);
+    delay(1500);
 
     // Start measurement and log exact timestamp
     unsigned long tStart = millis();
@@ -158,8 +157,9 @@ void sensingClass::as7265xTakeReads(void)
         // extra diagnostics: try a soft re-init attempt
         as7265x.drvOff();
         delay(200);
-        as7265x.drvOn();
-        delay(200);
+        // as7265x.drvOn();
+        
+        // delay(200);
         as7265x.startMeasurement();
         
         bool ready2 = false;
@@ -180,8 +180,10 @@ void sensingClass::as7265xTakeReads(void)
     // Read raw values
     uint16_t readings[AS7265X_NUM_CHANNELS] = {0};
     as7265x.readRawValuesSequential(readings, 2500);
-    as7265x.drvOff();
-    delay(150);
+    //as7265x.drvOff();
+    digitalWrite(PIN_YELLOW_LED, HIGH);
+    digitalWrite(PIN_WHITE_LED, HIGH);
+    delay(1000);
 
     Serial.print(F("$,"));
     for (int i = 0; i < AS7265X_NUM_CHANNELS; i++) 

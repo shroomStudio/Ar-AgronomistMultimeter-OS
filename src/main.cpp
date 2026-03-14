@@ -26,12 +26,22 @@ userInterfaceClass userInterfaceMain (lcdMain, buttonsMain, energyMain, sensingM
 
 void setup() 
 {
+    // Device General setup
+    pinMode(PIN_BLUE_LED, OUTPUT);
+    pinMode(PIN_RED_LED, OUTPUT);
+    pinMode(PIN_YELLOW_LED, OUTPUT);
+    pinMode(PIN_WHITE_LED, OUTPUT);
+
+    digitalWrite(PIN_BLUE_LED, HIGH);
+    digitalWrite(PIN_RED_LED, HIGH);
+    digitalWrite(PIN_YELLOW_LED, HIGH);
+    digitalWrite(PIN_WHITE_LED, HIGH);
+     
     Serial.begin(115200);
     lcdMain.initialDisplaySetup();
     energyMain.initialSetUpEnergyManagament();
     buttonsMain.initialButtonsSetup();
     userInterfaceMain.userInitialConfiguration();
-
 }
 
 void loop()
