@@ -109,7 +109,7 @@ void sensingClass::sensingProcessTakeReadings(void)
 
         lcdSensing.metadataTodisplayFreeCursor("Processeding with calib process \n",LEFT_ALIGNED_X,TOP_Y,true);
         
-        Serial.print(F("/*"));
+        Serial.println(F("/*"));
         delay(200);
 
         for (int i=0 ; i < NUMBER_OF_READS_TO_TAKE; ++i )
@@ -118,6 +118,8 @@ void sensingClass::sensingProcessTakeReadings(void)
             delay(250); 
         }
 
+        Serial.println(F("*/"));
+        delay(500);
         CalibrationIsDone = true;
     }
 
@@ -128,7 +130,7 @@ void sensingClass::sensingProcessTakeReadings(void)
             lcdSensing.metadataTodisplayInLCD("Press and Hold-OK to continue Measure", LEFT_ALIGNED_X, MIDDLE_Y,true);
         } while (buttonsSensing.buttonPressed() != OK_BUTTON);
         
-        Serial.print(F("*"));
+        Serial.println(F("@"));
         delay(200);
 
         for (int i=0 ; i < NUMBER_OF_READS_TO_TAKE; ++i )
@@ -136,6 +138,9 @@ void sensingClass::sensingProcessTakeReadings(void)
             as7265xTakeReads(); 
             delay(250); 
         }
+
+        Serial.println(F("@/"));
+        delay(250);
     }
 }
 
@@ -226,11 +231,11 @@ void sensingClass::as7265xTakeReads(void)
     delay(150);
 
     // Additional health/debug info
-    Serial.println(F("[AS7265x]temperature read:"));
-    Serial.print(F(" (dec="));
-    Serial.print(as7265x.readTemperature());
-    Serial.println(F(")"));
-    Serial.print(F("[AS7265] read complete")); 
+    //Serial.println(F("[AS7265x]temperature read:"));
+    //Serial.print(F(" (dec="));
+    //Serial.print(as7265x.readTemperature());
+    //Serial.println(F(")"));
+    Serial.println(F("[AS7265] read complete")); 
 }
 
 // ShroomCorp sensingClass.cpp all the code here is property of ShroomCorp and cannot be used
