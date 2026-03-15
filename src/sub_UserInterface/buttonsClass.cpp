@@ -49,11 +49,14 @@ BUTTON_PRESSED buttonsClass::buttonPressed(void)
 
 void buttonsClass::navigationButtons(void)
 {
+    currentButtonPressed = NO_BUTTON;
+    delay(150);
    // Initialization of interruptions
     for (int  i = 0; i < 4; i++)
     {
         // Read state of current button
         buttonstates[i] = digitalRead(buttonPins[i]);
+        delay(150);
         if ( buttonstates[i] != previousButtonstates[i])
         {
             previousButtonstates[i] = buttonstates[i];

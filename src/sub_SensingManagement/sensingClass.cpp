@@ -36,6 +36,7 @@ uint16_t as7265x_810nm;
 uint16_t as7265x_860nm;
 uint16_t as7265x_900nm;
 uint16_t as7265x_940nm;
+bool CalibrationIsDone;
 
 sensingClass::sensingClass(lcdDisplayClass &lcd, 
                             buttonsClass &buttons, 
@@ -60,16 +61,14 @@ void sensingClass::macronutrientSensingProcess()
     while (buttonsSensing.buttonPressed() != OK_BUTTON)
     {
         lcdSensing.metadataTodisplayInLCD("please get ready the sample, press OK to continue", LEFT_ALIGNED_X, MIDDLE_Y,true);
-        delay(1000);
         buttonsSensing.navigationButtons();
+        delay(1000);
     }
-    //TODO: get and Save date and time
+
     while (buttonsSensing.buttonPressed() != BACK_BUTTON)
     {
         if (!sensingProcessFinished)
         {
-            lcdSensing.metadataTodisplayInLCD("sensing in process, press back to abort... \n", LEFT_ALIGNED_X, MIDDLE_Y,true);
-            delay(1500);
             sensingProcessTakeReadings();
             //Process of sensing finished values 
             sensingProcessFinished = true;
@@ -93,21 +92,51 @@ void sensingClass::sensingProcessTakeReadings(void)
 {    
    //Serial.println("sensingProcessTakeReadings");
    uint8_t waitForSerial = 0;
-
+   
    // Initial setup for sensing class
     if (!Serial || waitForSerial > 3) 
     {
         delay(150); // Wait for serial port to connect. Needed for native USB
         waitForSerial++;
     }
-    
-    // Take readings from both sensors
-    for (int i=0 ; i < NUMBER_OF_READS_TO_TAKE; ++i )
+
+    if (!CalibrationIsDone)
     {
-        as7265xTakeReads(); 
-        delay(250); 
+        do {
+            buttonsSensing.navigationButtons();
+            lcdSensing.metadataTodisplayInLCD("Press and Hold-OK to continue calib", LEFT_ALIGNED_X, MIDDLE_Y,true);
+        } while (buttonsSensing.buttonPressed() != OK_BUTTON);
+
+        lcdSensing.metadataTodisplayFreeCursor("Processeding with calib process \n",LEFT_ALIGNED_X,TOP_Y,true);
+        
+        Serial.print(F("/*"));
+        delay(200);
+
+        for (int i=0 ; i < NUMBER_OF_READS_TO_TAKE; ++i )
+        {
+            as7265xTakeReads(); 
+            delay(250); 
+        }
+
+        CalibrationIsDone = true;
     }
-   
+
+    if (CalibrationIsDone) 
+    {
+        do {
+            buttonsSensing.navigationButtons();
+            lcdSensing.metadataTodisplayInLCD("Press and Hold-OK to continue Measure", LEFT_ALIGNED_X, MIDDLE_Y,true);
+        } while (buttonsSensing.buttonPressed() != OK_BUTTON);
+        
+        Serial.print(F("*"));
+        delay(200);
+
+        for (int i=0 ; i < NUMBER_OF_READS_TO_TAKE; ++i )
+        {
+            as7265xTakeReads(); 
+            delay(250); 
+        }
+    }
 }
 
 void sensingClass::as7265xTakeReads(void)
