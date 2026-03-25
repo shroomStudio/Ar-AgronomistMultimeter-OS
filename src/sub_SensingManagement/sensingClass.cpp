@@ -69,6 +69,10 @@ void sensingClass::macronutrientSensingProcess()
     {
         if (!sensingProcessFinished)
         {
+            digitalWrite(PIN_YELLOW_LED, LOW);
+            digitalWrite(PIN_WHITE_LED, LOW);
+            delay(250);
+
             sensingProcessTakeReadings();
             //Process of sensing finished values 
             sensingProcessFinished = true;
@@ -84,6 +88,11 @@ void sensingClass::macronutrientSensingProcess()
         delay(200);
     }
     
+    // Turn off lamp 
+    digitalWrite(PIN_YELLOW_LED, HIGH);
+    digitalWrite(PIN_WHITE_LED, HIGH);
+    delay(500);
+
     lcdSensing.metadataTodisplayFreeCursor("Sensing process finished \n",LEFT_ALIGNED_X,TOP_Y,true);
     delay(200);
 }
@@ -104,14 +113,14 @@ void sensingClass::sensingProcessTakeReadings(void)
     {
         do {
             buttonsSensing.navigationButtons();
-            lcdSensing.metadataTodisplayInLCD("Press and Hold-OK to continue calib", LEFT_ALIGNED_X, MIDDLE_Y,true);
+            lcdSensing.metadataTodisplayInLCD("Press and Hold-OK to take reads", LEFT_ALIGNED_X, MIDDLE_Y,true);
         } while (buttonsSensing.buttonPressed() != OK_BUTTON);
 
-        lcdSensing.metadataTodisplayFreeCursor("Processeding with calib process \n",LEFT_ALIGNED_X,TOP_Y,true);
+        lcdSensing.metadataTodisplayFreeCursor("Taking readings... \n",LEFT_ALIGNED_X,TOP_Y,true);
         
         Serial.println(F("/*"));
         delay(200);
-
+        
         for (int i=0 ; i < NUMBER_OF_READS_TO_TAKE; ++i )
         {
             as7265xTakeReads(); 
@@ -123,13 +132,13 @@ void sensingClass::sensingProcessTakeReadings(void)
         CalibrationIsDone = true;
     }
 
-    if (CalibrationIsDone) 
+    /*if (CalibrationIsDone) 
     {
         do {
             buttonsSensing.navigationButtons();
             lcdSensing.metadataTodisplayInLCD("Press and Hold-OK to continue Measure", LEFT_ALIGNED_X, MIDDLE_Y,true);
         } while (buttonsSensing.buttonPressed() != OK_BUTTON);
-        
+
         Serial.println(F("@"));
         delay(200);
 
@@ -138,10 +147,9 @@ void sensingClass::sensingProcessTakeReadings(void)
             as7265xTakeReads(); 
             delay(250); 
         }
-
         Serial.println(F("@/"));
         delay(250);
-    }
+    }*/
 }
 
 void sensingClass::as7265xTakeReads(void)
@@ -161,9 +169,9 @@ void sensingClass::as7265xTakeReads(void)
     as7265x.setIntegrationTime(157);
     as7265x.setGain(GAIN_64X);
     delay(150);
-    digitalWrite(PIN_YELLOW_LED, LOW);
-    digitalWrite(PIN_WHITE_LED, LOW);
-    delay(1000);
+    //digitalWrite(PIN_YELLOW_LED, LOW);
+    //digitalWrite(PIN_WHITE_LED, LOW);
+    //delay(1000);
 
     // Start measurement and log exact timestamp
     unsigned long tStart = millis();
@@ -217,9 +225,9 @@ void sensingClass::as7265xTakeReads(void)
     uint16_t readings[AS7265X_NUM_CHANNELS] = {0};
     as7265x.readRawValuesSequential(readings, 2500);
     //as7265x.drvOff();
-    digitalWrite(PIN_YELLOW_LED, HIGH);
-    digitalWrite(PIN_WHITE_LED, HIGH);
-    delay(500);
+    //digitalWrite(PIN_YELLOW_LED, HIGH);
+    //digitalWrite(PIN_WHITE_LED, HIGH);
+    //delay(500);
 
     Serial.print(F("$,"));
     for (int i = 0; i < AS7265X_NUM_CHANNELS; i++) 
