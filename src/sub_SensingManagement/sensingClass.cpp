@@ -167,7 +167,7 @@ void sensingClass::as7265xTakeReads(void)
     }
 
     as7265x.setIntegrationTime(157);
-    as7265x.setGain(GAIN_64X);
+    as7265x.setGain(GAIN_16X);
     delay(150);
     //digitalWrite(PIN_YELLOW_LED, LOW);
     //digitalWrite(PIN_WHITE_LED, LOW);
