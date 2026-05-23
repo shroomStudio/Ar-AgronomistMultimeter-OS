@@ -93,12 +93,20 @@ void sensingClass::as7265xTakeReads(void)
 
 // ── inferenceProcess ─────────────────────────────────────────────────
 // Triggered by serial cmd 'M'.
-// State machine: WARMUP_CHECK -> TAKING_READS -> AVERAGING ->
-//                NORMALIZING -> TRANSMITTING
+// New flow:
+//   1. ACK
+//   2. Validate white reference
+//   3. WARMUP_CHECK:
+//      - If lamp cold: send WARN,LAMP_COLD, wait for M (proceed) or any
+//        other char (cancel, return to IDLE)
+//      - If lamp ready: send READY,PRESS_M, wait for M (proceed) or 0
+//        (cancel, return to IDLE)
+//   4. Only on M confirmation: TAKING_READS -> AVERAGING ->
+//      NORMALIZING -> TRANSMITTING
 // Ref: AgM_SRS_Inference_V0.5
 void sensingClass::inferenceProcess()
 {
-    // ACK command (ARD-09)
+    // ARD-09: ACK command
     Serial.println(ACK_M_MSG);
 
     // ARD-07: validate white reference
@@ -112,17 +120,49 @@ void sensingClass::inferenceProcess()
         }
     }
 
-    // ARD-08: WARMUP_CHECK — warn if lamp on time < 10 min
-    // lampStartTime is set in main.cpp when cmd L is received
+    // ARD-08: WARMUP_CHECK
     unsigned long elapsed = millis() - lampStartTime;
-    if (lampStartTime == 0 || elapsed < LAMP_WARMUP_MS)
+    bool lampCold = (lampStartTime == 0 || elapsed < LAMP_WARMUP_MS);
+
+    if (lampCold)
     {
-        Serial.println(LAMP_COLD_MSG);  // non-blocking — continue anyway
+        // Send warning and wait for user decision
+        Serial.println(LAMP_COLD_MSG);
+        lcdSensing.metadataTodisplayInLCD("Lamp cold warn", LEFT_ALIGNED_X, MIDDLE_Y, true);
+    }
+    else
+    {
+        // Lamp ready — send ready prompt and wait for user decision
+        Serial.println(F("READY,PRESS_M"));
+        lcdSensing.metadataTodisplayInLCD("Ready. Wait M...", LEFT_ALIGNED_X, MIDDLE_Y, true);
     }
 
-    // TAKING_READS — 10 reads accumulated per channel (ARD-03)
+    // Wait for M (proceed) or any other char (cancel) — 60 s timeout
+    unsigned long waitStart = millis();
+    char userCmd = 0;
+    while ((millis() - waitStart) < 60000UL)
+    {
+        if (Serial.available() > 0)
+        {
+            userCmd = (char)Serial.read();
+            break;
+        }
+        delay(50);
+    }
+
+    if (userCmd != 'M')
+    {
+        // User cancelled or timeout
+        Serial.println(F("CANCELLED"));
+        lcdSensing.metadataTodisplayInLCD("AgM Ready", LEFT_ALIGNED_X, MIDDLE_Y, true);
+        return;
+    }
+
+    // User confirmed with M — proceed with measurement
+    Serial.println(F("ACK,M_CONFIRMED"));
     lcdSensing.metadataTodisplayInLCD("Taking reads...", LEFT_ALIGNED_X, MIDDLE_Y, true);
 
+    // TAKING_READS — 10 reads per channel (ARD-03)
     uint32_t accumulator[AS7265X_NUM_CHANNELS] = {0};
 
     for (uint8_t r = 0; r < READS_PER_CHANNEL; r++)
@@ -166,7 +206,7 @@ void sensingClass::inferenceProcess()
     for (uint8_t i = 0; i < AS7265X_NUM_CHANNELS; i++)
         rNorm[i] = (iAvg[i] / (float)I_WHITE_REF[i]) * 100.0f;
 
-    // TRANSMITTING — $,R410,...,R940,$ (ARD-06)
+    // TRANSMITTING (ARD-06)
     lcdSensing.metadataTodisplayInLCD("Sending data...", LEFT_ALIGNED_X, MIDDLE_Y, true);
 
     Serial.print(F("$,"));
@@ -177,7 +217,7 @@ void sensingClass::inferenceProcess()
     }
     Serial.println(F("$"));
 
-    lcdSensing.metadataTodisplayInLCD("Done.", LEFT_ALIGNED_X, MIDDLE_Y, true);
+    lcdSensing.metadataTodisplayInLCD("AgM Ready", LEFT_ALIGNED_X, MIDDLE_Y, true);
 }
 
 // ShroomCorp — Copyright
