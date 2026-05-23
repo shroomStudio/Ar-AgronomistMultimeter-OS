@@ -41,9 +41,6 @@ class sensingClass{
     void macronutrientSensingProcess();
     void inferenceProcess();  // ARD-02: triggered by serial cmd 'M'
 
-// File-scope variable accessible from main.cpp for lamp start time (ARD-08)
-extern unsigned long lampStartTime;
-
     private:
     //Private attributes
     bool isAS7265xReady;  // Add status flag
@@ -60,6 +57,9 @@ extern unsigned long lampStartTime;
     signalConditioningClass &conditioningSensing;
     ShroomCorp_AS7265x as7265x;
 };
+
+// File-scope variable defined in sensingClass.cpp, accessible from main.cpp (ARD-08)
+extern unsigned long lampStartTime;
 
 #endif 
 
