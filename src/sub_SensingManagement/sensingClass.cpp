@@ -37,6 +37,7 @@ uint16_t as7265x_860nm;
 uint16_t as7265x_900nm;
 uint16_t as7265x_940nm;
 bool CalibrationIsDone;
+unsigned long lampStartTime = 0;  // ARD-08: captures millis() when inference starts
 
 sensingClass::sensingClass(lcdDisplayClass &lcd, 
                             buttonsClass &buttons, 
@@ -248,3 +249,88 @@ void sensingClass::as7265xTakeReads(void)
 
 // ShroomCorp sensingClass.cpp all the code here is property of ShroomCorp and cannot be used
 // or distributed without written permission from ShroomCorp    
+
+// ── inferenceProcess — AgM Inference Feature ─────────────────────────
+// Implements state machine: IDLE -> WARMUP_CHECK -> TAKING_READS ->
+// AVERAGING -> NORMALIZING -> TRANSMITTING -> IDLE
+// Triggered by serial cmd 'M' (ARD-02). See SRS AgM_SRS_Inference_V0.4.1
+void sensingClass::inferenceProcess()
+{
+    // ARD-09: acknowledge command immediately
+    Serial.println(ACK_M_MSG);
+
+    // ARD-07: validate white reference — abort if any channel is zero
+    for (uint8_t i = 0; i < AS7265X_NUM_CHANNELS; i++)
+    {
+        if (I_WHITE_REF[i] == 0)
+        {
+            Serial.println(CALIB_MISSING_MSG);
+            return;
+        }
+    }
+
+    // ARD-08: WARMUP_CHECK — warn if lamp has not reached operating temperature
+    lampStartTime = millis();
+    if (lampStartTime < LAMP_WARMUP_MS)
+    {
+        // Non-blocking: transmit warning and continue
+        Serial.println(LAMP_COLD_MSG);
+    }
+
+    // TAKING_READS — accumulate READS_PER_CHANNEL reads per channel (ARD-03)
+    uint32_t accumulator[AS7265X_NUM_CHANNELS] = {0};
+
+    for (uint8_t read = 0; read < READS_PER_CHANNEL; read++)
+    {
+        // Re-use existing private helper: one full AS7265x snapshot
+        uint16_t snapshot[AS7265X_NUM_CHANNELS] = {0};
+
+        if (!isAS7265xReady)
+        {
+            if (!as7265x.begin()) return;
+            isAS7265xReady = true;
+        }
+
+        as7265x.setIntegrationTime(157);
+        as7265x.setGain(GAIN_16X);
+        delay(150);
+
+        as7265x.startMeasurement();
+
+        // Poll for data ready (5 s timeout)
+        unsigned long tStart = millis();
+        bool ready = false;
+        while ((millis() - tStart) < 5000)
+        {
+            if (as7265x.dataReady()) { ready = true; break; }
+            delay(100);
+        }
+        if (!ready) continue;  // skip this read on timeout
+
+        as7265x.readRawValuesSequential(snapshot, 2500);
+
+        for (uint8_t ch = 0; ch < AS7265X_NUM_CHANNELS; ch++)
+            accumulator[ch] += snapshot[ch];
+
+        delay(150);
+    }
+
+    // AVERAGING — I_avg[i] = accumulator[i] / READS_PER_CHANNEL (ARD-04)
+    float iAvg[AS7265X_NUM_CHANNELS];
+    for (uint8_t i = 0; i < AS7265X_NUM_CHANNELS; i++)
+        iAvg[i] = (float)accumulator[i] / (float)READS_PER_CHANNEL;
+
+    // NORMALIZING — R[i] = (I_avg[i] / I_WHITE_REF[i]) * 100.0 (ARD-05)
+    float rNorm[AS7265X_NUM_CHANNELS];
+    for (uint8_t i = 0; i < AS7265X_NUM_CHANNELS; i++)
+        rNorm[i] = (iAvg[i] / (float)I_WHITE_REF[i]) * 100.0f;
+
+    // TRANSMITTING — $,R410,...,R940,$ frame with 4 decimal places (ARD-06)
+    Serial.print(F("$,"));
+    for (uint8_t i = 0; i < AS7265X_NUM_CHANNELS; i++)
+    {
+        Serial.print(rNorm[i], 4);
+        Serial.print(F(","));
+    }
+    Serial.println(F("$"));
+}

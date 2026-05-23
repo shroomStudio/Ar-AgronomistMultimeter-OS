@@ -39,6 +39,7 @@ class sensingClass{
 
     //Public Methods
     void macronutrientSensingProcess();
+    void inferenceProcess();  // ARD-02: triggered by serial cmd 'M'
 
     private:
     //Private attributes

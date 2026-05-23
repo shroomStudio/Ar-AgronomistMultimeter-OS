@@ -46,6 +46,15 @@ void setup()
 
 void loop()
 {
+    // ARD-02: Serial command dispatcher — poll for inference trigger
+    if (Serial.available() > 0)
+    {
+        char cmd = Serial.read();
+        if (cmd == 'M')
+        {
+            sensingMain.inferenceProcess();
+        }
+    }
 }
 
 // ShroomCorp

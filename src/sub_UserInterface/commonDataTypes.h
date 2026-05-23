@@ -102,6 +102,27 @@ enum TYPE_USB
     SHARE_FILES_CHARGER
 };
 
+// ── AgM Inference Feature (ARD-01 to ARD-10) ─────────────────────────
+// Calibration05 white-reference counts from AgM_MasterDataset_25-04-26.xlsx
+// Sheet: Norm_Reflactance — protocol: PRESSED / 10MM / FIELD
+// Channel order: 410,435,460,485,510,535,560,585,610,645,680,705,730,760,810,860,900,940 nm
+const uint16_t I_WHITE_REF[18] = {
+    4729, 8629, 8829, 9169, 5929, 3969,   // 410–535 nm
+    4729, 8629, 4729, 8829, 8629, 9169,   // 560–705 nm
+    9169, 9229, 5929, 3969, 5929, 3969    // 730–940 nm
+};
+
+// Number of AS7265x reads to take per inference cycle (ARD-03)
+const uint8_t READS_PER_CHANNEL = 10;
+
+// Lamp warm-up duration: 10 minutes in milliseconds (ARD-08)
+const unsigned long LAMP_WARMUP_MS = 600000UL;
+
+// Serial frame strings
+const char CALIB_MISSING_MSG[] = "ERR,CALIB_MISSING";   // ARD-07
+const char LAMP_COLD_MSG[]     = "WARN,LAMP_COLD";       // ARD-08
+const char ACK_M_MSG[]         = "ACK,M";                // ARD-09
+
 #endif 
 //end class COMMONDATATYPES_H
 

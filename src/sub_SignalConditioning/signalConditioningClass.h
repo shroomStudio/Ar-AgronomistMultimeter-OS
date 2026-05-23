@@ -72,6 +72,7 @@ class signalConditioningClass{
     
     //Public Methods
     void macronutrientsMapping(void);
+    void normalize(uint16_t raw[18], float out[18]);  // ARD-05: R[i] = (raw[i]/I_WHITE_REF[i])*100
 
     private:
     //Private attributes
