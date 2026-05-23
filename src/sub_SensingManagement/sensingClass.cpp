@@ -160,6 +160,13 @@ void sensingClass::inferenceProcess()
 
     // User confirmed with M — proceed with measurement
     Serial.println(F("ACK,M_CONFIRMED"));
+
+    // Turn lamp ON before taking reads (requires 2s stabilisation)
+    digitalWrite(PIN_YELLOW_LED, LOW);
+    digitalWrite(PIN_WHITE_LED,  LOW);
+    lcdSensing.metadataTodisplayInLCD("Lamp ON...", LEFT_ALIGNED_X, MIDDLE_Y, true);
+    delay(2000);   // 2s lamp stabilisation before first read
+
     lcdSensing.metadataTodisplayInLCD("Taking reads...", LEFT_ALIGNED_X, MIDDLE_Y, true);
 
     // TAKING_READS — 10 reads per channel (ARD-03)
