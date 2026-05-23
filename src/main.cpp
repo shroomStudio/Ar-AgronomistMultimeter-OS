@@ -1,63 +1,73 @@
 // ShroomCorp
 // main.cpp
-// Description
+// AgM Inference Branch — serial console driven, LCD status only
 // Copyright
 
-//Headers 
 #include <Arduino.h>
 #include <sub_UserInterface/commonDataTypes.h>
 #include <sub_EnergyManagement/energyManagementClass.h>
 #include <sub_UserInterface/lcdDisplayClass.h>
-#include <sub_EnergyManagement/energyManagementClass.h>
 #include <sub_UserInterface/buttonsClass.h>
 #include <sub_UserInterface/userInterfaceClass.h>
 #include <sub_SensingManagement/sensingClass.h>
 #include <sub_SignalConditioning/signalConditioningClass.h>
 
-//Namespaces 
 using namespace std;
 
-lcdDisplayClass lcdMain;
-buttonsClass buttonsMain (lcdMain);
-energyManagementClass energyMain(lcdMain);
-signalConditioningClass conditioningMain (lcdMain, buttonsMain);
-sensingClass sensingMain (lcdMain, buttonsMain, conditioningMain);
-userInterfaceClass userInterfaceMain (lcdMain, buttonsMain, energyMain, sensingMain, conditioningMain);
+lcdDisplayClass        lcdMain;
+buttonsClass           buttonsMain(lcdMain);
+energyManagementClass  energyMain(lcdMain);
+signalConditioningClass conditioningMain(lcdMain, buttonsMain);
+sensingClass           sensingMain(lcdMain, buttonsMain, conditioningMain);
+userInterfaceClass     userInterfaceMain(lcdMain, buttonsMain, energyMain, sensingMain, conditioningMain);
 
-void setup() 
+void setup()
 {
-    // Device General setup
-    pinMode(PIN_BLUE_LED, OUTPUT);
-    pinMode(PIN_RED_LED, OUTPUT);
+    pinMode(PIN_BLUE_LED,   OUTPUT);
+    pinMode(PIN_RED_LED,    OUTPUT);
     pinMode(PIN_YELLOW_LED, OUTPUT);
-    pinMode(PIN_WHITE_LED, OUTPUT);
+    pinMode(PIN_WHITE_LED,  OUTPUT);
 
-    digitalWrite(PIN_BLUE_LED, HIGH);
-    digitalWrite(PIN_RED_LED, HIGH);
+    // All LEDs off at start (active LOW relay shield: HIGH = off)
+    digitalWrite(PIN_BLUE_LED,   HIGH);
+    digitalWrite(PIN_RED_LED,    HIGH);
     digitalWrite(PIN_YELLOW_LED, HIGH);
-    digitalWrite(PIN_WHITE_LED, HIGH);
-     
+    digitalWrite(PIN_WHITE_LED,  HIGH);
+
     Serial.begin(115200);
     lcdMain.initialDisplaySetup();
     energyMain.initialSetUpEnergyManagament();
-    buttonsMain.initialButtonsSetup();
-    userInterfaceMain.userInitialConfiguration();
+
+    // LCD: ready status — no button interaction required
+    lcdMain.metadataTodisplayInLCD("AgM Ready", LEFT_ALIGNED_X, MIDDLE_Y, true);
 }
 
 void loop()
 {
-    // ARD-02: Serial command dispatcher — poll for inference trigger
+    // Serial command dispatcher — all interaction via serial console
     if (Serial.available() > 0)
     {
-        char cmd = Serial.read();
-        if (cmd == 'M')
+        char cmd = (char)Serial.read();
+
+        if (cmd == 'L')
         {
+            // Lamp ON command (ARD-L): turn on tungsten lamp via relay pins
+            digitalWrite(PIN_YELLOW_LED, LOW);
+            digitalWrite(PIN_WHITE_LED,  LOW);
+            lampStartTime = millis();   // start warm-up countdown (ARD-08)
+            lcdMain.metadataTodisplayInLCD("Lamp ON", LEFT_ALIGNED_X, MIDDLE_Y, true);
+            Serial.println(F("L"));   // ACK: lamp on confirmed
+        }
+        else if (cmd == 'M')
+        {
+            // Measurement command: run full inference pipeline
+            lcdMain.metadataTodisplayInLCD("Measuring...", LEFT_ALIGNED_X, MIDDLE_Y, true);
             sensingMain.inferenceProcess();
+            lcdMain.metadataTodisplayInLCD("AgM Ready", LEFT_ALIGNED_X, MIDDLE_Y, true);
         }
     }
 }
 
 // ShroomCorp
 // main.cpp
-// Description
 // Copyright
