@@ -51,12 +51,21 @@ void loop()
 
         if (cmd == 'L')
         {
-            // Lamp ON command (ARD-L): turn on tungsten lamp via relay pins
+            // Lamp ON command: turn on tungsten lamp via relay pins
             digitalWrite(PIN_YELLOW_LED, LOW);
             digitalWrite(PIN_WHITE_LED,  LOW);
-            lampStartTime = millis();   // start warm-up countdown (ARD-08)
+            lampStartTime = millis();
             lcdMain.metadataTodisplayInLCD("Lamp ON", LEFT_ALIGNED_X, MIDDLE_Y, true);
-            Serial.println(F("L"));   // ACK: lamp on confirmed
+            Serial.println(F("L"));
+        }
+        else if (cmd == '0')
+        {
+            // Lamp OFF command: turn off tungsten lamp
+            digitalWrite(PIN_YELLOW_LED, HIGH);
+            digitalWrite(PIN_WHITE_LED,  HIGH);
+            lampStartTime = 0;
+            lcdMain.metadataTodisplayInLCD("Lamp OFF", LEFT_ALIGNED_X, MIDDLE_Y, true);
+            Serial.println(F("LAMP_OFF"));
         }
         else if (cmd == 'M')
         {
