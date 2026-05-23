@@ -48,6 +48,7 @@ class sensingClass{
     // Private Methods
     //Global File scope methods
     void sensingProcessTakeReadings(void);
+    bool calibrationProcess(void);
     void as7265xTakeReads(void);
 
     lcdDisplayClass &lcdSensing;

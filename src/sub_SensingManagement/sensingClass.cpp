@@ -36,6 +36,7 @@ uint16_t as7265x_810nm;
 uint16_t as7265x_860nm;
 uint16_t as7265x_900nm;
 uint16_t as7265x_940nm;
+bool CalibrationIsDone;
 
 sensingClass::sensingClass(lcdDisplayClass &lcd, 
                             buttonsClass &buttons, 
@@ -60,16 +61,18 @@ void sensingClass::macronutrientSensingProcess()
     while (buttonsSensing.buttonPressed() != OK_BUTTON)
     {
         lcdSensing.metadataTodisplayInLCD("please get ready the sample, press OK to continue", LEFT_ALIGNED_X, MIDDLE_Y,true);
-        delay(1000);
         buttonsSensing.navigationButtons();
+        delay(1000);
     }
-    //TODO: get and Save date and time
+
     while (buttonsSensing.buttonPressed() != BACK_BUTTON)
     {
         if (!sensingProcessFinished)
         {
-            lcdSensing.metadataTodisplayInLCD("sensing in process, press back to abort... \n", LEFT_ALIGNED_X, MIDDLE_Y,true);
-            delay(1500);
+            digitalWrite(PIN_YELLOW_LED, LOW);
+            digitalWrite(PIN_WHITE_LED, LOW);
+            delay(250);
+
             sensingProcessTakeReadings();
             //Process of sensing finished values 
             sensingProcessFinished = true;
@@ -78,34 +81,75 @@ void sensingClass::macronutrientSensingProcess()
         {
             //Sendind readings to conditioning class
             //sendingReadingsToConditioning();
+            break;
         }
-        
-       // Serial.println("sensing in process in loop press back to stop");
-        delay(1500);
-        sensingProcessFinished = false;
+        // Serial.println("sensing in process in loop press back to stop");
         buttonsSensing.navigationButtons();
-        delay(1000);
+        delay(200);
     }
     
-    lcdSensing.metadataTodisplayFreeCursor("Sensing process finished \n",LEFT_ALIGNED_X,TOP_Y,false);
-    delay(1000);
+    // Turn off lamp 
+    digitalWrite(PIN_YELLOW_LED, HIGH);
+    digitalWrite(PIN_WHITE_LED, HIGH);
+    delay(500);
+
+    lcdSensing.metadataTodisplayFreeCursor("Sensing process finished \n",LEFT_ALIGNED_X,TOP_Y,true);
+    delay(200);
 }
 
 void sensingClass::sensingProcessTakeReadings(void)
 {    
    //Serial.println("sensingProcessTakeReadings");
    uint8_t waitForSerial = 0;
-
+   
    // Initial setup for sensing class
     if (!Serial || waitForSerial > 3) 
     {
         delay(150); // Wait for serial port to connect. Needed for native USB
         waitForSerial++;
     }
-    
-    // Take readings from both sensors
-    as7265xTakeReads(); 
-    delay(250); 
+
+    if (!CalibrationIsDone)
+    {
+        do {
+            buttonsSensing.navigationButtons();
+            lcdSensing.metadataTodisplayInLCD("Press and Hold-OK to take reads", LEFT_ALIGNED_X, MIDDLE_Y,true);
+        } while (buttonsSensing.buttonPressed() != OK_BUTTON);
+
+        lcdSensing.metadataTodisplayFreeCursor("Taking readings... \n",LEFT_ALIGNED_X,TOP_Y,true);
+        
+        Serial.println(F("/*"));
+        delay(200);
+        
+        for (int i=0 ; i < NUMBER_OF_READS_TO_TAKE; ++i )
+        {
+            as7265xTakeReads(); 
+            delay(250); 
+        }
+
+        Serial.println(F("*/"));
+        delay(500);
+        CalibrationIsDone = true;
+    }
+
+    /*if (CalibrationIsDone) 
+    {
+        do {
+            buttonsSensing.navigationButtons();
+            lcdSensing.metadataTodisplayInLCD("Press and Hold-OK to continue Measure", LEFT_ALIGNED_X, MIDDLE_Y,true);
+        } while (buttonsSensing.buttonPressed() != OK_BUTTON);
+
+        Serial.println(F("@"));
+        delay(200);
+
+        for (int i=0 ; i < NUMBER_OF_READS_TO_TAKE; ++i )
+        {
+            as7265xTakeReads(); 
+            delay(250); 
+        }
+        Serial.println(F("@/"));
+        delay(250);
+    }*/
 }
 
 void sensingClass::as7265xTakeReads(void)
@@ -123,11 +167,11 @@ void sensingClass::as7265xTakeReads(void)
     }
 
     as7265x.setIntegrationTime(157);
-    as7265x.setGain(GAIN_64X);
+    as7265x.setGain(GAIN_16X);
     delay(150);
-    digitalWrite(PIN_YELLOW_LED, LOW);
-    digitalWrite(PIN_WHITE_LED, LOW);
-    delay(1500);
+    //digitalWrite(PIN_YELLOW_LED, LOW);
+    //digitalWrite(PIN_WHITE_LED, LOW);
+    //delay(1000);
 
     // Start measurement and log exact timestamp
     unsigned long tStart = millis();
@@ -181,9 +225,9 @@ void sensingClass::as7265xTakeReads(void)
     uint16_t readings[AS7265X_NUM_CHANNELS] = {0};
     as7265x.readRawValuesSequential(readings, 2500);
     //as7265x.drvOff();
-    digitalWrite(PIN_YELLOW_LED, HIGH);
-    digitalWrite(PIN_WHITE_LED, HIGH);
-    delay(1000);
+    //digitalWrite(PIN_YELLOW_LED, HIGH);
+    //digitalWrite(PIN_WHITE_LED, HIGH);
+    //delay(500);
 
     Serial.print(F("$,"));
     for (int i = 0; i < AS7265X_NUM_CHANNELS; i++) 
@@ -195,11 +239,11 @@ void sensingClass::as7265xTakeReads(void)
     delay(150);
 
     // Additional health/debug info
-    Serial.println(F("[AS7265x]temperature read:"));
-    Serial.print(F(" (dec="));
-    Serial.print(as7265x.readTemperature());
-    Serial.println(F(")"));
-    Serial.print(F("[AS7265] read complete")); 
+    //Serial.println(F("[AS7265x]temperature read:"));
+    //Serial.print(F(" (dec="));
+    //Serial.print(as7265x.readTemperature());
+    //Serial.println(F(")"));
+    Serial.println(F("[AS7265] read complete")); 
 }
 
 // ShroomCorp sensingClass.cpp all the code here is property of ShroomCorp and cannot be used

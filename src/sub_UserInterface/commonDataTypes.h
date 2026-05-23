@@ -61,6 +61,7 @@ PinA5   Green LED
 #define PIN_YELLOW_LED     6
 #define PIN_WHITE_LED      7
 #define MAX_NUMBER_OF_LED  5
+#define NUMBER_OF_READS_TO_TAKE 5
 
 // Constant definitions 
 const int pinDownButton = A0;
