@@ -164,12 +164,19 @@ void sensingClass::inferenceProcess()
 
     // TAKING_READS — 10 reads per channel (ARD-03)
     uint32_t accumulator[AS7265X_NUM_CHANNELS] = {0};
+    uint8_t  validReads = 0;
 
     for (uint8_t r = 0; r < READS_PER_CHANNEL; r++)
     {
+        // Progress update so Python knows Arduino is alive
+        Serial.print(F("MEASURING,"));
+        Serial.print(r + 1);
+        Serial.print(F("/"));
+        Serial.println(READS_PER_CHANNEL);
+
         if (!isAS7265xReady)
         {
-            if (!as7265x.begin()) return;
+            if (!as7265x.begin()) continue;
             isAS7265xReady = true;
         }
 
@@ -180,12 +187,16 @@ void sensingClass::inferenceProcess()
 
         unsigned long tStart = millis();
         bool ready = false;
-        while ((millis() - tStart) < 5000)
+        while ((millis() - tStart) < 8000)   // 8s timeout per read
         {
             if (as7265x.dataReady()) { ready = true; break; }
-            delay(100);
+            delay(200);
         }
-        if (!ready) continue;
+        if (!ready)
+        {
+            Serial.println(F("WARN,READ_TIMEOUT"));
+            continue;
+        }
 
         uint16_t snapshot[AS7265X_NUM_CHANNELS] = {0};
         as7265x.readRawValuesSequential(snapshot, 2500);
@@ -193,13 +204,24 @@ void sensingClass::inferenceProcess()
         for (uint8_t ch = 0; ch < AS7265X_NUM_CHANNELS; ch++)
             accumulator[ch] += snapshot[ch];
 
-        delay(150);
+        validReads++;
+        delay(100);
     }
 
-    // AVERAGING (ARD-04)
+    if (validReads == 0)
+    {
+        Serial.println(F("ERR,NO_READS"));
+        // Turn lamp off — safety
+        digitalWrite(PIN_YELLOW_LED, HIGH);
+        digitalWrite(PIN_WHITE_LED,  HIGH);
+        lcdSensing.metadataTodisplayInLCD("AgM Ready", LEFT_ALIGNED_X, MIDDLE_Y, true);
+        return;
+    }
+
+    // AVERAGING (ARD-04) — divide by actual valid reads
     float iAvg[AS7265X_NUM_CHANNELS];
     for (uint8_t i = 0; i < AS7265X_NUM_CHANNELS; i++)
-        iAvg[i] = (float)accumulator[i] / (float)READS_PER_CHANNEL;
+        iAvg[i] = (float)accumulator[i] / (float)validReads;
 
     // NORMALIZING (ARD-05)
     float rNorm[AS7265X_NUM_CHANNELS];
@@ -216,6 +238,11 @@ void sensingClass::inferenceProcess()
         Serial.print(F(","));
     }
     Serial.println(F("$"));
+
+    // Turn lamp off — lamp must be shut down at end of every sensing process
+    digitalWrite(PIN_YELLOW_LED, HIGH);
+    digitalWrite(PIN_WHITE_LED,  HIGH);
+    lampStartTime = 0;   // reset warmup timer
 
     lcdSensing.metadataTodisplayInLCD("AgM Ready", LEFT_ALIGNED_X, MIDDLE_Y, true);
 }
