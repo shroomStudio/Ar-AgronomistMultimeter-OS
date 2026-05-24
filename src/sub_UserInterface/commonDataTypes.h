@@ -105,11 +105,11 @@ enum TYPE_USB
 // ── AgM Inference Feature (ARD-01 to ARD-10) ─────────────────────────
 // Calibration05 white-reference counts from AgM_MasterDataset_25-04-26.xlsx
 // Sheet: Norm_Reflactance — protocol: PRESSED / 10MM / FIELD
-// Channel order: 410,435,460,485,510,535,560,585,610,645,680,705,730,760,810,860,900,940 nm
+// Channel order: 410,435,460,485,510,5351,560,585,610,645,680,705,730,760,810,860,900,940 nm
 const uint16_t I_WHITE_REF[18] = {
-    4729, 8629, 8829, 9169, 5929, 3969,   // 410–535 nm
-    4729, 8629, 4729, 8829, 8629, 9169,   // 560–705 nm
-    9169, 9229, 5929, 3969, 5929, 3969    // 730–940 nm
+    1827, 3705, 3536, 3678, 2220, 1532,   // 410–535 nm
+    1900, 3709, 1900, 3541, 3707, 3683,   // 560–705 nm
+    3541, 3684, 2221, 1534, 2222, 1534    // 730–940 nm
 };
 
 // Number of AS7265x reads to take per inference cycle (ARD-03)
